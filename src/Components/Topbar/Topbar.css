@@ -1,0 +1,43 @@
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 24px;
+  background: var(--bar-background);   /* uses your --bar-background: #F5F8FE */
+  border-bottom: 1px solid var(--stroke);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* subtle shadow */
+}
+
+/* Left side: logo + app name */
+.topbar-start {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-text {
+  font-family: var(--font-poppins);
+  font-size: var(--S3);        /* 24px */
+  font-weight: var(--fw-bold);
+}
+
+.logo-text .seed {
+  color: #65A30D; /* green */
+}
+
+.logo-text .ling {
+  color: #181743; /* navy */
+}
+
+/* Right side: action buttons */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

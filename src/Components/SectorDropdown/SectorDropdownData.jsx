@@ -1,14 +1,35 @@
+// src/components/SectorDropdown/SectorDropdownData.jsx
+import { useMemo } from "react";
 import SectorDropdown from "./SectorDropdown";
+import newSectorData from "../../constants/secrotData"
+function buildSectorsMap(data) {
+  const sectorsObj = data?.sectors ?? {};
+  const out = {};
 
-// centralize sectors data here (can later be fetched/derived)
-const SECTORS = {
-  technology: ["MSFT", "AAPL", "NVDA"],
-  finance: ["JPM", "BAC", "C"],
-  healthcare: ["PFE", "JNJ", "ABBV", "MRK"],
-  energy: ["XOM", "CVX"],
-};
+  for (const [key, val] of Object.entries(sectorsObj)) {
+    if (!val || typeof val !== "object") continue;
+    if (!("sector_name" in val)) continue;
 
-export default function SectorDropdownData({ selectedSector, onSectorChange, label }) {
+    // Use the human-readable sector_name instead of the raw key
+    const prettyKey = val.sector_name
+      .replace(/ Sector$/i, "")        // strip trailing "Sector"
+      .replace(/_/g, " ")              // replace underscores with spaces
+      .trim();
+
+    const tickers = Object.keys(val.stocks ?? {});
+    out[prettyKey.toLowerCase()] = tickers; // keep lowercase for consistency
+  }
+
+  return out;
+}
+
+export default function SectorDropdownData({
+  selectedSector,
+  onSectorChange,
+  label,
+}) {
+  const SECTORS = useMemo(() => buildSectorsMap(newSectorData), []);
+
   return (
     <SectorDropdown
       sectors={SECTORS}
@@ -19,5 +40,4 @@ export default function SectorDropdownData({ selectedSector, onSectorChange, lab
   );
 }
 
-// (optional) export for others if needed
-export { SECTORS };
+export { buildSectorsMap };

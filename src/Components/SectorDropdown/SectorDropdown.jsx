@@ -73,7 +73,7 @@ export default function SectorDropdown({
           onClick={() => setOpen((v) => !v)}
         >
           <span className="sector-label">{pretty(selectedSector)}</span>
-          <span className="stock-count">({count} Chosen leading stocks)</span>
+          <span className="stock-count">({count} leading stocks)</span>
           <svg
             className={`dropdown-arrow ${open ? "open" : ""}`}
             width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"

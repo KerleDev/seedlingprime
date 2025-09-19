@@ -1,5 +1,5 @@
 // src/services/MeanReversionApp.js
-import newSectorData from '../constants/secrotData';
+import sectorData from '../constants/secrotData';
 
 class MeanReversionApp {
   constructor() {

@@ -1,4 +1,4 @@
-const sectorData = {
+const newSectorData = {
   report_metadata: {
     title:
       'Comprehensive Financial Data Report: 143 Stocks Across 11 Sectors',
@@ -1312,4 +1312,4 @@ const sectorData = {
   },
 };
 
-export default sectorData;
+export default newSectorData;

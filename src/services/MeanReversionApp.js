@@ -1,5 +1,5 @@
 // src/services/MeanReversionApp.js
-import sectorData from '../constants/secrotData';
+import sectorData from '../constants/sectorData';
 
 class MeanReversionApp {
   constructor() {
@@ -7,10 +7,10 @@ class MeanReversionApp {
     this.perplexityAPI = {
       collectSectorData: async (sector) => {
         console.log(`Perplexity API: Collecting data for ${sector}`);
-        // Simulate API call using data from newSectorData
+        // Simulate API call using data from sectorData
         return new Promise((resolve) =>
           setTimeout(() => {
-            const data = newSectorData.sectors[sector.toLowerCase()];
+            const data = sectorData.sectors[sector.toLowerCase()];
             if (data) {
               resolve({
                 stocks: Object.entries(data.stocks).map(

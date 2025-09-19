@@ -1,8 +1,11 @@
-/* Chart layout */
+/* Chart layout: flex column so footer always sits below the chart */
 .chart-section {
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
 }
+
 .chart-header {
   display: flex;
   flex-wrap: wrap;
@@ -10,12 +13,12 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
-  padding-top: 12px;
 }
+
 .chart-title {
-  margin: 0; 
-  line-height: 1.2; 
-  font-size: var(--S2);
+  margin: 0;
+  line-height: 1.2;
+  font-size: clamp(16px, 1.4vw, 22px);
   font-weight: 600;
   color: var(--app-text);
 }
@@ -23,20 +26,21 @@
 /* KPI badges */
 .chart-stats {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   justify-content: flex-end;
-   transform: translateY(-1px);
 }
+
 .chart-stat {
-  background: #fff;    
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);         
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--stroke);
   border-radius: 12px;
   padding: 8px 12px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: flex-end;
 }
+
 .chart-stat-label {
   font-size: var(--S4);
   color: var(--input-text);
@@ -48,21 +52,26 @@
   color: var(--app-text);
 }
 
-/* Chart area */
+/* Chart area — CSS controls height */
 .chart-wrapper {
+  position: relative; /* own stacking context */
+  z-index: 0;
   width: 100%;
-  height: 450px;
+  height: clamp(300px, 40vh, 420px); /* responsive height */
+  margin-bottom: 8px; /* breathing room before footer */
 }
 
 .chart-wrapper *:focus {
   outline: none;
 }
 
-
-/* Toolbar for dropdown/filters above the chart */
-.chart-toolbar {
+/* Footer with sort dropdown (inline, not floating) */
+.chart-footer {
+  position: relative;
+  z-index: 2; /* always above the SVG */
+  margin-top: 10px;
   display: flex;
-  gap: 12px;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -71,28 +80,3 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
-
-/* Sort selector */
-.chart-footer {
-  margin-top: 12px;
-  display: flex;
-  justify-content: flex-start; 
-  align-items: center;
-}
-
-.sort-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-}
-
-.sort-label select {
-  padding: 6px 8px;
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  background: var(--note-background);
-  color: var(--app-text);
-}
-
-.chart-header .chart-stats { margin-top: 0; }

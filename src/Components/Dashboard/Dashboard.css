@@ -4,43 +4,52 @@
   flex-direction: column;
 }
 
-
+/* Hero */
 .page-hero {
-  max-width: 1600px;                    
-  margin: clamp(16px, 4vw, 32px) auto 0; 
+  max-width: 1600px;
+  margin: clamp(12px, 3.5vw, 28px) auto 0;
   padding: 0 16px;
   text-align: center;
+  gap: 8px; /* tighter vertical rhythm */
 }
 
-
+/* Fluid sizing for title/subtitle */
 .page-title {
-  margin-top: 0.75em;
+  margin: 0 0 8px 0;
   color: var(--app-text--light);
-  font-size: var(--S1);
   font-weight: var(--fw-semibold);
+  font-size: clamp(22px, 2vw, 32px);
+  line-height: 1.2;
 }
+
 .page-subtitle {
-  margin-top: 0.5em;
-  font-size: var(--S2);
+  margin: 0;
   color: var(--app-text--light);
   font-weight: var(--fw-regular);
+  font-size: clamp(14px, 1.2vw, 18px);
+  line-height: 1.5;
 }
 
-
+/* Grid */
 .dashboard-grid {
   width: min(100% - clamp(32px, 8vw, 160px), 1600px);
   margin-inline: auto;
-  margin-block: clamp(16px, 4vw, 32px);
+  margin-block: clamp(12px, 3vw, 24px);
   padding: 0;
 
   display: grid;
-  grid-template-columns: 1fr;       
-  gap: clamp(16px, 2.5vw, 24px);
+  grid-template-columns: 1fr;
+  gap: clamp(12px, 2vw, 20px);
+  grid-auto-rows: max-content; /* rows grow to fit content */
+  align-items: stretch;
 }
 
-/* For the dropdown */
+.dashboard-grid > * {
+  min-height: 0; /* important in complex layouts */
+}
+
+/* Top dropdown row */
 .page-controls {
-    text-align: center;
-    margin: 2em;    /*centers and gives vertical spacing*/
-  
+  text-align: center;
+  margin: clamp(12px, 2.5vw, 20px) 0; /* vertical spacing only */
 }

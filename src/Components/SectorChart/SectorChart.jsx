@@ -73,7 +73,7 @@ export default function SectorChart({
   return (
     <section className="chart-section">
       <div className="chart-header">
-       <h2 className="chart-title">{sectorDisplayName} Sector Overview</h2>
+        <h2 className="chart-title">{sectorDisplayName} Sector Overview</h2>
         <div className="chart-stats">
           <div className="chart-stat">
             <span className="chart-stat-label">Sector Mean</span>
@@ -95,10 +95,11 @@ export default function SectorChart({
       </div>
 
       <div className="chart-wrapper">
-        <ResponsiveContainer width="100%" height={450}>
+        {/* Let CSS control the height: use height="100%" here */}
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={stockData}
-            margin={{ top: 40, right: 40, left: 40, bottom: 60 }}
+            margin={{ top: 40, right: 40, left: 40, bottom: 20 }} /* more room for legend/x-axis */
           >
             <CartesianGrid
               strokeDasharray="1 1"

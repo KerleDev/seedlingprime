@@ -62,7 +62,7 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
   }, [open]);
 
   return (
-    <div className="sortdd-root">
+    <div className="sortdd-root" data-open={open ? "true" : "false"}>
       <span className="sortdd-label">{label}</span>
 
       <button

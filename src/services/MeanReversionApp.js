@@ -10,7 +10,10 @@ class MeanReversionApp {
         // Simulate API call using data from sectorData
         return new Promise((resolve) =>
           setTimeout(() => {
-            const data = sectorData.sectors[sector.toLowerCase()];
+            const formattedSector = sector
+              .toLowerCase()
+              .replace(/ /g, '_');
+            const data = sectorData.sectors[formattedSector];
             if (data) {
               resolve({
                 stocks: Object.entries(data.stocks).map(

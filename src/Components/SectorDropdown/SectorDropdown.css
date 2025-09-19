@@ -1,118 +1,97 @@
-.sector-selection { 
-  width: 100%; 
+/* ========== CONFIG (tweak this if needed) ========== */
+:root {
+  --dropdown-max: 560px; /* wide enough for your longest names on one line */
 }
 
-/* Centered container with a comfortable max width */
-.dropdown-container { 
-  position: relative; 
-  display: block; 
-  margin: 0 auto; 
-  width: min(100% - clamp(32px, 8vw, 160px), 420px);
+/* ========== Layout ========== */
+.sector-selection { width: 100%; }
+
+/* Centered container; fixed-but-not-full width */
+.dropdown-container {
+  position: relative;
+  display: block;
+  margin-inline: auto;
+  width: min(100% - clamp(32px, 8vw, 160px), var(--dropdown-max));
 }
 
-
-/* Trigger fills the container width */
+/* Trigger fills the container; one line only */
 .dropdown-trigger {
-  display: inline-flex; 
-  align-items: center; 
-  justify-content: flex-start;     /* keep children on one line */
-  gap: 12px;                       
-  padding: 1em 2em;               
-  border: 1px solid #E5E7EB; 
-  border-radius: 12px;            
-  background: #fff; 
-  cursor: pointer; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 1em 2em;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
   font: inherit;
-  font-size: clamp(15px, 1.05vw, 18px); 
-  min-height: 44px;               
-  color: #181743; 
+  font-size: clamp(15px, 1.05vw, 18px);
+  min-height: 44px;
+  color: #181743;
   box-shadow: 0 4px 14px rgba(0,0,0,0.10);
   width: 100%;
-}
-.dropdown-trigger:hover { 
-  border-color: #CBD5E1; 
+  white-space: nowrap;           /* keep everything on a single line */
 }
 
-/* Arrow: bigger and pinned to the right */
-.dropdown-arrow { 
-  transition: transform 150ms ease; 
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  margin-inline-start: 10px;
-  color: var(--arrow);
-}
-.dropdown-arrow.open { 
-  transform: rotate(180deg); 
-}
+.dropdown-trigger:hover { border-color: #CBD5E1; }
 
-/* === Text hierarchy inside trigger === */
-.sector-label {
-  font-size: clamp(16px, 1.2vw, 20px);   /* sector name: 16–20px */
-  font-weight: var(--fw-semibold);
-  color: var(--app-text--dark);
-  letter-spacing: 0.1px;
-}
+/* label left, count pushes to the right, arrow at the end */
+.sector-label { font-weight: var(--fw-semibold); letter-spacing: 0.1px; }
+.stock-count   { margin-inline-start: auto; color: var(--input-text); }
+.dropdown-arrow{ flex-shrink: 0; margin-inline-start: 10px; color: var(--arrow); }
 
-.stock-count {
-  font-size: clamp(14px, 1vw, 18px);     /* description/count: 14–18px */
-  font-weight: var(--fw-regular);
-  color: var(--input-text);
-  margin-inline-start: auto;             /* pushes arrow to far right */
-  opacity: 0.9;
-}
-
-/* Open menu aligns exactly under the trigger and matches its width */
+/* ========== Menu: EXACT same width as trigger ========== */
 .dropdown-menu {
-  position: absolute; 
-  z-index: 30; 
-  top: calc(100% + 8px);                 /* same 8px gap below trigger */
-  inset-inline: 0;                        /* left:0; right:0; align to container edges */
-  width: 100%;                            /* match container/trigger width */
-  box-sizing: border-box;                 /* include padding in width */
-  background: #fff; 
-  border: 1px solid #E5E7EB; 
-  border-radius: 12px; 
-  padding: 20px;                   
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  inset-inline: 0;               /* left:0; right:0 to match container edges */
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 12px;
   box-shadow: 0 12px 28px rgba(0,0,0,0.10);
-  max-height: min(50vh, 200px); 
-  overflow-y: auto;
-  overscroll-behavior: contain;   
-  scroll-behavior: smooth;
-}
 
-/* === Menu items === */
+  /* internal scrolling (11 items max but safe) */
+  max-height: min(50vh, 360px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+
+  /* modern thin scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #B9C0D0 #F2F4F8;
+}
+.dropdown-menu::-webkit-scrollbar{ width:8px;height:8px;}
+.dropdown-menu::-webkit-scrollbar-track{ background:#F2F4F8; border-radius:8px;}
+.dropdown-menu::-webkit-scrollbar-thumb{ background:#B9C0D0; border-radius:8px; border:2px solid #F2F4F8;}
+.dropdown-menu::-webkit-scrollbar-thumb:hover{ background:#9EA7B8;}
+.dropdown-menu::-webkit-scrollbar-button{ display:none; }
+
+/* ========== Items: one line each, label left / count right ========== */
 .dropdown-item {
-  width: 100%; 
-  display: flex; 
-  justify-content: space-between; 
+  width: 100%;
+  display: flex;
+  justify-content: space-between;   /* label left, count right */
   align-items: center;
-  padding: 12px 14px;              
-  border-radius: 8px; 
-  background: transparent; 
-  border: none; 
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  text-align: left; 
-  font: inherit; 
+  text-align: left;
+  font: inherit;
   color: #181743;
+  white-space: nowrap;               /* no wrap for items */
 }
-.dropdown-item:hover, 
-.dropdown-item.focused { 
-  background: #F3F4F6; 
-}
+.dropdown-item:hover, .dropdown-item.focused { background: #F3F4F6; }
 
 .dropdown-item.active {
-  outline: 2px solid hsl(85, 85%, 35%, 0.2);    
-  background: hsl(85, 85%, 35%);             
+  background: rgba(101,163,13,0.85); /* app green w/ alpha */
+  color: #fff;
 }
-
-.dropdown-item .sector-label {
-  font-size: clamp(16px, 1.1vw, 20px);   /* menu sector name */
-  font-weight: var(--fw-medium);
-}
-
-.dropdown-item .stock-count {
-  font-size: clamp(14px, 0.9vw, 18px);   /* menu description/count */
-  font-weight: var(--fw-light);
-  color: var(--input-text);
-}
+.dropdown-item.active .stock-count { color: #fff; }

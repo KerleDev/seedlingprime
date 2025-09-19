@@ -10,6 +10,7 @@ export default function SectorDropdown({
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const menuRef = useRef(null);
+  const itemRefs = useRef({}); // <== map of refs for each menu item
 
   const sectorKeys = Object.keys(sectors ?? {});
   const pretty = (s) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -23,13 +24,15 @@ export default function SectorDropdown({
         !menuRef.current.contains(e.target) &&
         btnRef.current &&
         !btnRef.current.contains(e.target)
-      ) setOpen(false);
+      ) {
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
 
-  // simple keyboard support inside menu
+  // keyboard support
   const [focusIdx, setFocusIdx] = useState(
     Math.max(0, sectorKeys.indexOf(selectedSector))
   );
@@ -56,6 +59,14 @@ export default function SectorDropdown({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, focusIdx, sectorKeys, onChange]);
+
+  // ✅ Auto-scroll selected/focused item into view when menu opens
+  useEffect(() => {
+    if (open && sectorKeys[focusIdx]) {
+      const el = itemRefs.current[sectorKeys[focusIdx]];
+      el?.scrollIntoView({ block: "nearest" });
+    }
+  }, [open, focusIdx, sectorKeys]);
 
   const count = sectors[selectedSector]?.length ?? 0;
 
@@ -100,8 +111,13 @@ export default function SectorDropdown({
                   role="option"
                   aria-selected={active}
                   className={`dropdown-item ${active ? "active" : ""} ${idx === focusIdx ? "focused" : ""}`}
+                  ref={(el) => (itemRefs.current[sector] = el)}   // <== assign ref
                   onMouseEnter={() => setFocusIdx(idx)}
-                  onClick={() => { onChange?.(sector); setOpen(false); btnRef.current?.focus(); }}
+                  onClick={() => {
+                    onChange?.(sector);
+                    setOpen(false);
+                    btnRef.current?.focus();
+                  }}
                 >
                   <span className="sector-label">{pretty(sector)}</span>
                   <span className="stock-count">({c} stocks)</span>

@@ -35,18 +35,17 @@
 
 /* === Text hierarchy inside trigger === */
 .sector-label {
-  font-size: clamp(16px, 1.2vw, 20px);   /* sector name: 16–20px */
+  font-size: clamp(24px, 1.2vw, 20px);   /* sector name: 16–20px */
   font-weight: var(--fw-semibold);
   color: var(--app-text--dark);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
 }
 
 .stock-count {
-  font-size: clamp(14px, 1vw, 18px);     /* description/count: 14–18px */
+  font-size: clamp(18px, 1vw, 18px);     /* description/count: 14–18px */
   font-weight: var(--fw-regular);
   color: var(--input-text);
   margin-inline-start: auto;             /* pushes arrow to far right */
-  opacity: 0.9;
 }
 
 /* keep arrow tight on the right */
@@ -89,8 +88,8 @@
 }
 
 .dropdown-item.active {
-  outline: 2px solid #65A30D33;    
-  background: #F4FAEF;             
+  outline: 2px solid hsl(85, 85%, 35%, 0.2);    
+  background: hsl(85, 85%, 35%);             
 }
 
 .dropdown-item .sector-label {
@@ -103,3 +102,4 @@
   font-weight: var(--fw-light);
   color: var(--input-text);
 }
+

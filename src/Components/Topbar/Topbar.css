@@ -28,11 +28,11 @@
 }
 
 .logo-text .seed {
-  color: #65A30D; /* green */
+  color: var(--app-green); /* green */
 }
 
 .logo-text .ling {
-  color: #181743; /* navy */
+  color: var(--app-text--dark); /* navy */
 }
 
 /* Right side: action buttons */

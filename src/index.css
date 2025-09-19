@@ -20,24 +20,25 @@
 
   /* Colors */
   --bg-gradient: linear-gradient(to right, #24243e, #302b63, #0f0c29);
-  --page-background:#FFFFFF;
-  --bar-background:#F5F8FE;
-  --note-background:#FFFFFF;
-  --input-background:#F9FAFB;
+  --page-background: #FFFFFF;
+  --bar-background: #F5F8FE;
+  --note-background: #FFFFFF;
+  --input-background: #F9FAFB;
+  --app-green: #65A30D;
 
-  --app-text:#181743;
-  --input-text:#9EA2AE;
-  --stroke:#E5E7EA;
-  --arrow:#9EA2AE;
+  --app-text--dark: #181743;
+  --app-text--light: #fff;
+  --input-text: #9EA2AE;
+  --stroke: #E5E7EA;
+  --arrow: #9EA2AE;
 
   /* Button */
-  --BTN-text:#FFFFFF;
-  --BTN-background:#181743;
-  --BTN-width:127px;
-  --BTN-radius-pill: 12px 28px;
+  --BTN-text: #FFFFFF;
+  --BTN-background: #181743;
+  --BTN-width: 127px;
+  --BTN-padding-pill: 12px 28px;
 
- /* Font sizes for project (largest → smallest) */
-
+  /* Font sizes for project (largest → smallest) */
   --S1: 3.75rem;   /* 60px - main heading (H1) */
   --S2: 2rem;      /* 32px - large heading (H2) */
   --S3: 1.5rem;    /* 24px - subtitle / highlighted content */
@@ -45,16 +46,21 @@
   --S5: 0.875rem;  /* 14px - secondary text / descriptions */
   --S6: 0.75rem;   /* 12px - helper text / small notes */
 
-
   /* Spacing & Radius */
   --input-padding: 8px 12px;
   --button-padding: 12px 16px;
   --input-radius: 8px;
   --BTN-radius: 12px;
-  --card-radius: 30px;
+  --card-radius: 20px;
+
+  /* Layout tokens */
+  --app-bg: var(--bg-gradient);       /* page background */
+  --topbar-bg: var(--BTN-background); /* top bar + card background */
+  --card-gap: 1.25rem;
+  --card-padding: 1.25rem;
 }
 
-/* Utilities */
+/* Utilities
 .font-p { font-family: var(--font-poppins); }
 
 .fw-thin { font-weight: var(--fw-thin); }
@@ -63,14 +69,12 @@
 .fw-medium { font-weight: var(--fw-medium); }
 .fw-semibold { font-weight: var(--fw-semibold); }
 .fw-bold { font-weight: var(--fw-bold); }
-.fw-black { font-weight: var(--fw-black); }
+.fw-black { font-weight: var(--fw-black); } */
 
 html, body, #root { height: 100%; }
+
 body {
-  background: #0f0c29;
   background: var(--bg-gradient);
-  color: var(--app-text);
+  color: var(--app-text--light);
 }
-
-
 

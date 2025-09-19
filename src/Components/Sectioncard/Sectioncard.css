@@ -1,0 +1,27 @@
+/* === SectionCard.css === */
+
+.section-card {
+  /* light card like top bar */
+  background: var(--bar-background);
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+  overflow: hidden;
+  color: var(--app-text--dark);
+
+  /* fill the grid cell (the grid controls width & side margins) */
+  width: 100%;
+  margin: 0;
+  padding: clamp(16px, 2.5vw, 28px);
+}
+
+.section-card-header { margin-bottom: clamp(12px, 2vw, 20px); }
+.section-card-header > h2 {
+  margin: 0;
+  font-size: var(--S2);
+  font-weight: var(--fw-semibold);
+  color: var(--app-text--dark);  /* dark heading text */
+  text-align: center;
+}
+
+.section-card-body { color: var(--app-text--dark); }

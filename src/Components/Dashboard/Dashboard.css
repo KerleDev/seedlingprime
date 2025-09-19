@@ -4,6 +4,43 @@
   flex-direction: column;
 }
 
-.page-content {
-  padding: 24px;
+
+.page-hero {
+  max-width: 1600px;                    
+  margin: clamp(16px, 4vw, 32px) auto 0; 
+  padding: 0 16px;
+  text-align: center;
+}
+
+
+.page-title {
+  margin-top: 0.75em;
+  color: var(--app-text--light);
+  font-size: var(--S1);
+  font-weight: var(--fw-semibold);
+}
+.page-subtitle {
+  margin-top: 0.5em;
+  font-size: var(--S2);
+  color: var(--app-text--light);
+  font-weight: var(--fw-medium);
+}
+
+
+.dashboard-grid {
+  width: min(100% - clamp(32px, 8vw, 160px), 1600px);
+  margin-inline: auto;
+  margin-block: clamp(16px, 4vw, 32px);
+  padding: 0;
+
+  display: grid;
+  grid-template-columns: 1fr;       
+  gap: clamp(16px, 2.5vw, 24px);
+}
+
+/* For the dropdown */
+.page-controls {
+    text-align: center;
+    margin: 2em;    /*centers and gives vertical spacing*/
+  
 }

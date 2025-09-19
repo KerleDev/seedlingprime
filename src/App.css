@@ -1,4 +1,4 @@
-/* ===== Base Button ===== */
+/* ===== Button ===== */
 .btn {
   display: inline-flex;
   justify-content: center;
@@ -7,14 +7,14 @@
 
   /* Size */
   width: var(--BTN-width);             
-  padding: var(--BTN-radius-pill);
+  padding: var(--BTN-padding-pill);
 
   /* Typography */
   font-family: var(--font-poppins);
   font-size: var(--S4);        /* 16px */
   font-weight: var(--fw-semibold);
 
-  /* Shape & interaction */
+  /* Sh ape & interaction */
   border-radius: 28px;         /* pill */
   border: 1px solid transparent;
   cursor: pointer;
@@ -23,6 +23,7 @@
 }
 
 /* ===== Variants ===== */
+
 .btn--dark {
   background: var(--BTN-background);   /* #181743 */
   color: var(--BTN-text);              /* #FFFFFF */
@@ -30,12 +31,12 @@
 }
 
 .btn--light {
-  background: #fff;
+  background: var(--app-text--light);
   color: var(--BTN-background);
   border-color: var(--BTN-background); /* outline */
 }
-
-/* ===== States (optional but recommended) ===== */
+                                                
+/* ===== States ===== */
 .btn--dark:hover { box-shadow: 0 6px 18px rgba(0,0,0,.25); transform: translateY(-1px); }
 .btn--dark:active { transform: translateY(0); box-shadow: 0 3px 10px rgba(0,0,0,.2); }
 

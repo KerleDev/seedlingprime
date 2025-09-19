@@ -2,18 +2,35 @@ import { useEffect, useRef, useState } from "react";
 import "./SectorDropdown.css";
 
 export default function SectorDropdown({
-  sectors,                 // { technology: [...], finance: [...], ... }
-  selectedSector,          // "technology"
-  onChange,                // (sector: string) => void
-  label = "Select sector", // for a11y
+  sectors = {},             // { technology: [...], finance: [...], ... }
+  selectedSector,           // "technology"
+  onChange,                 // (sector: string) => void
+  label = "Select sector",  // for a11y
 }) {
   const [open, setOpen] = useState(false);
   const btnRef = useRef(null);
   const menuRef = useRef(null);
-  const itemRefs = useRef({}); // <== map of refs for each menu item
+  const itemRefs = useRef({});
 
-  const sectorKeys = Object.keys(sectors ?? {});
-  const pretty = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+  const sectorKeys = Object.keys(sectors);
+
+
+  useEffect(() => {
+    if (!sectorKeys.length) return;
+    const isValid = selectedSector && sectorKeys.includes(selectedSector);
+    if (!isValid) {
+      const first = sectorKeys[0];
+      onChange?.(first);
+    }
+  }, [selectedSector, sectorKeys, onChange]);
+
+  const currentSector =
+    (selectedSector && sectorKeys.includes(selectedSector) && selectedSector) ||
+    sectorKeys[0] ||
+    "";
+
+  const pretty = (s) =>
+    s ? s.charAt(0).toUpperCase() + s.slice(1) : "Choose sector";
 
   // close on click outside
   useEffect(() => {
@@ -34,10 +51,11 @@ export default function SectorDropdown({
 
   // keyboard support
   const [focusIdx, setFocusIdx] = useState(
-    Math.max(0, sectorKeys.indexOf(selectedSector))
+    Math.max(0, sectorKeys.indexOf(currentSector))
   );
+
   useEffect(() => {
-    if (!open) return;
+    if (!open || !sectorKeys.length) return;
     const onKey = (e) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -60,7 +78,6 @@ export default function SectorDropdown({
     return () => document.removeEventListener("keydown", onKey);
   }, [open, focusIdx, sectorKeys, onChange]);
 
-  // ✅ Auto-scroll selected/focused item into view when menu opens
   useEffect(() => {
     if (open && sectorKeys[focusIdx]) {
       const el = itemRefs.current[sectorKeys[focusIdx]];
@@ -68,7 +85,7 @@ export default function SectorDropdown({
     }
   }, [open, focusIdx, sectorKeys]);
 
-  const count = sectors[selectedSector]?.length ?? 0;
+  const count = sectors[currentSector]?.length ?? 0;
 
   return (
     <section className="sector-selection">
@@ -82,18 +99,29 @@ export default function SectorDropdown({
           aria-expanded={open}
           aria-controls="sector-menu"
           onClick={() => setOpen((v) => !v)}
+          disabled={!sectorKeys.length}
         >
-          <span className="sector-label">{pretty(selectedSector)}</span>
-          <span className="stock-count">({count} leading stocks)</span>
+          <span className="sector-label">{pretty(currentSector)}</span>
+          {sectorKeys.length > 0 && (
+            <span className="stock-count">({count} stocks)</span>
+          )}
           <svg
             className={`dropdown-arrow ${open ? "open" : ""}`}
-            width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            aria-hidden="true"
           >
-            <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth="2" fill="none" />
+            <path
+              d="M6 8l4 4 4-4"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+            />
           </svg>
         </button>
 
-        {open && (
+        {open && sectorKeys.length > 0 && (
           <div
             ref={menuRef}
             id="sector-menu"
@@ -102,7 +130,7 @@ export default function SectorDropdown({
             aria-activedescendant={`option-${sectorKeys[focusIdx]}`}
           >
             {sectorKeys.map((sector, idx) => {
-              const active = selectedSector === sector;
+              const active = currentSector === sector;
               const c = sectors[sector]?.length ?? 0;
               return (
                 <button
@@ -110,8 +138,10 @@ export default function SectorDropdown({
                   id={`option-${sector}`}
                   role="option"
                   aria-selected={active}
-                  className={`dropdown-item ${active ? "active" : ""} ${idx === focusIdx ? "focused" : ""}`}
-                  ref={(el) => (itemRefs.current[sector] = el)}   // <== assign ref
+                  className={`dropdown-item ${active ? "active" : ""} ${
+                    idx === focusIdx ? "focused" : ""
+                  }`}
+                  ref={(el) => (itemRefs.current[sector] = el)}
                   onMouseEnter={() => setFocusIdx(idx)}
                   onClick={() => {
                     onChange?.(sector);

@@ -1055,260 +1055,260 @@ const newSectorData = {
         },
       },
     },
-    key_highlights: {
-      highest_dividend_yields: [
-        {
-          symbol: 'EPD',
-          name: 'Enterprise Products',
-          yield: 6.9,
-        },
-        {
-          symbol: 'VZ',
-          name: 'Verizon',
-          yield: 6.5,
-        },
-        {
-          symbol: 'F',
-          name: 'Ford Motor',
-          yield: 6.38,
-        },
-        {
-          symbol: 'PFE',
-          name: 'Pfizer',
-          yield: 7.2,
-        },
-        {
-          symbol: 'O',
-          name: 'Realty Income',
-          yield_range: '5.3-5.4',
-        },
-      ],
-      strongest_roe_performance: [
-        {
-          symbol: 'HD',
-          name: 'Home Depot',
-          roe: 193.95,
-        },
-        {
-          symbol: 'AAPL',
-          name: 'Apple',
-          roe: 138.01,
-        },
-        {
-          symbol: 'SHW',
-          name: 'Sherwin-Williams',
-          roe: 62.43,
-        },
-        {
-          symbol: 'CMG',
-          name: 'Chipotle',
-          roe: 42.59,
-        },
-        {
-          symbol: 'KO',
-          name: 'Coca-Cola',
-          roe: 42.37,
-        },
-      ],
-      premium_valuations_high_pe: [
-        {
-          symbol: 'TSLA',
-          name: 'Tesla',
-          pe_ratio: 196.52,
-        },
-        {
-          symbol: 'VTR',
-          name: 'Ventas',
-          pe_ratio: 158.44,
-        },
-        {
-          symbol: 'WELL',
-          name: 'Welltower',
-          pe_ratio: 92.74,
-        },
-        {
-          symbol: 'ABBV',
-          name: 'AbbVie',
-          pe_ratio: 86.035,
-        },
-        {
-          symbol: 'EQIX',
-          name: 'Equinix',
-          pe_ratio: 76.815,
-        },
-      ],
-      value_opportunities_low_pe: [
-        {
-          symbol: 'COP',
-          name: 'ConocoPhillips',
-          pe_ratio: 10.9,
-        },
-        {
-          symbol: 'HAL',
-          name: 'Halliburton',
-          pe_ratio: 10.45,
-        },
-        {
-          symbol: 'UNH',
-          name: 'UnitedHealth',
-          pe_ratio: 10.86,
-        },
-        {
-          symbol: 'EPD',
-          name: 'Enterprise Products',
-          pe_ratio: 11.91,
-        },
-        {
-          symbol: 'TFC',
-          name: 'Truist Financial',
-          pe_ratio: 11.6,
-        },
-      ],
-    },
-    data_coverage_summary: {
-      complete_coverage_85_percent: [
-        'energy_12_of_13',
-        'healthcare_10_of_13',
-        'financial_8_of_13',
-        'technology_5_of_13_top_performers',
-        'consumer_staples_9_of_13',
-        'real_estate_9_of_13',
-      ],
-      partial_coverage: [
-        'materials_5_complete_8_partial',
-        'industrials_6_complete_7_partial',
-        'utilities_5_complete_8_partial',
-        'consumer_discretionary_5_complete_8_partial',
-        'communication_services_7_of_10_active_2_no_longer_traded',
-      ],
-      technical_analysis_coverage:
-        '30_percent_due_to_data_source_limitations',
-      notes: {
-        data_sources: [
-          'Yahoo Finance',
-          'StockAnalysis',
-          'MarketWatch',
-          'Morningstar',
-        ],
-        report_date: 'September 2025',
-        limitations: [
-          'Technical analysis limited to 30% of stocks due to data source constraints',
-          'Some stocks show price ranges instead of exact prices',
-          'Complete technical coverage requires real-time financial terminals',
-        ],
-        special_cases: [
-          'PXD (Pioneer Natural) - Acquired by ExxonMobil',
-          'TWTR (Twitter) - Acquired by Elon Musk (2022), now X, later acquired by xAI (2025)',
-          'ATVI (Activision Blizzard) - Acquired by Microsoft (2023) for $68.7B',
-          'BA (Boeing) - Negative earnings distort some ratios',
-          'KHC (Kraft Heinz) - Negative earnings and ROE',
-          'CCI (Crown Castle) - Negative earnings impact metrics',
-        ],
-      },
-    },
-    missing_stocks_partial_data: {
-      materials_sector: [
-        'NEM',
-        'DOW',
-        'DD',
-        'PPG',
-        'NUE',
-        'CF',
-        'IFF',
-        'MLM',
-      ],
-      industrials_sector: [
-        'UPS',
-        'LMT',
-        'UNP',
-        'CSX',
-        'FDX',
-        'NOC',
-        'DE',
-      ],
-      utilities_sector: [
-        'XEL',
-        'D',
-        'SRE',
-        'PEG',
-        'ED',
-        'WEC',
-        'ES',
-        'AWK',
-      ],
-      consumer_discretionary_sector: [
-        'MCD',
-        'SBUX',
-        'TJX',
-        'LOW',
-        'BKNG',
-        'GM',
-        'EBAY',
-      ],
-      healthcare_sector: ['BMY', 'GILD', 'CVS'],
-      financial_sector: ['JPM', 'BAC', 'WFC', 'AXP', 'BLK', 'SCHW'],
-      technology_sector: [
-        'INTC',
-        'AVGO',
-        'QCOM',
-        'ORCL',
-        'CRM',
-        'ADBE',
-        'IBM',
-      ],
-      real_estate_sector: ['PLD', 'DLR', 'EXR'],
-      consumer_staples_sector: ['KMB', 'GIS', 'CPB', 'MO'],
-    },
-    methodology: {
-      data_collection:
-        'Multi-source aggregation from financial data providers',
-      validation:
-        'Cross-reference between multiple financial platforms',
-      coverage_target: '143 stocks across 11 major market sectors',
-      fundamental_metrics: [
-        'Price-to-Earnings (P/E) Ratio',
-        'Price-to-Book (P/B) Ratio',
-        'Price-to-Sales (P/S) Ratio',
-        'Earnings Per Share (EPS)',
-        'Return on Equity (ROE)',
-        'Return on Assets (ROA)',
-        'Debt-to-Equity Ratio',
-        'Current Ratio',
-        'Price/Earnings to Growth (PEG) Ratio',
-        'Dividend Yield',
-      ],
-      technical_indicators: [
-        '50-day Moving Average',
-        '200-day Moving Average',
-        'Relative Strength Index (RSI)',
-        'MACD (Moving Average Convergence Divergence)',
-        '52-week High/Low Range',
-      ],
-    },
-    investment_insights: {
-      sector_strengths: {
-        energy:
-          'Strong cash flows and dividend yields, value opportunities',
-        healthcare:
-          'Defensive characteristics with solid dividend growth',
-        technology: 'Growth leaders but premium valuations',
-        financials:
-          'Benefiting from higher interest rate environment',
-        real_estate: 'REITs offering attractive dividend yields',
-        consumer_staples:
-          'Defensive positioning with consistent dividends',
-      },
-      risk_factors: {
-        high_pe_stocks:
-          'Premium valuations may face pressure in economic slowdown',
-        negative_earnings:
-          'BA, KHC, CCI showing fundamental challenges',
-        debt_concerns:
-          'Monitor high debt-to-equity ratios in certain sectors',
-        dividend_sustainability:
-          'Verify coverage ratios for high-yield stocks',
-      },
-    },
+    // key_highlights: {
+    //   highest_dividend_yields: [
+    //     {
+    //       symbol: 'EPD',
+    //       name: 'Enterprise Products',
+    //       yield: 6.9,
+    //     },
+    //     {
+    //       symbol: 'VZ',
+    //       name: 'Verizon',
+    //       yield: 6.5,
+    //     },
+    //     {
+    //       symbol: 'F',
+    //       name: 'Ford Motor',
+    //       yield: 6.38,
+    //     },
+    //     {
+    //       symbol: 'PFE',
+    //       name: 'Pfizer',
+    //       yield: 7.2,
+    //     },
+    //     {
+    //       symbol: 'O',
+    //       name: 'Realty Income',
+    //       yield_range: '5.3-5.4',
+    //     },
+    //   ],
+    //   strongest_roe_performance: [
+    //     {
+    //       symbol: 'HD',
+    //       name: 'Home Depot',
+    //       roe: 193.95,
+    //     },
+    //     {
+    //       symbol: 'AAPL',
+    //       name: 'Apple',
+    //       roe: 138.01,
+    //     },
+    //     {
+    //       symbol: 'SHW',
+    //       name: 'Sherwin-Williams',
+    //       roe: 62.43,
+    //     },
+    //     {
+    //       symbol: 'CMG',
+    //       name: 'Chipotle',
+    //       roe: 42.59,
+    //     },
+    //     {
+    //       symbol: 'KO',
+    //       name: 'Coca-Cola',
+    //       roe: 42.37,
+    //     },
+    //   ],
+    //   premium_valuations_high_pe: [
+    //     {
+    //       symbol: 'TSLA',
+    //       name: 'Tesla',
+    //       pe_ratio: 196.52,
+    //     },
+    //     {
+    //       symbol: 'VTR',
+    //       name: 'Ventas',
+    //       pe_ratio: 158.44,
+    //     },
+    //     {
+    //       symbol: 'WELL',
+    //       name: 'Welltower',
+    //       pe_ratio: 92.74,
+    //     },
+    //     {
+    //       symbol: 'ABBV',
+    //       name: 'AbbVie',
+    //       pe_ratio: 86.035,
+    //     },
+    //     {
+    //       symbol: 'EQIX',
+    //       name: 'Equinix',
+    //       pe_ratio: 76.815,
+    //     },
+    //   ],
+    //   value_opportunities_low_pe: [
+    //     {
+    //       symbol: 'COP',
+    //       name: 'ConocoPhillips',
+    //       pe_ratio: 10.9,
+    //     },
+    //     {
+    //       symbol: 'HAL',
+    //       name: 'Halliburton',
+    //       pe_ratio: 10.45,
+    //     },
+    //     {
+    //       symbol: 'UNH',
+    //       name: 'UnitedHealth',
+    //       pe_ratio: 10.86,
+    //     },
+    //     {
+    //       symbol: 'EPD',
+    //       name: 'Enterprise Products',
+    //       pe_ratio: 11.91,
+    //     },
+    //     {
+    //       symbol: 'TFC',
+    //       name: 'Truist Financial',
+    //       pe_ratio: 11.6,
+    //     },
+    //   ],
+    // },
+    // data_coverage_summary: {
+    //   complete_coverage_85_percent: [
+    //     'energy_12_of_13',
+    //     'healthcare_10_of_13',
+    //     'financial_8_of_13',
+    //     'technology_5_of_13_top_performers',
+    //     'consumer_staples_9_of_13',
+    //     'real_estate_9_of_13',
+    //   ],
+    //   partial_coverage: [
+    //     'materials_5_complete_8_partial',
+    //     'industrials_6_complete_7_partial',
+    //     'utilities_5_complete_8_partial',
+    //     'consumer_discretionary_5_complete_8_partial',
+    //     'communication_services_7_of_10_active_2_no_longer_traded',
+    //   ],
+    //   technical_analysis_coverage:
+    //     '30_percent_due_to_data_source_limitations',
+    //   notes: {
+    //     data_sources: [
+    //       'Yahoo Finance',
+    //       'StockAnalysis',
+    //       'MarketWatch',
+    //       'Morningstar',
+    //     ],
+    //     report_date: 'September 2025',
+    //     limitations: [
+    //       'Technical analysis limited to 30% of stocks due to data source constraints',
+    //       'Some stocks show price ranges instead of exact prices',
+    //       'Complete technical coverage requires real-time financial terminals',
+    //     ],
+    //     special_cases: [
+    //       'PXD (Pioneer Natural) - Acquired by ExxonMobil',
+    //       'TWTR (Twitter) - Acquired by Elon Musk (2022), now X, later acquired by xAI (2025)',
+    //       'ATVI (Activision Blizzard) - Acquired by Microsoft (2023) for $68.7B',
+    //       'BA (Boeing) - Negative earnings distort some ratios',
+    //       'KHC (Kraft Heinz) - Negative earnings and ROE',
+    //       'CCI (Crown Castle) - Negative earnings impact metrics',
+    //     ],
+    //   },
+    // },
+    // missing_stocks_partial_data: {
+    //   materials_sector: [
+    //     'NEM',
+    //     'DOW',
+    //     'DD',
+    //     'PPG',
+    //     'NUE',
+    //     'CF',
+    //     'IFF',
+    //     'MLM',
+    //   ],
+    //   industrials_sector: [
+    //     'UPS',
+    //     'LMT',
+    //     'UNP',
+    //     'CSX',
+    //     'FDX',
+    //     'NOC',
+    //     'DE',
+    //   ],
+    //   utilities_sector: [
+    //     'XEL',
+    //     'D',
+    //     'SRE',
+    //     'PEG',
+    //     'ED',
+    //     'WEC',
+    //     'ES',
+    //     'AWK',
+    //   ],
+    //   consumer_discretionary_sector: [
+    //     'MCD',
+    //     'SBUX',
+    //     'TJX',
+    //     'LOW',
+    //     'BKNG',
+    //     'GM',
+    //     'EBAY',
+    //   ],
+    //   healthcare_sector: ['BMY', 'GILD', 'CVS'],
+    //   financial_sector: ['JPM', 'BAC', 'WFC', 'AXP', 'BLK', 'SCHW'],
+    //   technology_sector: [
+    //     'INTC',
+    //     'AVGO',
+    //     'QCOM',
+    //     'ORCL',
+    //     'CRM',
+    //     'ADBE',
+    //     'IBM',
+    //   ],
+    //   real_estate_sector: ['PLD', 'DLR', 'EXR'],
+    //   consumer_staples_sector: ['KMB', 'GIS', 'CPB', 'MO'],
+    // },
+    // methodology: {
+    //   data_collection:
+    //     'Multi-source aggregation from financial data providers',
+    //   validation:
+    //     'Cross-reference between multiple financial platforms',
+    //   coverage_target: '143 stocks across 11 major market sectors',
+    //   fundamental_metrics: [
+    //     'Price-to-Earnings (P/E) Ratio',
+    //     'Price-to-Book (P/B) Ratio',
+    //     'Price-to-Sales (P/S) Ratio',
+    //     'Earnings Per Share (EPS)',
+    //     'Return on Equity (ROE)',
+    //     'Return on Assets (ROA)',
+    //     'Debt-to-Equity Ratio',
+    //     'Current Ratio',
+    //     'Price/Earnings to Growth (PEG) Ratio',
+    //     'Dividend Yield',
+    //   ],
+    //   technical_indicators: [
+    //     '50-day Moving Average',
+    //     '200-day Moving Average',
+    //     'Relative Strength Index (RSI)',
+    //     'MACD (Moving Average Convergence Divergence)',
+    //     '52-week High/Low Range',
+    //   ],
+    // },
+    // investment_insights: {
+    //   sector_strengths: {
+    //     energy:
+    //       'Strong cash flows and dividend yields, value opportunities',
+    //     healthcare:
+    //       'Defensive characteristics with solid dividend growth',
+    //     technology: 'Growth leaders but premium valuations',
+    //     financials:
+    //       'Benefiting from higher interest rate environment',
+    //     real_estate: 'REITs offering attractive dividend yields',
+    //     consumer_staples:
+    //       'Defensive positioning with consistent dividends',
+    //   },
+    //   risk_factors: {
+    //     high_pe_stocks:
+    //       'Premium valuations may face pressure in economic slowdown',
+    //     negative_earnings:
+    //       'BA, KHC, CCI showing fundamental challenges',
+    //     debt_concerns:
+    //       'Monitor high debt-to-equity ratios in certain sectors',
+    //     dividend_sustainability:
+    //       'Verify coverage ratios for high-yield stocks',
+    //   },
+    // },
   },
 };
 

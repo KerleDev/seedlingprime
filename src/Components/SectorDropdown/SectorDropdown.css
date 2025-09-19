@@ -2,16 +2,22 @@
   width: 100%; 
 }
 
+/* Centered container with a comfortable max width */
 .dropdown-container { 
   position: relative; 
-  display: inline-block; 
+  display: block; 
+  margin: 0 auto; 
+  width: min(100% - clamp(32px, 8vw, 160px), 420px);
 }
 
+
+/* Trigger fills the container width */
 .dropdown-trigger {
   display: inline-flex; 
   align-items: center; 
+  justify-content: flex-start;     /* keep children on one line */
   gap: 12px;                       
-  padding: 12px 16px;             
+  padding: 1em 2em;               
   border: 1px solid #E5E7EB; 
   border-radius: 12px;            
   background: #fff; 
@@ -20,14 +26,21 @@
   font-size: clamp(15px, 1.05vw, 18px); 
   min-height: 44px;               
   color: #181743; 
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10); 
-  justify-content: flex-start;     /* keep children on one line */
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  width: 100%;
 }
 .dropdown-trigger:hover { 
   border-color: #CBD5E1; 
 }
+
+/* Arrow: bigger and pinned to the right */
 .dropdown-arrow { 
   transition: transform 150ms ease; 
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  margin-inline-start: 10px;
+  color: var(--arrow);
 }
 .dropdown-arrow.open { 
   transform: rotate(180deg); 
@@ -35,36 +48,37 @@
 
 /* === Text hierarchy inside trigger === */
 .sector-label {
-  font-size: clamp(24px, 1.2vw, 20px);   /* sector name: 16–20px */
+  font-size: clamp(16px, 1.2vw, 20px);   /* sector name: 16–20px */
   font-weight: var(--fw-semibold);
   color: var(--app-text--dark);
   letter-spacing: 0.1px;
 }
 
 .stock-count {
-  font-size: clamp(18px, 1vw, 18px);     /* description/count: 14–18px */
+  font-size: clamp(14px, 1vw, 18px);     /* description/count: 14–18px */
   font-weight: var(--fw-regular);
   color: var(--input-text);
   margin-inline-start: auto;             /* pushes arrow to far right */
+  opacity: 0.9;
 }
 
-/* keep arrow tight on the right */
-.dropdown-arrow {
-  flex-shrink: 0;
-  margin-inline-start: 10px;
-  color: var(--arrow);
-}
-
+/* Open menu aligns exactly under the trigger and matches its width */
 .dropdown-menu {
   position: absolute; 
   z-index: 30; 
-  margin-top: 8px; 
-  min-width: 280px;                
+  top: calc(100% + 8px);                 /* same 8px gap below trigger */
+  inset-inline: 0;                        /* left:0; right:0; align to container edges */
+  width: 100%;                            /* match container/trigger width */
+  box-sizing: border-box;                 /* include padding in width */
   background: #fff; 
   border: 1px solid #E5E7EB; 
   border-radius: 12px; 
-  padding: 8px;                   
+  padding: 20px;                   
   box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  max-height: min(50vh, 200px); 
+  overflow-y: auto;
+  overscroll-behavior: contain;   
+  scroll-behavior: smooth;
 }
 
 /* === Menu items === */
@@ -102,4 +116,3 @@
   font-weight: var(--fw-light);
   color: var(--input-text);
 }
-

@@ -144,7 +144,7 @@ export default function SectorChart({
             <Legend
               verticalAlign="bottom"
               height={36}
-              iconType="rect"
+              iconType="none"
               wrapperStyle={{
                 paddingTop: "20px",
                 fontSize: "14px",

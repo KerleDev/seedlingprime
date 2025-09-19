@@ -3,10 +3,17 @@ import React, { useState } from 'react';
 import TopBar from '../Topbar/Topbar';
 import SectionCard from '../Sectioncard/Sectioncard';
 import SectorDropdownData from '../SectorDropdown/SectorDropdownData';
+import MeanReversionApp from '../../services/MeanReversionApp'; // Import the new class
 import './Dashboard.css';
 
 function Dashboard() {
   const [selectedSector, setSelectedSector] = useState('technology'); // default
+  const meanReversionApp = new MeanReversionApp(); // Instantiate the class
+
+  const handleSectorChange = async (sector) => {
+    setSelectedSector(sector);
+    await meanReversionApp.analyzeSector(sector);
+  };
 
   return (
     <div className="page">
@@ -24,7 +31,7 @@ function Dashboard() {
       <div className="page-controls">
         <SectorDropdownData
           selectedSector={selectedSector}
-          onSectorChange={setSelectedSector}
+          onSectorChange={handleSectorChange}
           label="Choose a sector"
         />
       </div>

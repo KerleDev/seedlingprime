@@ -1,11 +1,10 @@
-.page {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Root container for this page (scoped; avoids clashing with global .page) */
+.dashboard {
+  /* No layout rules here — Layout handles full-height + sticky footer */
 }
 
 /* Hero */
-.page-hero {
+.dashboard .page-hero {
   max-width: 1600px;
   margin: clamp(12px, 3.5vw, 28px) auto 0;
   padding: 0 16px;
@@ -14,7 +13,7 @@
 }
 
 /* Fluid sizing for title/subtitle */
-.page-title {
+.dashboard .page-title {
   margin: 0 0 8px 0;
   color: var(--app-text--light);
   font-weight: var(--fw-semibold);
@@ -22,7 +21,7 @@
   line-height: 1.2;
 }
 
-.page-subtitle {
+.dashboard .page-subtitle {
   margin: 0;
   color: var(--app-text--light);
   font-weight: var(--fw-regular);
@@ -30,7 +29,13 @@
   line-height: 1.5;
 }
 
-/* Grid */
+/* Top dropdown row */
+.dashboard .page-controls {
+  text-align: center;
+  margin: clamp(12px, 2.5vw, 20px) 0; /* vertical spacing only */
+}
+
+/* Main grid */
 .dashboard-grid {
   width: min(100% - clamp(32px, 8vw, 160px), 1600px);
   margin-inline: auto;
@@ -45,11 +50,24 @@
 }
 
 .dashboard-grid > * {
-  min-height: 0; /* important in complex layouts */
+  min-height: 0; /* helps in complex card layouts */
 }
 
-/* Top dropdown row */
-.page-controls {
-  text-align: center;
-  margin: clamp(12px, 2.5vw, 20px) 0; /* vertical spacing only */
+/* Simple helpers inside the SectionCard content */
+.card-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card-col.full {
+  flex: 1 1 100%;
+}
+
+/* Footer under the chart (sort control row) */
+.chart-footer {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-start;
+
 }

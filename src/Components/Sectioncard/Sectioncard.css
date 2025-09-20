@@ -22,7 +22,7 @@
 
 .section-card-header > h2 {
   margin: 0;
-  font-size: clamp(16px, 1.4vw, 22px);
+  font-size: clamp(18px, 1.4vw, 24px);
   font-weight: var(--fw-semibold);
   color: var(--app-text--dark);
   text-align: center;

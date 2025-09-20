@@ -1,82 +1,138 @@
-/* Chart layout: flex column so footer always sits below the chart */
+/* ===== SectorChart.css — V6: Hero + Trio (compact badges, taller hero) ===== */
+
+/* Layout: column so the KPI band sits above the chart */
 .chart-section {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 12px;
+  padding-top: 24px;
 }
 
-.chart-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
-
+/* Centered header above the white band */
+.chart-header { width: 100%; text-align: center; }
 .chart-title {
   margin: 0;
   line-height: 1.2;
-  font-size: clamp(16px, 1.4vw, 22px);
+  font-size: clamp(18px, 1.4vw, 24px);
   font-weight: 600;
   color: var(--app-text);
 }
 
-/* KPI badges */
-.chart-stats {
-  display: flex;
-  gap: 12px;
-  justify-content: flex-end;
-}
+/* Extra breathing room between header → KPI band */
+.chart-header + .chart-topband { margin-top: clamp(16px, 3vw, 36px); }
 
-.chart-stat {
+/* White band container */
+.chart-topband {
   background: #fff;
-  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); */
-  /* border: 1px solid var(--stroke); */
   border-radius: 12px;
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  width: 100%;
+  padding: 16px 24px;
 }
 
-.chart-stat-label {
-  font-size: var(--S4);
+/* === HERO + TRIO GRID ===
+   Smaller cards overall, but hero is taller and wider */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr; /* hero wider */
+  gap: 14px;                                /* slightly tighter gap */
+  align-items: center;                        /* don't equalize heights */
+}
+
+/* HERO card (Avg Price) — taller for emphasis */
+.big {
+  background: linear-gradient(180deg, #ffffff, #f7f8ff);
+  border: 1px solid rgba(24,23,67,0.08);
+  border-radius: 16px;
+  padding: 18px 20px;                        /* compact but comfy */
+  min-height: 128px;                         /* ⬅ taller hero */
+  box-shadow:
+    0 10px 20px rgba(24,23,67,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+}
+.big .stat-value {
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 800;
+  color: var(--app-text--dark);
+}
+
+/* Trio KPI cards (P/E, P/B, Total) — smaller overall */
+.small {
+  background: #fff;
+  border: 1px solid rgba(24,23,67,0.08);
+  border-radius: 16px;
+  padding: 10px 12px;                        /* ⬅ smaller padding */
+  min-height: 72px;                          /* ⬅ shorter than hero */
+  box-shadow: 0 2px 8px rgba(24,23,67,0.06);
+
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 6px;
+}
+.small .stat-value {
+  font-weight: 700;
+  font-size: clamp(14px, 1.4vw, 18px);       /* ⬅ smaller number */
+  color: var(--app-text--dark);
+}
+
+/* Shared text styles */
+.stat-label {
+  font-size: 0.8rem;                         /* ≈ 12–13px for compact look */
   color: var(--input-text);
-  margin-bottom: 4px;
+  margin: 0;
 }
-.chart-stat-value {
-  font-size: var(--S2);
-  font-weight: 600;
-  color: var(--app-text);
+
+/* Delta chip (▲/▼) — compact pill */
+.stat-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;                          /* ⬅ tighter */
+  border-radius: 999px;
+  font-size: 0.8rem;                          /* ⬅ smaller text */
+  font-weight: 700;
 }
+.stat-delta.up   { color: #16a34a; background: rgba(22,163,74,0.12); }
+.stat-delta.down { color: #dc2626; background: rgba(220,38,38,0.12); }
+.stat-delta.up::before   { content: "▲"; margin-right: 2px; }
+.stat-delta.down::before { content: "▼"; margin-right: 2px; }
 
 /* Chart area — CSS controls height */
 .chart-wrapper {
-  position: relative; /* own stacking context */
+  position: relative;
   z-index: 0;
   width: 100%;
-  height: clamp(300px, 40vh, 420px); /* responsive height */
-  margin-bottom: 8px; /* breathing room before footer */
+  height: clamp(300px, 40vh, 420px);
+  margin-bottom: 8px;
 }
+.chart-wrapper *:focus { outline: none; }
 
-.chart-wrapper *:focus {
-  outline: none;
-}
-
-/* Footer with sort dropdown (inline, not floating) */
+/* Footer with sort dropdown */
 .chart-footer {
   position: relative;
-  z-index: 2; /* always above the SVG */
-  margin-top: 10px;
+  z-index: 2;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: flex-start;
+  margin: 1em 0 2em 0;
 }
 
-/* Optional: Recharts tooltip polish */
+/* Tooltip polish */
 .recharts-default-tooltip {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 980px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .big { grid-column: 1 / -1; }  /* hero spans both columns */
+}
+@media (max-width: 560px) {
+  .kpi-grid { grid-template-columns: 1fr; } /* stack all */
 }

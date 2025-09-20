@@ -26,11 +26,16 @@ const CustomYAxisTick = ({ x, y, payload, sectorMean }) => {
         fontSize={13}
         fontWeight={isHighlighted ? 600 : 400}
       >
-        ${payload?.value}
+        ${payload?.value?.toLocaleString?.("en-US") ?? payload?.value}
       </text>
     </g>
   );
 };
+
+// Small formatters for nice values
+const fmtUSD = (v) =>
+  Number.isFinite(v) ? `$${Math.round(v).toLocaleString("en-US")}` : "—";
+const fmt1 = (v) => (Number.isFinite(v) ? Number(v).toFixed(1) : "—");
 
 /**
  * Props:
@@ -40,6 +45,7 @@ const CustomYAxisTick = ({ x, y, payload, sectorMean }) => {
  * - sectorPB: number
  * - selectedSector: string
  * - displayName?: string (optional nicer name from transform)
+ * - avgDeltaPct30d?: number | null  (optional delta for hero chip, e.g., 1.8)
  */
 export default function SectorChart({
   stockData = [],
@@ -48,6 +54,7 @@ export default function SectorChart({
   sectorPB = 0,
   selectedSector = "",
   displayName,
+  avgDeltaPct30d = null, // optional; shows a green/red chip if provided
 }) {
   const sectorDisplayName =
     displayName ||
@@ -55,7 +62,7 @@ export default function SectorChart({
       ? selectedSector.charAt(0).toUpperCase() + selectedSector.slice(1)
       : "Sector");
 
-  // build safe ticks including sector mean
+  // Build safe ticks including sector mean
   const ticks = (() => {
     if (!stockData.length) return [];
     const prices = stockData.map((s) => Number(s.currentPrice ?? 0));
@@ -70,36 +77,61 @@ export default function SectorChart({
     return [...new Set(all)];
   })();
 
+  // Optional delta chip state
+  const showDelta =
+    Number.isFinite(avgDeltaPct30d) && avgDeltaPct30d !== 0;
+  const deltaClass =
+    avgDeltaPct30d > 0
+      ? "stat-delta up"
+      : avgDeltaPct30d < 0
+      ? "stat-delta down"
+      : "stat-delta";
+
   return (
     <section className="chart-section">
+      {/* Centered header ABOVE the band */}
       <div className="chart-header">
         <h2 className="chart-title">{sectorDisplayName} Sector Overview</h2>
-        <div className="chart-stats">
-          <div className="chart-stat">
-            <span className="chart-stat-label">Sector Mean</span>
-            <span className="chart-stat-value">${sectorMean}</span>
+      </div>
+
+      {/* === V6: HERO + TRIO KPI BAND === */}
+      <div className="chart-topband">
+        <div className="kpi-grid">
+          {/* HERO: Avg Price */}
+          <div className="big" role="group" aria-label="Average price">
+            <div className="stat-label">Avg Price</div>
+            <div className="stat-value">{fmtUSD(sectorMean)}</div>
+            {showDelta && (
+              <div className={deltaClass}>
+                {Math.abs(avgDeltaPct30d).toFixed(1)}% vs 30d
+              </div>
+            )}
           </div>
-          <div className="chart-stat">
-            <span className="chart-stat-label">Sector P/E</span>
-            <span className="chart-stat-value">{sectorPE}</span>
+
+          {/* TRIO */}
+          <div className="small" role="group" aria-label="Sector P/E">
+            <div className="stat-label">Sector P/E</div>
+            <div className="stat-value">{fmt1(sectorPE)}</div>
           </div>
-          <div className="chart-stat">
-            <span className="chart-stat-label">Sector P/B</span>
-            <span className="chart-stat-value">{sectorPB}</span>
+
+          <div className="small" role="group" aria-label="Sector P/B">
+            <div className="stat-label">Sector P/B</div>
+            <div className="stat-value">{fmt1(sectorPB)}</div>
           </div>
-          <div className="chart-stat">
-            <span className="chart-stat-label">Total Stocks</span>
-            <span className="chart-stat-value">{stockData.length}</span>
+
+          <div className="small" role="group" aria-label="Total stocks">
+            <div className="stat-label">Total Stocks</div>
+            <div className="stat-value">{stockData?.length ?? 0}</div>
           </div>
         </div>
       </div>
+      {/* === /V6 band === */}
 
       <div className="chart-wrapper">
-        {/* Let CSS control the height: use height="100%" here */}
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={stockData}
-            margin={{ top: 40, right: 40, left: 40, bottom: 20 }} /* more room for legend/x-axis */
+            margin={{ top: 40, right: 40, left: 40, bottom: 20 }}
           >
             <CartesianGrid
               strokeDasharray="1 1"

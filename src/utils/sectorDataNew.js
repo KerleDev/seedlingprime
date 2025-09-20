@@ -1200,3 +1200,8 @@ const sectorDataNew = {
 };
 
 export default sectorDataNew;
+
+// CommonJS compatibility export (harmless in ESM environments)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = sectorDataNew;
+}

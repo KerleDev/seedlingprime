@@ -1,26 +1,25 @@
-
 import { Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from './Components/Dashboard/Dashboard'
+import Layout from "./Layout";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import Landing from "./Components/Landing/Landing";
 import './App.css'
 
 function App() {
- 
-
   return (
-    <>
     <Routes>
-        {/* default → dashboard */}
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+      {/* All pages share the same Layout (TopBar + Footer) */}
+      <Route path="/" element={<Layout />}>
+        {/* Default page → Landing */}
+        <Route index element={<Landing />} />
 
-      {/* actual dashboard page */}
-      <Route path="/dashboard" element={<Dashboard />} />
+        {/* Dashboard page */}
+        <Route path="dashboard" element={<Dashboard />} />
+      </Route>
 
-      {/* anything else → dashboard */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* Fallback: any unknown route redirects to "/" (Landing) */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  
-    </>
-  )
+  );
 }
 
-export default App
+export default App;

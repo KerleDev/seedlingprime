@@ -55,7 +55,7 @@
 
   /* Layout tokens */
   --app-bg: var(--bg-gradient);       /* page background */
-  --topbar-bg: var(--BTN-background); /* top bar + card background */
+  --topbar-bg: var(--BTN-background); 
   --card-gap: 1.25rem;
   --card-padding: 1.25rem;
 }

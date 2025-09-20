@@ -1,0 +1,33 @@
+.site-footer {
+  background: #181743;                   
+  padding-block: clamp(16px, 2.5vw, 24px);
+}
+
+.footer-inner {
+
+  width: min(100% - clamp(32px, 8vw, 160px), 1600px);
+  margin-inline: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+.footer-disclaimer {
+  color: var(--bar-background);       
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 120ch;
+  margin: 0 auto;
+  padding-inline: 12px;
+}
+
+
+.footer-copy {
+  color: #7F8A8F;
+  font-size: 1rem;
+  margin-top: clamp(12px, 2vw, 20px);
+  text-align: center;
+}

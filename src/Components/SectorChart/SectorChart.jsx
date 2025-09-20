@@ -160,7 +160,7 @@ export default function SectorChart({
             <Bar
               dataKey="currentPrice"
               name="Stock Price ($)"
-              radius={[0, 0, 0, 0]}
+              radius={[10, 10, 2, 2]}
               stroke="none"
             >
               {stockData.map((entry, index) => {

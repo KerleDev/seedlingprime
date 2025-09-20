@@ -1,0 +1,26 @@
+.landing {
+  text-align: center;
+  padding: clamp(40px, 8vw, 100px) 20px;
+}
+
+.landing h1 {
+  font-size: 2rem;
+  color: var(--BTN-background);
+  margin-bottom: 16px;
+}
+
+.landing p {
+  font-size: 1.25rem;
+  color: var(--app-text);
+  max-width: 60ch;
+  margin: 0 auto 32px;
+}
+
+/* .landing-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+} */
+
+
+

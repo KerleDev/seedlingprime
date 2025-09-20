@@ -4,6 +4,7 @@ import TopBar from "../Topbar/Topbar";
 import SectionCard from "../Sectioncard/Sectioncard";
 import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
 import SortDropdown from "../SectorDropdown/SortDropdown";
+import Footer from "../Footer/Footer";
 import "./Dashboard.css";
 
 // Data / utils
@@ -69,7 +70,6 @@ function Dashboard() {
   return (
     <div className="page">
       <header className="page-header">
-        <TopBar />
         <div className="page-hero">
           <h1 className="page-title">Your Investment Dashboard</h1>
           <h2 className="page-subtitle">

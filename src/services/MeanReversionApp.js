@@ -1,5 +1,5 @@
 // src/services/MeanReversionApp.js
-import sectorData from '../constants/sectorData';
+import sectorData from '../constants/sectorDataNew';
 
 class MeanReversionApp {
   constructor() {
@@ -140,20 +140,14 @@ class MeanReversionApp {
           peRatio: !isNaN(peRatio) ? peRatio : null,
           pbRatio: parseFloat(stock.pb_ratio) || null,
           psRatio: parseFloat(stock.ps_ratio) || null,
-          eps: parseFloat(stock.eps) || null,
           roe: !isNaN(roe) ? roe : null,
-          roa: parseFloat(stock.roa) || null,
-          debtToEquity: parseFloat(stock.debt_to_equity) || null,
-          currentRatio: parseFloat(stock.current_ratio) || null,
-          peg: parseFloat(stock.peg) || null,
-          dividendYield: parseFloat(stock.dividend_yield) || null,
-          ma50: parseFloat(stock.ma_50) || null,
-          ma200: parseFloat(stock.ma_200) || null,
-          rsi: parseFloat(stock.rsi) || null,
-          macd: parseFloat(stock.macd) || null,
-          week52Low: parseFloat(stock.week_52_low) || null,
-          week52High: parseFloat(stock.week_52_high) || null,
-          // Add other relevant metrics here
+          netIncome: parseFloat(stock.net_income) || null, // Added property
+          freeCashFlowMargin:
+            parseFloat(stock.free_cash_flow_margin) || null, // Added property
+          deqRatio: parseFloat(stock.deq_ratio) || null, // Added property
+          revGrowth: parseFloat(stock.rev_growth) || null, // Added property
+          netIncomeGrowth:
+            parseFloat(stock.net_income_growth) || null, // Added property
         };
         // Identify undervalued opportunities
         // Only include stocks that have a valid currentPrice and peRatio after parsing

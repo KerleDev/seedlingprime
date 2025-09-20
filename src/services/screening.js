@@ -165,26 +165,31 @@ class StockScreener {
 
   /**
    * Check financial health criteria
+   * Based on UNDERVALUED.md requirements:
+   * - ROE minimum: 10% (default, no sector variations per documentation)
+   * - Debt-to-equity maximum: 1.5 (default, no sector variations per documentation)
+   * - Free cash flow margin minimum: 5%
+   * - Optional positive net income requirement
    */
   passesFinancialHealthTests(stock, criteria) {
-    // Debt-to-equity check
+    // Debt-to-equity check - Maximum 1.5 (no sector variations)
     if (stock.debtToEquity > (criteria.maxDebtToEquity || 1.5)) {
       return false;
     }
 
-    // Return on Equity check
+    // Return on Equity check - Minimum 10% (no sector variations)
     if (stock.roe < (criteria.minROE || 10)) {
       return false;
     }
 
-    // Free cash flow margin check
+    // Free cash flow margin check - Minimum 5%
     if (
       stock.freeCashFlowMargin < (criteria.minFreeCashFlowMargin || 5)
     ) {
       return false;
     }
 
-    // Positive net income
+    // Positive net income (optional filter)
     if (criteria.requirePositiveNetIncome && stock.netIncome <= 0) {
       return false;
     }
@@ -194,14 +199,17 @@ class StockScreener {
 
   /**
    * Check growth criteria
+   * Based on UNDERVALUED.md requirements:
+   * - Revenue growth minimum: 0% (default, no sector variations per documentation)
+   * - Net income growth: optional filter only when specified
    */
   passesGrowthTests(stock, criteria) {
-    // Revenue growth check
+    // Revenue growth check - Minimum 0% (no sector variations)
     if (stock.revenueGrowth < (criteria.minRevenueGrowth || 0)) {
       return false;
     }
 
-    // Net income growth check
+    // Net income growth check (optional - only when specified in criteria)
     if (
       criteria.minNetIncomeGrowth &&
       stock.netIncomeGrowth < criteria.minNetIncomeGrowth
@@ -468,43 +476,49 @@ class StockScreener {
 
   /**
    * Get sector-specific screening recommendations
+   * NOTE: Sector-specific variations commented out per UNDERVALUED.md documentation
+   * All sectors now use uniform criteria as documented
    */
-  getSectorSpecificCriteria(sector) {
-    const sectorDefaults = {
-      Technology: {
-        minROE: 15,
-        maxPEMultiplier: 0.8, // More aggressive for tech
-        minRevenueGrowth: 10,
-        focusMetrics: ['peRatio', 'revenueGrowth', 'roe'],
-      },
-      Healthcare: {
-        minROE: 12,
-        maxPEMultiplier: 0.85,
-        minRevenueGrowth: 5,
-        focusMetrics: ['peRatio', 'roe', 'debtToEquity'],
-      },
-      Finance: {
-        minROE: 10,
-        maxDebtToEquity: 2.0, // Different for banks
-        maxPBMultiplier: 0.9,
-        focusMetrics: ['priceToBook', 'roe', 'netIncomeGrowth'],
-      },
-      Utilities: {
-        minROE: 8,
-        maxPEMultiplier: 0.9,
-        minRevenueGrowth: 0, // Lower growth expectations
-        focusMetrics: ['dividendYield', 'debtToEquity', 'roe'],
-      },
-    };
+  // getSectorSpecificCriteria(sector) {
+  // Sector-specific customizations commented out per documentation
+  // const sectorDefaults = {
+  //   Technology: {
+  //     minROE: 15,
+  //     maxPEMultiplier: 0.8, // More aggressive for tech
+  //     minRevenueGrowth: 10,
+  //     focusMetrics: ['peRatio', 'revenueGrowth', 'roe'],
+  //   },
+  //   Healthcare: {
+  //     minROE: 12,
+  //     maxPEMultiplier: 0.85,
+  //     minRevenueGrowth: 5,
+  //     focusMetrics: ['peRatio', 'roe', 'debtToEquity'],
+  //   },
+  //   Finance: {
+  //     minROE: 10,
+  //     maxDebtToEquity: 2.0, // Different for banks
+  //     maxPBMultiplier: 0.9,
+  //     focusMetrics: ['priceToBook', 'roe', 'netIncomeGrowth'],
+  //   },
+  //   Utilities: {
+  //     minROE: 8,
+  //     maxPEMultiplier: 0.9,
+  //     minRevenueGrowth: 0, // Lower growth expectations
+  //     focusMetrics: ['dividendYield', 'debtToEquity', 'roe'],
+  //   },
+  // };
 
-    return (
-      sectorDefaults[sector] || {
-        minROE: 10,
-        maxPEMultiplier: 0.85,
-        minRevenueGrowth: 3,
-      }
-    );
-  }
+  // Return uniform criteria for all sectors per UNDERVALUED.md
+  // return {
+  //   minROE: 10,
+  //   maxPEMultiplier: 0.85,
+  //   maxPBMultiplier: 0.9,
+  //   maxPSMultiplier: 0.9,
+  //   minRevenueGrowth: 0,
+  //   maxDebtToEquity: 1.5,
+  //   minFreeCashFlowMargin: 5,
+  // };
+  // }
 }
 
 // Export for use in different environments

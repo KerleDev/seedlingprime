@@ -1,27 +1,39 @@
 /* === SectionCard.css === */
-
 .section-card {
-  /* light card like top bar */
   background: var(--bar-background);
   border: 1px solid var(--stroke);
-  border-radius: 20px;
+  border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-  overflow: hidden;
   color: var(--app-text--dark);
 
-  /* fill the grid cell (the grid controls width & side margins) */
-  width: 100%;
-  margin: 0;
-  padding: clamp(16px, 2.5vw, 28px);
+  width: 75%;
+  margin: 0 auto;
+  padding: 16px;
+
+  /* Cards expand vertically with their content */
+  display: flex;
+  flex-direction: column;
 }
 
-.section-card-header { margin-bottom: clamp(12px, 2vw, 20px); }
+.section-card-header {
+  margin-bottom: 12px;
+  flex-shrink: 0; /* header always keeps its space */
+}
+
 .section-card-header > h2 {
   margin: 0;
-  font-size: var(--S2);
+  font-size: clamp(16px, 1.4vw, 22px);
   font-weight: var(--fw-semibold);
-  color: var(--app-text--dark);  /* dark heading text */
+  color: var(--app-text--dark);
   text-align: center;
 }
 
-.section-card-body { color: var(--app-text--dark); }
+.section-card-body {
+  color: var(--app-text--dark);
+
+  /* body takes remaining space and grows as needed */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0; /* important for flex children (charts, tables, etc.) */
+}

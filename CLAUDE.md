@@ -25,7 +25,7 @@ This system identifies undervalued stocks showing mean reversion potential, prov
 - **Framework**: React 19.1.1 with Vite 7.1.6 as the build tool
 - **Routing**: React Router DOM for client-side navigation
 - **Styling**: CSS modules with component-specific stylesheets
-- **Data**: Large financial dataset in `src/constants/secrotData.js` containing sector ETF data and individual stock metrics
+- **Data**: Large financial dataset in `src/constants/sectorDataNew.js` containing sector ETF data and individual stock metrics
 
 ### Key Components Structure
 
@@ -40,7 +40,7 @@ src/
 │   ├── SectorDropdown/ - Sector selection dropdown with data integration
 │   └── MyAPIComponent.jsx - (untracked file for API integration)
 └── constants/
-    └── secrotData.js - Comprehensive financial data for 11 sectors
+    └── sectorDataNew.js - Comprehensive financial data for 11 sectors
 ```
 
 ## Development Commands
@@ -62,6 +62,7 @@ npm run preview
 ## Key Data Structure
 
 The application centers around `newSectorData` object containing:
+
 - 11 sectors: energy, materials, industrials, utilities, healthcare, financial, consumer_discretionary, consumer_staples, information_technology, communication_services, real_estate
 - Each sector includes ETF data and individual stock metrics (P/E ratios, dividend yields, etc.)
 - 143 total stocks with varying data completeness (85% complete, 15% partial)

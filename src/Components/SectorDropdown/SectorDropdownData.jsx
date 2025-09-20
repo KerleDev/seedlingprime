@@ -1,7 +1,7 @@
 // src/components/SectorDropdown/SectorDropdownData.jsx
 import { useMemo } from 'react';
 import SectorDropdown from './SectorDropdown';
-import newSectorData from '../../constants/sectorDataNew';
+import newSectorData from '../../utils/sectorDataNew';
 function buildSectorsMap(data) {
   const sectorsObj = data?.sectors ?? {};
   const out = {};

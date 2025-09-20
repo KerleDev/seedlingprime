@@ -79,27 +79,64 @@ class MeanReversionApp {
     console.log('Processing raw data:', rawData);
     const sectorAverages = rawData.sectorAverages || {};
     const processedStocks = rawData.stocks
-      .filter(
-        (stock) =>
-          stock.price &&
-          stock.pe_ratio !== null &&
-          stock.pe_ratio !== undefined
-      ) // Filter out stocks with missing essential data
+      // .filter(
+      //   (stock) =>
+      //     !(
+      //       stock.status &&
+      //       (stock.status.includes('acquired') ||
+      //         stock.status.includes('negative_earnings'))
+      //     )
+      // ) // Filter out stocks that are acquired or have negative earnings
       .map((stock) => {
         // Safely extract price, handling price_range if present
-        const currentPrice =
-          typeof stock.price === 'string' && stock.price.includes('-')
-            ? parseFloat(stock.price.split('-')[0]) // Take the lower bound of the range
-            : stock.price;
+        let currentPrice = null;
+        if (typeof stock.price === 'number') {
+          currentPrice = stock.price;
+        } else if (typeof stock.price === 'string') {
+          if (stock.price.includes('-')) {
+            currentPrice = parseFloat(stock.price.split('-')[0]);
+          } else {
+            currentPrice = parseFloat(stock.price);
+          }
+        } else if (
+          stock.price_range &&
+          typeof stock.price_range === 'string'
+        ) {
+          if (stock.price_range.includes('-')) {
+            currentPrice = parseFloat(
+              stock.price_range.split('-')[0]
+            );
+          } else {
+            currentPrice = parseFloat(stock.price_range);
+          }
+        }
 
-        // Ensure pe_ratio and roe are numbers
-        const peRatio = parseFloat(stock.pe_ratio);
+        // Ensure pe_ratio and roe are numbers, handling pe_ratio_range if present
+        let peRatio = null;
+        if (typeof stock.pe_ratio === 'number') {
+          peRatio = stock.pe_ratio;
+        } else if (typeof stock.pe_ratio === 'string') {
+          if (stock.pe_ratio.includes('-')) {
+            peRatio = parseFloat(stock.pe_ratio.split('-')[0]);
+          } else {
+            peRatio = parseFloat(stock.pe_ratio);
+          }
+        } else if (
+          stock.pe_ratio_range &&
+          typeof stock.pe_ratio_range === 'string'
+        ) {
+          if (stock.pe_ratio_range.includes('-')) {
+            peRatio = parseFloat(stock.pe_ratio_range.split('-')[0]);
+          } else {
+            peRatio = parseFloat(stock.pe_ratio_range);
+          }
+        }
         const roe = parseFloat(stock.roe);
 
         const processedStock = {
           symbol: stock.symbol,
           name: stock.name,
-          currentPrice: currentPrice,
+          currentPrice: !isNaN(currentPrice) ? currentPrice : null,
           peRatio: !isNaN(peRatio) ? peRatio : null,
           pbRatio: parseFloat(stock.pb_ratio) || null,
           psRatio: parseFloat(stock.ps_ratio) || null,
@@ -107,24 +144,33 @@ class MeanReversionApp {
           roe: !isNaN(roe) ? roe : null,
           roa: parseFloat(stock.roa) || null,
           debtToEquity: parseFloat(stock.debt_to_equity) || null,
-          // currentRatio: parseFloat(stock.current_ratio) || null,
-          // peg: parseFloat(stock.peg) || null,
-          // dividendYield: parseFloat(stock.dividend_yield) || null,
-          // ma50: parseFloat(stock.ma_50) || null,
-          // ma200: parseFloat(stock.ma_200) || null,
-          // rsi: parseFloat(stock.rsi) || null,
-          // macd: parseFloat(stock.macd) || null,
-          // week52Low: parseFloat(stock.week_52_low) || null,
-          // week52High: parseFloat(stock.week_52_high) || null,
+          currentRatio: parseFloat(stock.current_ratio) || null,
+          peg: parseFloat(stock.peg) || null,
+          dividendYield: parseFloat(stock.dividend_yield) || null,
+          ma50: parseFloat(stock.ma_50) || null,
+          ma200: parseFloat(stock.ma_200) || null,
+          rsi: parseFloat(stock.rsi) || null,
+          macd: parseFloat(stock.macd) || null,
+          week52Low: parseFloat(stock.week_52_low) || null,
+          week52High: parseFloat(stock.week_52_high) || null,
           // Add other relevant metrics here
         };
         // Identify undervalued opportunities
-        processedStock.isUndervalued = this.detectMeanReversion(
-          processedStock,
-          sectorAverages
-        );
-        return processedStock;
-      });
+        // Only include stocks that have a valid currentPrice and peRatio after parsing
+        if (
+          processedStock.currentPrice !== null &&
+          processedStock.peRatio !== null
+        ) {
+          processedStock.isUndervalued = this.detectMeanReversion(
+            processedStock,
+            sectorAverages
+          );
+          return processedStock;
+        } else {
+          return null; // Filter out stocks with invalid price or peRatio
+        }
+      })
+      .filter((stock) => stock !== null); // Remove null entries from the array
 
     return {
       stocks: processedStocks,

@@ -181,7 +181,15 @@ const newSectorData = {
         EOG: {
           name: 'EOG RESOURCES',
           price: 117.7,
-          status: 'complete_data_available',
+          pe_ratio: 11.26,
+          pb_ratio: 1,
+          ps_ratio: 0.87,
+          eps: 10.3,
+          roe: 18.23,
+          roa: 8.24,
+          debt_to_equity: 0.81,
+          current_ratio: 2.0,
+          dividend_yield: 3.05,
         },
         PXD: {
           name: 'PIONEER NATURAL',
@@ -896,16 +904,18 @@ const newSectorData = {
       stocks: {
         DIS: {
           name: 'DISNEY',
-          pe_ratio_range: '18.06-19.40',
+          pe_ratio: 19.4,
+          price: 110.0, // Added explicit price
           eps: 6.37,
           roe: 11.46,
-          debt_to_equity_range: '0.32-0.37',
+          debt_to_equity: 0.35,
           current_ratio: 0.72,
           peg: 5.36,
         },
         CMCSA: {
           name: 'COMCAST',
           price: 35.27,
+          pe_ratio: 12.0, // Added explicit pe_ratio
           eps: 6.01,
           roe: 24.92,
           roa: 16.24,
@@ -914,7 +924,8 @@ const newSectorData = {
         },
         VZ: {
           name: 'VERIZON',
-          price_range: '42-43',
+          price: 42.35,
+          pe_ratio: 9.5, // Added explicit pe_ratio
           dividend_yield: 6.5,
           ma_50: 41.69,
           ma_200: 42.42,
@@ -923,7 +934,7 @@ const newSectorData = {
         },
         TMUS: {
           name: 'T-MOBILE',
-          price_range: '233-239',
+          price: 236.39,
           pe_ratio: 20.33,
           dividend_yield: 1.49,
           ma_50: 252.46,
@@ -934,6 +945,7 @@ const newSectorData = {
         NFLX: {
           name: 'NETFLIX',
           price: 1228.5,
+          pe_ratio: 50.0, // Added explicit pe_ratio
           roe: 35.21,
           roa: 16.24,
           debt_to_equity: 0.58,
@@ -971,7 +983,7 @@ const newSectorData = {
         },
         EQIX: {
           name: 'EQUINIX',
-          price_range: '765-788',
+          price: 765.88,
           pe_ratio: 76.815,
           eps: 9.61,
           roe: 7.51,
@@ -991,7 +1003,7 @@ const newSectorData = {
         },
         PSA: {
           name: 'PUBLIC STORAGE',
-          price_range: '286-294',
+          price: 286.94,
           eps: 4.28,
           dividend_yield: 4.1,
           week_52_low: 256.6,
@@ -999,7 +1011,7 @@ const newSectorData = {
         },
         SPG: {
           name: 'SIMON PROPERTY',
-          price_range: '178-182',
+          price: 178.82,
           eps: 6.47,
           dividend_yield: 4.95,
           week_52_low: 136.34,

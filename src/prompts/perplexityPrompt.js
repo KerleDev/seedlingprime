@@ -1,29 +1,54 @@
-const perplexityPrompt = (sector) => `
-Collect comprehensive financial data for the ${sector} sector. I need the following information for each relevant company in this sector:
+import simplifiedSectorData from '../constants/simplifiedSectorData.js';
 
-- Stock prices and historical performance (current price, 52-week high/low)
-- Financial statements and key ratios:
-  - Price-to-Earnings (P/E) Ratio
-  - Price-to-Book (P/B) Ratio
-  - Price-to-Sales (P/S) Ratio
-  - Earnings Per Share (EPS)
-  - Return on Equity (ROE)
-  - Return on Assets (ROA)
-  - Debt-to-Equity Ratio
-  - Current Ratio
-  - PEG (Price/Earnings to Growth) Ratio
-  - Dividend Yield
-- Technical indicators:
-  - 50-day Moving Average (MA50)
-  - 200-day Moving Average (MA200)
-  - Relative Strength Index (RSI)
-  - MACD (Moving Average Convergence Divergence)
+function humanizeSector(sectorKey) {
+  return sectorKey
+    .split('_')
+    .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
+    .join(' ');
+}
 
-Also, provide overall market metrics and sector comparisons, including:
-- The sector's ETF ticker, name, current price, and P/E ratio.
-- Any notable market trends or insights for the ${sector} sector.
+// Expects the exact sector key from the dropdown, e.g. "information_technology"
+const perplexityPrompt = (sectorKey) => {
+  const symbols =
+    simplifiedSectorData.sectors[sectorKey]?.stocks || [];
+  const sector = humanizeSector(sectorKey);
+  const symbolList = symbols.join(', ');
 
-Structure the output as a JSON object with a 'sector_etf', 'stocks' (an array of stock objects, each containing its symbol and the requested metrics), and 'trends' key. Ensure all numerical data is provided as actual numbers, not strings.
+  return `Collect essential financial data for the ${sector} sector and restrict the universe strictly to these tickers: [${symbolList}]. If a symbol is missing or unavailable, include it with null fields.
+
+Only provide the following minimal fields (numbers, not strings):
+- name
+- market_cap
+- price
+- change_percent_1d   // 1-day percent price change
+- pe_ratio
+- pb_ratio
+- ps_ratio
+- roe                // percent
+- net_income         // absolute value
+- free_cash_flow_margin // percent
+- de_ratio
+- rev_growth         // percent
+- net_income_growth  // percent
+
+Also include a minimal sector ETF object with: ticker, name, price, pe_ratio.
+
+Output JSON exactly in this shape:
+{
+  "sector": "${sector}",
+  "sector_key": "${sectorKey}",
+  "sector_etf": { "ticker": "", "name": "", "price": 0, "pe_ratio": 0 },
+  "stocks": [
+    { "symbol": "TICKER", "name": "", "market_cap": 0, "price": 0, "change_percent_1d": 0, "pe_ratio": 0, "pb_ratio": 0, "ps_ratio": 0, "roe": 0, "net_income": 0, "free_cash_flow_margin": 0, "de_ratio": 0, "rev_growth": 0, "net_income_growth": 0 }
+    // one object per ticker in [${symbolList}]
+  ],
+  "trends": { }
+}
+
+Rules:
+- Only include the requested tickers and fields above (no extra fields).
+- Use null for any unavailable metric.
 `;
+};
 
 export default perplexityPrompt;

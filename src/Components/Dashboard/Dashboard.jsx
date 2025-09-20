@@ -67,6 +67,7 @@ function Dashboard() {
     }
   }, [stockData, sectorMean, sortMode]);
 
+
   return (
     <div className="page">
       <header className="page-header">
@@ -83,7 +84,7 @@ function Dashboard() {
         <SectorDropdownData
           sectors={shaped.sectors}
           selectedSector={selectedSector}
-          onSectorChange={setSelectedSector}
+          onSectorChange={handleSectorChange}
           label="Choose a sector"
         />
       </div>

@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
-import "./Landing.css";
+import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import './Landing.css';
 
 function Landing() {
   const navigate = useNavigate();
@@ -7,15 +8,17 @@ function Landing() {
   return (
     <section className="landing">
       <h1>Welcome to Seedling Analytics 🌱</h1>
+
       <p>
-        Make smarter investment decisions with clean dashboards and insights.
+        Make smarter investment decisions with clean dashboards and
+        insights.
       </p>
 
       <div className="landing-buttons">
         <button className="btn btn--dark">Sign In</button>
-        <button 
+        <button
           className="btn btn--light "
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate('/dashboard')}
         >
           Start Free Analysis
         </button>

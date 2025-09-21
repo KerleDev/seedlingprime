@@ -47,7 +47,11 @@ Output JSON exactly in this shape:
 
 Rules:
 - Only include the requested tickers and fields above (no extra fields).
-- Use null for any unavailable metric.
+ - Use web search to retrieve up-to-date numeric values for each field from reputable sources (e.g., company filings, SEC, major financial data providers). Provide numbers, not strings.
+ - Avoid nulls. If a specific metric is unavailable after searching, set it to 0 and add a brief explanation and citations under "trends".
+ - Include an array "citations" in "trends" with source URLs used for the data.
+ - Use units consistently (e.g., percents as numbers like 12.3, not "12.3%"), and round reasonably.
+
 `;
 };
 

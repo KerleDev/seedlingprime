@@ -4,6 +4,7 @@ import SectionCard from "../Sectioncard/Sectioncard";
 import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
 import SortDropdown from "../SectorDropdown/SortDropdown";
 import SectorChart from "../SectorChart/SectorChart";
+import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities"
 import "./Dashboard.css";
 
 // Data / utils
@@ -122,10 +123,8 @@ function Dashboard() {
             />
           </div>
         </SectionCard>
-
-        {/* Other cards (placeholders for now) */}
         <SectionCard title="Undervalued Opportunities">
-          {/* TODO: add table/list of opportunities */}
+          <UndervaluedOpportunities sectorKey={selectedSector} />
         </SectionCard>
 
         <SectionCard title="Complete Sector Breakdown">

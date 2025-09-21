@@ -3,24 +3,29 @@
   background: var(--bar-background);
   border: 1px solid var(--stroke);
   border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   color: var(--app-text--dark);
 
-  width: 75%;
+  width: 80em;
+  /* use full width by default */
+  max-width: 1180px;
+  /* cap the size for large screens */
   margin: 0 auto;
   padding: 16px;
 
-  /* Cards expand vertically with their content */
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .section-card-header {
   margin-bottom: 12px;
-  flex-shrink: 0; /* header always keeps its space */
+  margin-top: 2em;
+  flex-shrink: 0;
+  /* header always keeps its space */
 }
 
-.section-card-header > h2 {
+.section-card-header>h2 {
   margin: 0;
   font-size: clamp(18px, 1.4vw, 24px);
   font-weight: var(--fw-semibold);
@@ -35,5 +40,7 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-height: 0; /* important for flex children (charts, tables, etc.) */
+  min-height: 0;
+  /* important for flex children (charts, tables, etc.) */
 }
+

@@ -1,10 +1,11 @@
-
 import React, { useMemo, useState, useCallback } from "react";
 import SectionCard from "../Sectioncard/Sectioncard";
 import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
 import SortDropdown from "../SectorDropdown/SortDropdown";
 import SectorChart from "../SectorChart/SectorChart";
-import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities"
+import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities";
+import SectorBreakdownTable from "../SectorBreakdown/SectorBreakdownTable";
+
 import "./Dashboard.css";
 
 // Data / utils
@@ -18,7 +19,9 @@ const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames
 function Dashboard() {
   // Default to "technology" if exists, otherwise first sector key (or empty)
   const defaultKey =
-    (shaped?.sectors?.technology ? "technology" : Object.keys(shaped?.sectors || {})[0]) || "";
+    (shaped?.sectors?.technology
+      ? "technology"
+      : Object.keys(shaped?.sectors || {})[0]) || "";
 
   const [selectedSector, setSelectedSector] = useState(defaultKey);
   const [sortMode, setSortMode] = useState("asc"); // "asc" | "desc" | "distance" | "symbol"
@@ -29,10 +32,16 @@ function Dashboard() {
   }, []);
 
   // Derive the table for the chosen sector
-  const stockData = useMemo(() => shaped?.sectors?.[selectedSector] || [], [selectedSector]);
+  const stockData = useMemo(
+    () => shaped?.sectors?.[selectedSector] || [],
+    [selectedSector]
+  );
 
   // Compute metrics (mean price, avg P/E, avg P/B)
-  const { sectorMean, sectorPE, sectorPB } = useMemo(() => sectorMetrics(stockData), [stockData]);
+  const { sectorMean, sectorPE, sectorPB } = useMemo(
+    () => sectorMetrics(stockData),
+    [stockData]
+  );
 
   // Sorted data for the chart based on current sort mode
   const sortedStockData = useMemo(() => {
@@ -86,14 +95,23 @@ function Dashboard() {
       </header>
 
       {/* Top controls */}
-      <div className="page-controls" style={{ display: "flex", gap: 12, alignItems: "center" }}>
+      <div
+        className="page-controls"
+        style={{ display: "flex", gap: 12, alignItems: "center" }}
+      >
         <SectorDropdownData
           sectors={shaped.sectors}
           selectedSector={selectedSector}
-          onSectorChange={handleSectorChange}   // or setSelectedSector if the API matches
+          onSectorChange={handleSectorChange} // or setSelectedSector if the API matches
           label="Choose a sector"
         />
       </div>
+
+      <SectionCard
+        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
+      >
+        <UndervaluedOpportunities sectorKey={selectedSector} />
+      </SectionCard>
 
       {/* Main grid (do NOT use <main> here because Layout already has one) */}
       <section className="dashboard-grid" aria-label="Dashboard content">
@@ -123,12 +141,8 @@ function Dashboard() {
             />
           </div>
         </SectionCard>
-        <SectionCard title="Undervalued Opportunities">
-          <UndervaluedOpportunities sectorKey={selectedSector} />
-        </SectionCard>
-
         <SectionCard title="Complete Sector Breakdown">
-          {/* TODO: add full sector table */}
+          <SectorBreakdownTable sectorKey={selectedSector} />
         </SectionCard>
       </section>
     </div>

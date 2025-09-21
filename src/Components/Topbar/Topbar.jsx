@@ -16,8 +16,12 @@ function TopBar() {
       </Link>
 
       <div className="actions">
-        <button className="btn btn--light" type="button">Sign in</button>
-        <button className="btn btn--dark" type="button">Sign up</button>
+        <button className="btn btn--light" type="button">
+          Sign in
+        </button>
+        <button className="btn btn--dark" type="button">
+          Sign up
+        </button>
       </div>
     </header>
   );

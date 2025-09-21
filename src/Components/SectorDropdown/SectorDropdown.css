@@ -1,10 +1,13 @@
 /* ========== CONFIG (tweak this if needed) ========== */
 :root {
-  --dropdown-max: 560px; /* wide enough for your longest names on one line */
+  --dropdown-max: 560px;
+  /* wide enough for your longest names on one line */
 }
 
 /* ========== Layout ========== */
-.sector-selection { width: 100%; }
+.sector-selection {
+  width: 100%;
+}
 
 /* Centered container; fixed-but-not-full width */
 .dropdown-container {
@@ -29,31 +32,47 @@
   font-size: clamp(15px, 1.05vw, 18px);
   min-height: 44px;
   color: #181743;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
   width: 100%;
-  white-space: nowrap;           /* keep everything on a single line */
+  white-space: nowrap;
+  /* keep everything on a single line */
 }
 
-.dropdown-trigger:hover { border-color: #CBD5E1; }
+.dropdown-trigger:hover {
+  border-color: #CBD5E1;
+}
 
 /* label left, count pushes to the right, arrow at the end */
-.sector-label { font-weight: var(--fw-semibold); letter-spacing: 0.1px; }
-.stock-count   { margin-inline-start: auto; color: var(--input-text); }
-.dropdown-arrow{ flex-shrink: 0; margin-inline-start: 10px; color: var(--arrow); }
+.sector-label {
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.1px;
+}
+
+.stock-count {
+  margin-inline-start: auto;
+  color: var(--input-text);
+}
+
+.dropdown-arrow {
+  flex-shrink: 0;
+  margin-inline-start: 10px;
+  color: var(--arrow);
+}
 
 /* ========== Menu: EXACT same width as trigger ========== */
 .dropdown-menu {
   position: absolute;
   z-index: 30;
   top: calc(100% + 8px);
-  inset-inline: 0;               /* left:0; right:0 to match container edges */
+  inset-inline: 0;
+  /* left:0; right:0 to match container edges */
   width: 100%;
   box-sizing: border-box;
   background: #fff;
   border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 12px;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.10);
 
   /* internal scrolling (11 items max but safe) */
   max-height: min(50vh, 360px);
@@ -65,17 +84,37 @@
   scrollbar-width: thin;
   scrollbar-color: #B9C0D0 #F2F4F8;
 }
-.dropdown-menu::-webkit-scrollbar{ width:8px;height:8px;}
-.dropdown-menu::-webkit-scrollbar-track{ background:#F2F4F8; border-radius:8px;}
-.dropdown-menu::-webkit-scrollbar-thumb{ background:#B9C0D0; border-radius:8px; border:2px solid #F2F4F8;}
-.dropdown-menu::-webkit-scrollbar-thumb:hover{ background:#9EA7B8;}
-.dropdown-menu::-webkit-scrollbar-button{ display:none; }
+
+.dropdown-menu::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-track {
+  background: #F2F4F8;
+  border-radius: 8px;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: #B9C0D0;
+  border-radius: 8px;
+  border: 2px solid #F2F4F8;
+}
+
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: #9EA7B8;
+}
+
+.dropdown-menu::-webkit-scrollbar-button {
+  display: none;
+}
 
 /* ========== Items: one line each, label left / count right ========== */
 .dropdown-item {
   width: 100%;
   display: flex;
-  justify-content: space-between;   /* label left, count right */
+  justify-content: space-between;
+  /* label left, count right */
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -86,12 +125,20 @@
   text-align: left;
   font: inherit;
   color: #181743;
-  white-space: nowrap;               /* no wrap for items */
+  white-space: nowrap;
+  /* no wrap for items */
 }
-.dropdown-item:hover, .dropdown-item.focused { background: #F3F4F6; }
+
+.dropdown-item:hover,
+.dropdown-item.focused {
+  background: #F3F4F6;
+}
 
 .dropdown-item.active {
   background: #181743;
   color: #fff;
 }
-.dropdown-item.active .stock-count { color: #fff; }
+
+.dropdown-item.active .stock-count {
+  color: #fff;
+}

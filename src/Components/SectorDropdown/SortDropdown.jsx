@@ -2,10 +2,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "./SortDropdown.css";
 
 const OPTIONS = [
-  { value: "asc",      label: "Price ↑" },
-  { value: "desc",     label: "Price ↓" },
+  { value: "asc", label: "Price ↑" },
+  { value: "desc", label: "Price ↓" },
   { value: "distance", label: "Distance from mean" },
-  { value: "symbol",   label: "Symbol (A→Z)" },
+  { value: "symbol", label: "Symbol (A→Z)" },
 ];
 
 export default function SortDropdown({ value, onChange, label = "Sort by" }) {
@@ -14,7 +14,7 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
   const btnRef = useRef(null);
   const menuRef = useRef(null);
 
-  const current = OPTIONS.find(o => o.value === value) || OPTIONS[0];
+  const current = OPTIONS.find((o) => o.value === value) || OPTIONS[0];
 
   // סגירה בלחיצה בחוץ
   useEffect(() => {
@@ -39,7 +39,9 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
     const spaceBelow = window.innerHeight - rect.bottom;
     const spaceAbove = rect.top;
     const menuHeight = 220; // אומדן סביר; ה־CSS גם מגביל max-height
-    setPlacement(spaceBelow >= menuHeight || spaceBelow >= spaceAbove ? "bottom" : "top");
+    setPlacement(
+      spaceBelow >= menuHeight || spaceBelow >= spaceAbove ? "bottom" : "top"
+    );
   }, [open]);
 
   // עדכון במצב resize/scroll
@@ -51,7 +53,9 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
       const menuHeight = 220;
-      setPlacement(spaceBelow >= menuHeight || spaceBelow >= spaceAbove ? "bottom" : "top");
+      setPlacement(
+        spaceBelow >= menuHeight || spaceBelow >= spaceAbove ? "bottom" : "top"
+      );
     };
     window.addEventListener("resize", onRecalc);
     window.addEventListener("scroll", onRecalc, true);
@@ -72,11 +76,22 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls="sortdd-menu"
-        onClick={() => setOpen(v => !v)}
+        onClick={() => setOpen((v) => !v)}
       >
         <span className="sortdd-trigger-text">{current.label}</span>
-        <svg className={`sortdd-arrow ${open ? "open" : ""}`} width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
-          <path d="M6 8l4 4 4-4" stroke="currentColor" strokeWidth="2" fill="none" />
+        <svg
+          className={`sortdd-arrow ${open ? "open" : ""}`}
+          width="18"
+          height="18"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 8l4 4 4-4"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+          />
         </svg>
       </button>
 
@@ -87,7 +102,7 @@ export default function SortDropdown({ value, onChange, label = "Sort by" }) {
           role="listbox"
           className={`sortdd-menu sortdd-menu--${placement}`}
         >
-          {OPTIONS.map(opt => (
+          {OPTIONS.map((opt) => (
             <button
               key={opt.value}
               role="option"

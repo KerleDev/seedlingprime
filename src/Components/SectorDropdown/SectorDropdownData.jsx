@@ -9,19 +9,9 @@ function buildSectorsMap(data) {
   for (const [key, val] of Object.entries(sectorsObj)) {
     if (!val || typeof val !== 'object') continue;
     if (!('sector_name' in val)) continue;
-    if (!val || typeof val !== 'object') continue;
-    if (!('sector_name' in val)) continue;
-
-    // Use the human-readable sector_name instead of the raw key
-    const prettyKey = val.sector_name
-      .replace(/ Sector$/i, '') // strip trailing "Sector"
-      .replace(/_/g, ' ') // replace underscores with spaces
-      .replace(/ Sector$/i, '') // strip trailing "Sector"
-      .replace(/_/g, ' ') // replace underscores with spaces
-      .trim();
-
     const tickers = Object.keys(val.stocks ?? {});
-    out[prettyKey.toLowerCase()] = tickers; // keep lowercase for consistency
+    // IMPORTANT: Keep RAW sector key so selection maps to shaped.sectors
+    out[key] = tickers;
   }
 
   return out;

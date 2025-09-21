@@ -29,8 +29,13 @@ export default function SectorDropdown({
     sectorKeys[0] ||
     "";
 
-  const pretty = (s) =>
-    s ? s.charAt(0).toUpperCase() + s.slice(1) : "Choose sector";
+  const pretty = (s) => {
+    if (!s) return "Choose sector";
+    // Replace underscores with spaces and title-case each word
+    return s
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+  };
 
   // close on click outside
   useEffect(() => {

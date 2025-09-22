@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import "./UndervaluedOpportunities.css";
 import { uoUtils } from "../../utils/uoUtilsAdapter";
 import MetricCard from "../Metric Card/Metric Card";
+import { runSectorValuationFromCache } from "../../services/cacheAnalysis";
 
 // local formatters (MetricCard also formats its items)
 const money = (n) =>
@@ -61,6 +62,7 @@ export default function UndervaluedOpportunities({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [candidates, setCandidates] = useState([]);
+  const [valuationCandidates, setValuationCandidates] = useState([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -69,13 +71,39 @@ export default function UndervaluedOpportunities({
       try {
         setLoading(true);
         setError("");
+        // Preferred: valuation from cached Perplexity
+        try {
+          const valuation = await runSectorValuationFromCache(sectorKey);
+          const topTwo = Array.isArray(valuation?.results) ? valuation.results : [];
+          const mapped = topTwo.map((r) => {
+            const name = utils.getStockName(r.symbol);
+            const v = r.valuation || {};
+            return {
+              ticker: r.symbol,
+              name,
+              price: r.price,
+              metrics: [
+                { label: "Fair Value", value: v.blendedFairPrice, type: "money" },
+                { label: "Upside", value: v.upsidePct, type: "pct", colorize: true },
+                { label: "MoS", value: v.marginOfSafety, type: "pct", colorize: true },
+                { label: "P/E", value: r.peRatio },
+                { label: "P/B", value: r.priceToBook },
+                { label: "P/S", value: r.priceToSales },
+                { label: "ROE", value: r.roe, type: "pct" },
+                { label: "FCF M", value: r.freeCashFlowMargin, type: "pct" },
+                { label: "D/E", value: r.debtToEquity },
+                { label: "RevG", value: r.revenueGrowth, type: "pct" },
+                { label: "NIG", value: r.netIncomeGrowth, type: "pct" },
+              ],
+            };
+          });
+          if (!cancelled) setValuationCandidates(mapped);
+        } catch (e) {
+          console.warn("Valuation from cache not available:", e?.message || e);
+        }
 
-        // 1) get tickers for the sector
-        const tickers = await Promise.resolve(
-          utils.getStocksBySector(sectorKey)
-        );
-
-        // 2) enrich with names + metrics
+        // Fallback: adapter-based scoring
+        const tickers = await Promise.resolve(utils.getStocksBySector(sectorKey));
         const enriched = await Promise.all(
           tickers.map(async (t) => {
             const metrics = await Promise.resolve(utils.getStockMetrics(t));
@@ -83,12 +111,9 @@ export default function UndervaluedOpportunities({
             return { ticker: t, name, metrics };
           })
         );
-
-        // 3) score and take best 2
         const scored = enriched
           .map((s) => ({ ...s, _score: computeUndervaluationScore(s.metrics) }))
           .sort((a, b) => a._score - b._score);
-
         if (!cancelled) setCandidates(scored.slice(0, 2));
       } catch (e) {
         if (!cancelled) setError(e?.message || "Failed to load opportunities");
@@ -113,12 +138,13 @@ export default function UndervaluedOpportunities({
       );
     }
     if (error) return <p className="uval-error">{error}</p>;
-    if (!candidates.length)
+    const toRender = valuationCandidates.length ? valuationCandidates : candidates;
+    if (!toRender.length)
       return <p className="uval-empty">No candidates found for this sector.</p>;
 
     return (
       <div className="uval-cards">
-        {candidates.map((s) => {
+        {toRender.map((s) => {
           const m = s.metrics;
           const metrics = [
             { label: "P/E Ratio", value: m.peRatio },
@@ -137,8 +163,8 @@ export default function UndervaluedOpportunities({
               key={s.ticker}
               ticker={s.ticker}
               name={s.name}
-              price={m.price}
-              metrics={metrics}
+              price={s.price ?? m.price}
+              metrics={valuationCandidates.length ? s.metrics : metrics}
               ctaDisabled={true}
               ctaLabel="Generate AI Report"
             />
@@ -146,7 +172,7 @@ export default function UndervaluedOpportunities({
         })}
       </div>
     );
-  }, [loading, error, candidates]);
+  }, [loading, error, candidates, valuationCandidates]);
 
   return (
     <section className="uval-section" aria-label="Undervalued Opportunities">

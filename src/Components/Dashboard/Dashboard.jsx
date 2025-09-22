@@ -92,7 +92,7 @@ function Dashboard() {
         setPpxlLoading(true);
         setPpxlError('');
         setPpxlData(null);
-        // 1) Try cache first (3-hour TTL by default inside loadSectorData)
+        // Try cache first (3-hour TTL by default inside loadSectorData)
         const cached = loadSectorData(selectedSector);
         if (!cancelled && cached) {
           setPpxlData(cached);

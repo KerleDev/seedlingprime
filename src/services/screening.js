@@ -5,7 +5,7 @@ class StockScreener {
   constructor() {
     this.cache = new Map();
     this.sectorStats = new Map();
-    this.CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+    this.CACHE_TTL = 3 * 60 * 60 * 1000; // 3 hours
   }
 
   /**

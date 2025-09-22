@@ -1,5 +1,5 @@
 import { sendToGemini } from '../api/gemini';
-import { askPerplexitySimple } from './perplexityService';
+import { askPerplexity } from './perplexityService';
 import geminiPrompt from '../prompts/geminiPrompt';
 
 /**
@@ -10,7 +10,7 @@ import geminiPrompt from '../prompts/geminiPrompt';
  */
 export async function generateGeminiReportFromSector(sectorInput) {
   const { text: ppxlText, json: sectorJson } =
-    await askPerplexitySimple(sectorInput);
+    await askPerplexity(sectorInput);
 
   const reportPrompt = geminiPrompt({ sectorJson, ppxlText });
 

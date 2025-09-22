@@ -1,6 +1,10 @@
-import './Sectioncard.css';
+import './SectionCard.css';
 
-export default function SectionCard({ title, children, hideHeader = false }) {
+export default function SectionCard({
+  title,
+  children,
+  hideHeader = false,
+}) {
   const headingId = title
     ? title.toLowerCase().replace(/\s+/g, '-')
     : undefined;
@@ -9,7 +13,9 @@ export default function SectionCard({ title, children, hideHeader = false }) {
     <section
       className="section-card"
       role="region"
-      aria-labelledby={!hideHeader && headingId ? headingId : undefined}
+      aria-labelledby={
+        !hideHeader && headingId ? headingId : undefined
+      }
       aria-label={hideHeader && title ? title : undefined}
     >
       {!hideHeader && (
@@ -18,9 +24,7 @@ export default function SectionCard({ title, children, hideHeader = false }) {
         </header>
       )}
 
-      <div className="section-card-body">
-        {children}
-      </div>
+      <div className="section-card-body">{children}</div>
     </section>
   );
 }

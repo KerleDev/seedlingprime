@@ -14,7 +14,7 @@ import './Dashboard.css';
 import newSectorData from '../../utils/sectorDataNew';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
-import { askPerplexitySimple } from '../../services/perplexityService';
+import { askPerplexity } from '../../services/perplexityService';
 
 // Prepare once (pure transform)
 const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames, etf }
@@ -86,8 +86,7 @@ function Dashboard() {
         setPpxlLoading(true);
         setPpxlError('');
         setPpxlData(null);
-        const { json, text } =
-          await askPerplexitySimple(selectedSector);
+        const { json, text } = await askPerplexity(selectedSector);
         if (cancelled) return;
         // Prefer JSON, fallback to text
         setPpxlData(json || text || null);

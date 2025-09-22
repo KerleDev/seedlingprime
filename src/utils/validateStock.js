@@ -59,7 +59,4 @@ function validateStock(s) {
   return { valid: issues.length === 0, issues };
 }
 
-module.exports = {
-  validateStock,
-  RANGES,
-};
+export { validateStock, RANGES };

@@ -1,7 +1,7 @@
 // Data pipeline wiring: normalization -> filtering -> prompt building
 // Ensures downstream (screener, Gemini) consumes the canonical schema
 
-const { normalizeSectorData } = require('../utils/normalizeSectorData');
+import { normalizeSectorData } from '../utils/normalizeSectorData.js';
 
 /**
  * Prepare normalized, sector-filtered data for analysis
@@ -56,7 +56,4 @@ function buildPrompt(data, sector) {
 Data (JSON):\n${JSON.stringify(payload, null, 2)}\n\nInstructions:\n1) Identify undervalued stocks with potential for mean reversion.\n2) Provide risk assessment and rationale (valuation vs sector, ROE, FCF margin, leverage, growth).\n3) Give clear investment recommendations and caveats.\n4) Return sections: Executive Summary, Key Findings, Market Analysis, Risks, Recommendations, Conclusion.`;
 }
 
-module.exports = {
-  prepareDataForAnalysis,
-  buildPrompt,
-};
+export { prepareDataForAnalysis, buildPrompt };

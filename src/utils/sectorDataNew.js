@@ -1202,6 +1202,6 @@ const sectorDataNew = {
 export default sectorDataNew;
 
 // CommonJS compatibility export (harmless in ESM environments)
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = sectorDataNew;
+if (typeof globalThis !== 'undefined' && typeof globalThis.module !== 'undefined' && globalThis.module.exports) {
+  globalThis.module.exports = sectorDataNew;
 }

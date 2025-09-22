@@ -2,7 +2,8 @@
 
 import StockScreenerModule from './screening';
 import * as dataPipeline from './dataPipeline';
-const StockScreener = StockScreenerModule?.default || StockScreenerModule;
+const StockScreener =
+  StockScreenerModule?.default || StockScreenerModule;
 import { valueTopUndervalued } from './valuation';
 
 /**
@@ -14,7 +15,7 @@ import { valueTopUndervalued } from './valuation';
  *   generateReport?: (prompt: string) => Promise<string>; // optional Gemini adapter
  * }} params
  */
-export async function runAnalysis({
+export default async function runAnalysis({
   sector,
   criteria = {},
   dataset,
@@ -24,10 +25,8 @@ export async function runAnalysis({
   if (!dataset) throw new Error('dataset is required');
 
   // Step 1: Normalize & filter
-  const { sectorStocks, allStocks, issues } = dataPipeline.prepareDataForAnalysis(
-    dataset,
-    sector
-  );
+  const { sectorStocks, allStocks, issues } =
+    dataPipeline.prepareDataForAnalysis(dataset, sector);
 
   // Step 2: Screen
   const screener = new StockScreener();
@@ -44,7 +43,10 @@ export async function runAnalysis({
   // Step 3b: Valuation – compute fair value and upside for top two undervalued
   const valuationSummary = valueTopUndervalued(topInSector, sector);
 
-  const prompt = dataPipeline.buildPrompt({ stocks: topInSector }, sector);
+  const prompt = dataPipeline.buildPrompt(
+    { stocks: topInSector },
+    sector
+  );
 
   // Step 4: Optional Gemini report
   let report = null;
@@ -65,10 +67,17 @@ export async function runAnalysis({
 /**
  * Convenience: run only normalization + screening + valuation for a sector.
  */
-export async function runValuation({ sector, criteria = {}, dataset }) {
+export async function runValuation({
+  sector,
+  criteria = {},
+  dataset,
+}) {
   if (!sector) throw new Error('sector is required');
   if (!dataset) throw new Error('dataset is required');
-  const { allStocks } = dataPipeline.prepareDataForAnalysis(dataset, sector);
+  const { allStocks } = dataPipeline.prepareDataForAnalysis(
+    dataset,
+    sector
+  );
   const screener = new StockScreener();
   const screeningResults = await screener.screenStocks(
     { sector, ...criteria },

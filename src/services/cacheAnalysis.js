@@ -3,7 +3,7 @@
 // then reuses the existing analysisRunner pipeline (normalize -> screen -> value).
 
 import { loadSectorData } from './perplexityCache';
-import { runAnalysis, runValuation } from './analysisRunner';
+import runAnalysis, { runValuation } from './analysisRunner';
 
 /**
  * Convert snake_case sector key to human-readable (Information Technology)

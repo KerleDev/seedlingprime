@@ -183,7 +183,12 @@ function Dashboard() {
       <SectionCard
         title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
       >
-        <UndervaluedOpportunities sectorKey={selectedSector} />
+        <UndervaluedOpportunities
+          sectorKey={selectedSector}
+          liveData={ppxlData}
+          loading={ppxlLoading}
+          error={ppxlError}
+        />
       </SectionCard>
 
       {/* Main grid (do NOT use <main> here because Layout already has one) */}
@@ -205,6 +210,9 @@ function Dashboard() {
                 sectorPB={sectorPB}
                 selectedSector={selectedSector}
                 displayName={shaped.displayNames[selectedSector]}
+                liveData={ppxlData}
+                loading={ppxlLoading}
+                error={ppxlError}
               />
             </div>
           </div>
@@ -218,7 +226,12 @@ function Dashboard() {
           </div>
         </SectionCard>
         <SectionCard title="Complete Sector Breakdown">
-          <SectorBreakdownTable sectorKey={selectedSector} />
+          <SectorBreakdownTable
+            sectorKey={selectedSector}
+            liveData={ppxlData}
+            loading={ppxlLoading}
+            error={ppxlError}
+          />
         </SectionCard>
       </section>
     </div>

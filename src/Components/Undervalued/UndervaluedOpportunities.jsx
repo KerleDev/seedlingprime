@@ -57,6 +57,9 @@ function computeUndervaluationScore(m) {
 
 export default function UndervaluedOpportunities({
   sectorKey,
+  liveData = null,
+  loading: parentLoading = false,
+  error: parentError = '',
   utils = uoUtils,
 }) {
   const [loading, setLoading] = useState(true);
@@ -71,30 +74,119 @@ export default function UndervaluedOpportunities({
       try {
         setLoading(true);
         setError("");
-        // Preferred: valuation from cached Perplexity
+
+        // If parent has an error, use it
+        if (parentError) {
+          setError(parentError);
+          setLoading(false);
+          return;
+        }
+
+        // If parent is still loading, wait
+        if (parentLoading) {
+          setLoading(true);
+          return;
+        }
+
+        // Priority 1: Use live data directly if available (but only when no valuation analysis exists)
+        // We'll check for valuation first, then use live data to enhance it
+        let hasValuationAnalysis = false;
+        try {
+          const valuation = await runSectorValuationFromCache(sectorKey);
+          if (valuation?.results && Array.isArray(valuation.results) && valuation.results.length > 0) {
+            hasValuationAnalysis = true;
+          }
+        } catch {
+          // No valuation available, continue with live data only
+        }
+
+        if (!hasValuationAnalysis && liveData && typeof liveData === 'object' && liveData.stocks) {
+          try {
+            // Process live data stocks directly
+            const liveStocks = Array.isArray(liveData.stocks) ? liveData.stocks : [];
+            const enriched = liveStocks.map((stock) => {
+              const name = stock.name || utils.getStockName(stock.symbol) || stock.symbol;
+              const metricObj = {
+                peRatio: stock.pe_ratio,
+                pbRatio: stock.pb_ratio,
+                psRatio: stock.ps_ratio,
+                roe: stock.roe,
+                cashFlowMargin: stock.free_cash_flow_margin,
+                deRatio: stock.de_ratio,
+                revenueGrowth: stock.rev_growth,
+                netIncomeGrowth: stock.net_income_growth,
+                price: stock.price,
+                change: 0 // Default, as this isn't in live data
+              };
+
+              // Format metrics for MetricCard display
+              const metrics = [
+                { label: "P/E Ratio", value: stock.pe_ratio },
+                { label: "P/B Ratio", value: stock.pb_ratio },
+                { label: "P/S Ratio", value: stock.ps_ratio },
+                { label: "ROE", value: stock.roe, type: "pct" },
+                { label: "FCF M", value: stock.free_cash_flow_margin, type: "pct" },
+                { label: "D/E", value: stock.de_ratio },
+                { label: "RevG", value: stock.rev_growth, type: "pct" },
+                { label: "NIG", value: stock.net_income_growth, type: "pct" },
+                { label: "Change", value: 0, type: "pct", colorize: true }, // Default since not in live data
+              ];
+
+              return {
+                ticker: stock.symbol,
+                name,
+                metrics,
+                price: stock.price,
+                _score: computeUndervaluationScore(metricObj)
+              };
+            });
+
+            const sorted = enriched.sort((a, b) => a._score - b._score);
+            if (!cancelled) setCandidates(sorted.slice(0, 2));
+            setLoading(false);
+            return;
+          } catch (e) {
+            console.warn("Failed to process live data:", e);
+          }
+        }
+
+        // Priority 2: Enhanced valuation from cached Perplexity + live data metrics
         try {
           const valuation = await runSectorValuationFromCache(sectorKey);
           const topTwo = Array.isArray(valuation?.results) ? valuation.results : [];
+
           const mapped = topTwo.map((r) => {
             const name = utils.getStockName(r.symbol);
             const v = r.valuation || {};
+
+            // Try to find corresponding live data for this stock
+            let liveStock = null;
+            if (liveData && liveData.stocks) {
+              liveStock = liveData.stocks.find(s => s.symbol === r.symbol);
+            }
+
+            // Use live data for basic metrics if available, otherwise use analysis results
+            // Note: valuation percentages (upside, MoS) are already in percentage format (e.g., 24.5 for 24.5%)
+            // But live data percentages might be in decimal format (e.g., 0.245 for 24.5%)
+            const metrics = [
+              { label: "Fair Value", value: v.blendedFairPrice, type: "money" },
+              { label: "Upside", value: v.upsidePct, type: "pct_already", colorize: true },
+              { label: "MoS", value: v.marginOfSafety, type: "pct_already", colorize: true },
+              { label: "P/E", value: liveStock?.pe_ratio ?? r.peRatio },
+              { label: "P/B", value: liveStock?.pb_ratio ?? r.priceToBook },
+              { label: "P/S", value: liveStock?.ps_ratio ?? r.priceToSales },
+              { label: "ROE", value: liveStock?.roe ?? r.roe, type: "pct" },
+              { label: "FCF M", value: liveStock?.free_cash_flow_margin ?? r.freeCashFlowMargin, type: "pct" },
+              { label: "D/E", value: liveStock?.de_ratio ?? r.debtToEquity },
+              { label: "RevG", value: liveStock?.rev_growth ?? r.revenueGrowth, type: "pct" },
+              { label: "NIG", value: liveStock?.net_income_growth ?? r.netIncomeGrowth, type: "pct" },
+            ];
+
             return {
               ticker: r.symbol,
               name,
-              price: r.price,
-              metrics: [
-                { label: "Fair Value", value: v.blendedFairPrice, type: "money" },
-                { label: "Upside", value: v.upsidePct, type: "pct", colorize: true },
-                { label: "MoS", value: v.marginOfSafety, type: "pct", colorize: true },
-                { label: "P/E", value: r.peRatio },
-                { label: "P/B", value: r.priceToBook },
-                { label: "P/S", value: r.priceToSales },
-                { label: "ROE", value: r.roe, type: "pct" },
-                { label: "FCF M", value: r.freeCashFlowMargin, type: "pct" },
-                { label: "D/E", value: r.debtToEquity },
-                { label: "RevG", value: r.revenueGrowth, type: "pct" },
-                { label: "NIG", value: r.netIncomeGrowth, type: "pct" },
-              ],
+              price: liveStock?.price ?? r.price,
+              metrics,
             };
           });
           if (!cancelled) setValuationCandidates(mapped);
@@ -102,7 +194,7 @@ export default function UndervaluedOpportunities({
           console.warn("Valuation from cache not available:", e?.message || e);
         }
 
-        // Fallback: adapter-based scoring
+        // Priority 3: Fallback: adapter-based scoring
         const tickers = await Promise.resolve(utils.getStocksBySector(sectorKey));
         const enriched = await Promise.all(
           tickers.map(async (t) => {
@@ -126,7 +218,7 @@ export default function UndervaluedOpportunities({
     return () => {
       cancelled = true;
     };
-  }, [sectorKey, utils]);
+  }, [sectorKey, liveData, parentLoading, parentError, utils]);
 
   const content = useMemo(() => {
     if (loading) {

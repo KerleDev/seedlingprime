@@ -20,10 +20,10 @@ import { askPerplexity } from '../../services/perplexityService';
 const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames, etf }
 
 function Dashboard() {
-  // Default to "technology" if exists, otherwise first sector key (or empty)
+  // Default to "information_technology" if exists, otherwise first sector key (or empty)
   const defaultKey =
-    (shaped?.sectors?.technology
-      ? 'technology'
+    (shaped?.sectors?.information_technology
+      ? 'information_technology'
       : Object.keys(shaped?.sectors || {})[0]) || '';
 
   const [selectedSector, setSelectedSector] = useState(defaultKey);

@@ -8,16 +8,19 @@ import SectionCard from '../sectionCard/SectionCard';
 import SectorDropdownData from '../SectorDropdown/SectorDropdownData';
 import SortDropdown from '../SectorDropdown/SortDropdown';
 import SectorChart from '../SectorChart/SectorChart';
-import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities";
-import SectorBreakdownTable from "../SectorBreakdown/SectorBreakdownTable";
+import UndervaluedOpportunities from '../Undervalued/UndervaluedOpportunities';
+import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import './Dashboard.css';
-
 
 // Data / utils
 import newSectorData from '../../utils/sectorDataNew';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';
+import {
+  saveSectorData,
+  loadSectorData,
+} from '../../services/perplexityCache';
 
 // Prepare once (pure transform)
 const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames, etf }
@@ -25,11 +28,9 @@ const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames
 function Dashboard() {
   // Default to "information_technology" if exists, otherwise first sector key (or empty)
   const defaultKey =
-
     (shaped?.sectors?.information_technology
       ? 'information_technology'
       : Object.keys(shaped?.sectors || {})[0]) || '';
-
 
   const [selectedSector, setSelectedSector] = useState(defaultKey);
   const [sortMode, setSortMode] = useState('asc'); // "asc" | "desc" | "distance" | "symbol"
@@ -91,10 +92,20 @@ function Dashboard() {
         setPpxlLoading(true);
         setPpxlError('');
         setPpxlData(null);
+        // 1) Try cache first (3-hour TTL by default inside loadSectorData)
+        const cached = loadSectorData(selectedSector);
+        if (!cancelled && cached) {
+          setPpxlData(cached);
+          setPpxlLoading(false);
+          return; // skip API call if cache is valid
+        }
         const { json, text } = await askPerplexity(selectedSector);
         if (cancelled) return;
         // Prefer JSON, fallback to text
-        setPpxlData(json || text || null);
+        const payload = json || text || null;
+        setPpxlData(payload);
+        // Persist for reuse by screening and other services
+        saveSectorData(selectedSector, payload);
         // Also log for debugging
         console.log(
           'Perplexity data for sector:',
@@ -141,8 +152,7 @@ function Dashboard() {
       {/* Top controls */}
       <div
         className="page-controls"
-
-        style={{ display: "flex", gap: 12, alignItems: "center" }}
+        style={{ display: 'flex', gap: 12, alignItems: 'center' }}
       >
         <SectorDropdownData
           sectors={shaped.sectors}

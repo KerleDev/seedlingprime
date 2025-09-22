@@ -1,22 +1,22 @@
 // Flattens sectorDataNew structure into an array of canonical stock objects
 // Applies field normalization and validation
 
-const { normalizeStock } = require('./normalizeStock');
-const { validateStock } = require('./validateStock');
+const { normalizeStock } = require("./normalizeStock");
+const { validateStock } = require("./validateStock");
 
 /**
  * Convert sector label: uses sector_name if present, strips trailing ' Sector'
  * Fallback: title-case of key replacing underscores with spaces
  */
 function formatSectorName(sectorKey, sectorObj) {
-  if (sectorObj && typeof sectorObj.sector_name === 'string') {
+  if (sectorObj && typeof sectorObj.sector_name === "string") {
     const s = sectorObj.sector_name.trim();
-    return s.endsWith(' Sector') ? s.replace(/ Sector$/, '') : s;
+    return s.endsWith(" Sector") ? s.replace(/ Sector$/, "") : s;
   }
   return sectorKey
-    .split('_')
+    .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 /**
@@ -25,7 +25,7 @@ function formatSectorName(sectorKey, sectorObj) {
  */
 function toPercentIfDecimal(v) {
   if (v == null) return v;
-  if (typeof v !== 'number' || Number.isNaN(v)) return v;
+  if (typeof v !== "number" || Number.isNaN(v)) return v;
   if (v > -1 && v < 1) return v * 100;
   return v; // already in percent units
 }
@@ -39,7 +39,11 @@ function normalizeSectorData(sectorDataNew) {
   const out = [];
   const issuesMap = {};
 
-  if (!sectorDataNew || typeof sectorDataNew !== 'object' || !sectorDataNew.sectors) {
+  if (
+    !sectorDataNew ||
+    typeof sectorDataNew !== "object" ||
+    !sectorDataNew.sectors
+  ) {
     return { stocks: out, issues: issuesMap };
   }
 
@@ -60,7 +64,11 @@ function normalizeSectorData(sectorDataNew) {
         // Keep roe as-is (dataset appears already in percent units)
       };
 
-      const canonical = normalizeStock({ symbol, sector: sectorName, raw: adjusted });
+      const canonical = normalizeStock({
+        symbol,
+        sector: sectorName,
+        raw: adjusted,
+      });
       const { valid, issues } = validateStock(canonical);
       if (!valid) {
         issuesMap[symbol] = issues;

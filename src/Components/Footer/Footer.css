@@ -1,5 +1,5 @@
 .site-footer {
-  background: #181743;                   
+  background: #181743;
   padding-block: clamp(16px, 2.5vw, 24px);
 }
 
@@ -15,7 +15,7 @@
 
 
 .footer-disclaimer {
-  color: var(--bar-background);       
+  color: var(--bar-background);
   font-size: 1rem;
   line-height: 1.6;
   text-align: center;

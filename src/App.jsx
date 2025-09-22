@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./Layout";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Landing from "./Components/Landing/Landing";
-import './App.css'
+import "./App.css";
 
 function App() {
   return (

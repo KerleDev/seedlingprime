@@ -4,9 +4,11 @@
   align-items: center;
 
   padding: 12px 24px;
-  background: var(--bar-background);   /* uses your --bar-background: #F5F8FE */
+  background: var(--bar-background);
+  /* uses your --bar-background: #F5F8FE */
   border-bottom: 1px solid var(--stroke);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* subtle shadow */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  /* subtle shadow */
 }
 
 /* Left side: logo + app name */
@@ -14,11 +16,11 @@
   display: flex;
   align-items: center;
   gap: 8px;
-   text-decoration: none;
-    color: inherit; 
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 10px;
 }
 
 .topbar-start:focus-visible {
@@ -33,16 +35,19 @@
 
 .logo-text {
   font-family: var(--font-poppins);
-  font-size: var(--S3);        /* 24px */
+  font-size: var(--S3);
+  /* 24px */
   font-weight: var(--fw-bold);
 }
 
 .logo-text .seed {
-  color: var(--app-green); /* green */
+  color: var(--app-green);
+  /* green */
 }
 
 .logo-text .ling {
-  color: var(--app-text--dark); /* navy */
+  color: var(--app-text--dark);
+  /* navy */
 }
 
 /* Right side: action buttons */

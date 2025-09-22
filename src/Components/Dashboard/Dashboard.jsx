@@ -8,7 +8,10 @@ import SectionCard from '../sectionCard/SectionCard';
 import SectorDropdownData from '../SectorDropdown/SectorDropdownData';
 import SortDropdown from '../SectorDropdown/SortDropdown';
 import SectorChart from '../SectorChart/SectorChart';
+import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities";
+import SectorBreakdownTable from "../SectorBreakdown/SectorBreakdownTable";
 import './Dashboard.css';
+
 
 // Data / utils
 import newSectorData from '../../utils/sectorDataNew';
@@ -22,9 +25,11 @@ const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames
 function Dashboard() {
   // Default to "information_technology" if exists, otherwise first sector key (or empty)
   const defaultKey =
+
     (shaped?.sectors?.information_technology
       ? 'information_technology'
       : Object.keys(shaped?.sectors || {})[0]) || '';
+
 
   const [selectedSector, setSelectedSector] = useState(defaultKey);
   const [sortMode, setSortMode] = useState('asc'); // "asc" | "desc" | "distance" | "symbol"
@@ -136,7 +141,8 @@ function Dashboard() {
       {/* Top controls */}
       <div
         className="page-controls"
-        style={{ display: 'flex', gap: 12, alignItems: 'center' }}
+
+        style={{ display: "flex", gap: 12, alignItems: "center" }}
       >
         <SectorDropdownData
           sectors={shaped.sectors}
@@ -163,6 +169,12 @@ function Dashboard() {
           )}
         </div>
       </div>
+
+      <SectionCard
+        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
+      >
+        <UndervaluedOpportunities sectorKey={selectedSector} />
+      </SectionCard>
 
       {/* Main grid (do NOT use <main> here because Layout already has one) */}
       <section
@@ -195,14 +207,8 @@ function Dashboard() {
             />
           </div>
         </SectionCard>
-
-        {/* Other cards (placeholders for now) */}
-        <SectionCard title="Undervalued Opportunities">
-          {/* TODO: add table/list of opportunities */}
-        </SectionCard>
-
         <SectionCard title="Complete Sector Breakdown">
-          {/* TODO: add full sector table */}
+          <SectorBreakdownTable sectorKey={selectedSector} />
         </SectionCard>
       </section>
     </div>

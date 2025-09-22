@@ -10,7 +10,7 @@ import { extractJSON } from '../utils/json';
 export async function askPerplexity(sectorKeyOrQuery) {
   const data = await sendToPerplexity(ppxlPrompt(sectorKeyOrQuery), {
     system: 'You are a financial analyst.',
-    temperature: 0.2,
+    temperature: 0.1,
     return_citations: true,
     search_recency_filter: 'month',
   });

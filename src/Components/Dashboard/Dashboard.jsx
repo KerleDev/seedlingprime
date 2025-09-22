@@ -43,11 +43,24 @@ function Dashboard() {
     setSelectedSector(key);
   }, []);
 
-  // Derive the table for the chosen sector
-  const stockData = useMemo(
-    () => shaped?.sectors?.[selectedSector] || [],
-    [selectedSector]
-  );
+  // Derive the table for the chosen sector - use live data if available
+  const stockData = useMemo(() => {
+    // Priority 1: Use live data if available
+    if (ppxlData && typeof ppxlData === 'object' && ppxlData.stocks && Array.isArray(ppxlData.stocks)) {
+      return ppxlData.stocks.map(stock => ({
+        symbol: stock.symbol,
+        name: stock.name || stock.symbol,
+        currentPrice: stock.price,
+        pe: stock.pe_ratio,
+        pb: stock.pb_ratio,
+        // Add other fields needed for compatibility
+        marketCap: stock.market_cap
+      }));
+    }
+
+    // Priority 2: Fall back to static data
+    return shaped?.sectors?.[selectedSector] || [];
+  }, [selectedSector, ppxlData]);
 
   // Compute metrics (mean price, avg P/E, avg P/B)
   const { sectorMean, sectorPE, sectorPB } = useMemo(

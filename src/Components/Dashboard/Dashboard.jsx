@@ -13,7 +13,7 @@ import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import './Dashboard.css';
 
 // Data / utils
-import newSectorData from '../../utils/sectorDataNew';
+import newSectorData from '../../constants/sectorDataNew';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';
@@ -46,15 +46,20 @@ function Dashboard() {
   // Derive the table for the chosen sector - use live data if available
   const stockData = useMemo(() => {
     // Priority 1: Use live data if available
-    if (ppxlData && typeof ppxlData === 'object' && ppxlData.stocks && Array.isArray(ppxlData.stocks)) {
-      return ppxlData.stocks.map(stock => ({
+    if (
+      ppxlData &&
+      typeof ppxlData === 'object' &&
+      ppxlData.stocks &&
+      Array.isArray(ppxlData.stocks)
+    ) {
+      return ppxlData.stocks.map((stock) => ({
         symbol: stock.symbol,
         name: stock.name || stock.symbol,
         currentPrice: stock.price,
         pe: stock.pe_ratio,
         pb: stock.pb_ratio,
         // Add other fields needed for compatibility
-        marketCap: stock.market_cap
+        marketCap: stock.market_cap,
       }));
     }
 

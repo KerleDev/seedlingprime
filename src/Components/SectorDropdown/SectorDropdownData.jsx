@@ -1,7 +1,8 @@
 // src/components/SectorDropdown/SectorDropdownData.jsx
 import { useMemo } from 'react';
 import SectorDropdown from './SectorDropdown';
-import newSectorData from '../../utils/sectorDataNew';
+import newSectorData from '../../constants/sectorDataNew';
+import simplifiedSectorData from '../../constants/simplifiedSectorData';
 function buildSectorsMap(data) {
   const sectorsObj = data?.sectors ?? {};
   const out = {};
@@ -22,7 +23,10 @@ export default function SectorDropdownData({
   onSectorChange,
   label,
 }) {
-  const SECTORS = useMemo(() => buildSectorsMap(newSectorData), []);
+  const SECTORS = useMemo(
+    () => buildSectorsMap(simplifiedSectorData),
+    []
+  );
 
   return (
     <SectorDropdown

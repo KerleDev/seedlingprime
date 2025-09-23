@@ -1,6 +1,7 @@
 const simplifiedSectorData = {
   sectors: {
     energy: {
+      sector_name: 'Energy Sector',
       stocks: [
         'XOM',
         'CVX',
@@ -17,6 +18,7 @@ const simplifiedSectorData = {
       ],
     },
     materials: {
+      sector_name: 'Materials Sector',
       stocks: [
         'LIN',
         'FCX',
@@ -31,6 +33,7 @@ const simplifiedSectorData = {
       ],
     },
     industrials: {
+      sector_name: 'Industrials Sector',
       stocks: [
         'BA',
         'CAT',
@@ -45,6 +48,7 @@ const simplifiedSectorData = {
       ],
     },
     utilities: {
+      sector_name: 'Utilities Sector',
       stocks: [
         'NEE',
         'AEP',
@@ -59,6 +63,7 @@ const simplifiedSectorData = {
       ],
     },
     healthcare: {
+      sector_name: 'Healthcare Sector',
       stocks: [
         'JNJ',
         'UNH',
@@ -73,6 +78,7 @@ const simplifiedSectorData = {
       ],
     },
     financial: {
+      sector_name: 'Financial Sector',
       stocks: [
         'GS',
         'MS',
@@ -87,6 +93,7 @@ const simplifiedSectorData = {
       ],
     },
     consumer_discretionary: {
+      sector_name: 'Consumer Discretionary Sector',
       stocks: [
         'AMZN',
         'TSLA',
@@ -101,6 +108,7 @@ const simplifiedSectorData = {
       ],
     },
     consumer_staples: {
+      sector_name: 'Consumer Staples Sector',
       stocks: [
         'PG',
         'KO',
@@ -115,6 +123,7 @@ const simplifiedSectorData = {
       ],
     },
     information_technology: {
+      sector_name: 'Information Technology Sector',
       stocks: [
         'AAPL',
         'MSFT',
@@ -129,6 +138,7 @@ const simplifiedSectorData = {
       ],
     },
     communication_services: {
+      sector_name: 'Communication Services Sector',
       stocks: [
         'DIS',
         'CMCSA',
@@ -143,6 +153,7 @@ const simplifiedSectorData = {
       ],
     },
     real_estate: {
+      sector_name: 'Real Estate Sector',
       stocks: [
         'AMT',
         'EQIX',

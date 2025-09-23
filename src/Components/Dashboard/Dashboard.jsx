@@ -13,7 +13,7 @@ import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import './Dashboard.css';
 
 // Data / utils
-import newSectorData from '../../utils/sectorDataNew';
+import newSectorData from '../../constants/sectorDataNew';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';

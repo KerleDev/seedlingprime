@@ -168,7 +168,7 @@ export default function UndervaluedOpportunities({
             });
 
             if (!cancelled) {
-              setCandidates(mapped);
+              setCandidates(mapped.slice(0, 2));
               setDataSource('valuation');
               setLoading(false);
               return;

@@ -14,12 +14,9 @@ import './Dashboard.css';
 import './api-loader.css';
 
 // Data / utils
-<<<<<<< Updated upstream
-import newSectorData from '../../utils/sectorDataNew';
-=======
+
 // import newSectorData from '../../constants/sectorDataNew';
 import simplifiedSectorData from '../../constants/simplifiedSectorData';
->>>>>>> Stashed changes
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';

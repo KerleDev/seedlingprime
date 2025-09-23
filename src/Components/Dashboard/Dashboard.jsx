@@ -11,7 +11,6 @@ import SectorChart from '../SectorChart/SectorChart';
 import UndervaluedOpportunities from '../Undervalued/UndervaluedOpportunities';
 import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import './Dashboard.css';
-import './api-loader.css';
 
 // Data / utils
 
@@ -183,10 +182,8 @@ function Dashboard() {
         />
         {/* Live data status (Perplexity) */}
         <div style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
-          {/* <span className="loader"></span> */}
           {ppxlLoading && (
             <div>
-              <span className="loader"></span>
               <span className="api-status">Fetching live data…</span>
             </div>
           )}
@@ -255,6 +252,7 @@ function Dashboard() {
             />
           </div>
         </SectionCard>
+
         <SectionCard title="Complete Sector Breakdown">
           <SectorBreakdownTable
             sectorKey={selectedSector}

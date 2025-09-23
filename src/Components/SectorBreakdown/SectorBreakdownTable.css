@@ -1,6 +1,8 @@
 /* Wrapper — no horizontal scroll */
 .sbt-wrap {
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
   overflow-x: visible;
   border-radius: 12px;
 }

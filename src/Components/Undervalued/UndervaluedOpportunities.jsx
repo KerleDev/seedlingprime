@@ -1,22 +1,22 @@
 // src/components/Undervalued/UndervaluedOpportunities.jsx
 // Shows the top 2 “undervalued” stocks for a sector using MetricCard.
 
-import React, { useEffect, useMemo, useState } from "react";
-import "./UndervaluedOpportunities.css";
-import { uoUtils } from "../../utils/uoUtilsAdapter";
-import MetricCard from "../Metric Card/Metric Card";
-import { runSectorValuationFromCache } from "../../services/cacheAnalysis";
+import React, { useEffect, useMemo, useState } from 'react';
+import './UndervaluedOpportunities.css';
+import { uoUtils } from '../../utils/uoUtilsAdapter';
+import MetricCard from '../Metric Card/Metric Card';
+import { runSectorValuationFromCache } from '../../services/cacheAnalysis';
 
 // local formatters (MetricCard also formats its items)
-const money = (n) =>
-  Number.isFinite(n)
-    ? `$${n.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
-    : "—";
-const ratio = (n) => (Number.isFinite(n) ? n.toFixed(2) : "—");
-const pctSmart = (n) => {
-  if (!Number.isFinite(n)) return "—";
-  return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
-};
+// const money = (n) =>
+//   Number.isFinite(n)
+//     ? `$${n.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
+//     : '—';
+// const ratio = (n) => (Number.isFinite(n) ? n.toFixed(2) : '—');
+// const pctSmart = (n) => {
+//   if (!Number.isFinite(n)) return '—';
+//   return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
+// };
 
 // Composite score for “undervalued” (lower is better). Tune weights as you like.
 function computeUndervaluationScore(m) {
@@ -63,9 +63,56 @@ export default function UndervaluedOpportunities({
   utils = uoUtils,
 }) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [candidates, setCandidates] = useState([]);
-  const [valuationCandidates, setValuationCandidates] = useState([]);
+  const [dataSource, setDataSource] = useState('');
+
+  const formatMetrics = (stock, source = 'fallback') => {
+    if (source === 'valuation') {
+      const v = stock.valuation || {};
+      return [
+        { label: 'Fair Value', value: v.blendedFairPrice, type: 'money' },
+        { label: 'Upside', value: v.upsidePct, type: 'pct_already', colorize: true },
+        { label: 'MoS', value: v.marginOfSafety, type: 'pct_already', colorize: true },
+        { label: 'P/E', value: stock.peRatio },
+        { label: 'P/B', value: stock.priceToBook },
+        { label: 'P/S', value: stock.priceToSales },
+        { label: 'ROE', value: stock.roe, type: 'pct' },
+        { label: 'FCF M', value: stock.freeCashFlowMargin, type: 'pct' },
+        { label: 'D/E', value: stock.debtToEquity },
+        { label: 'RevG', value: stock.revenueGrowth, type: 'pct' },
+        { label: 'NIG', value: stock.netIncomeGrowth, type: 'pct' },
+      ];
+    }
+
+    if (source === 'live') {
+      return [
+        { label: 'P/E Ratio', value: stock.pe_ratio },
+        { label: 'P/B Ratio', value: stock.pb_ratio },
+        { label: 'P/S Ratio', value: stock.ps_ratio },
+        { label: 'ROE', value: stock.roe, type: 'pct' },
+        { label: 'FCF M', value: stock.free_cash_flow_margin, type: 'pct' },
+        { label: 'D/E', value: stock.de_ratio },
+        { label: 'RevG', value: stock.rev_growth, type: 'pct' },
+        { label: 'NIG', value: stock.net_income_growth, type: 'pct' },
+        { label: 'Change', value: 0, type: 'pct', colorize: true },
+      ];
+    }
+
+    // fallback
+    const m = stock.metrics || stock;
+    return [
+      { label: 'P/E Ratio', value: m.peRatio },
+      { label: 'P/B Ratio', value: m.pbRatio },
+      { label: 'P/S Ratio', value: m.psRatio },
+      { label: 'ROE', value: m.roe, type: 'pct' },
+      { label: 'CashFlowM', value: m.cashFlowMargin, type: 'pct' },
+      { label: 'D/E', value: m.deRatio },
+      { label: 'RevenueG', value: m.revenueGrowth, type: 'pct' },
+      { label: 'NIG', value: m.netIncomeGrowth, type: 'pct' },
+      { label: 'Change', value: m.change, type: 'pct', colorize: true },
+    ];
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -73,38 +120,68 @@ export default function UndervaluedOpportunities({
     async function load() {
       try {
         setLoading(true);
-        setError("");
+        setError('');
+        setDataSource('');
 
-        // If parent has an error, use it
         if (parentError) {
           setError(parentError);
           setLoading(false);
           return;
         }
 
-        // If parent is still loading, wait
         if (parentLoading) {
           setLoading(true);
           return;
         }
 
-        // Priority 1: Use live data directly if available (but only when no valuation analysis exists)
-        // We'll check for valuation first, then use live data to enhance it
-        let hasValuationAnalysis = false;
+        // Try data sources in priority order
+
+        // Priority 1: Valuation analysis (cached Perplexity results)
         try {
           const valuation = await runSectorValuationFromCache(sectorKey);
           if (valuation?.results && Array.isArray(valuation.results) && valuation.results.length > 0) {
-            hasValuationAnalysis = true;
+            const mapped = valuation.results.map((r) => {
+              const name = utils.getStockName(r.symbol);
+              let liveStock = null;
+              if (liveData?.stocks) {
+                liveStock = liveData.stocks.find(s => s.symbol === r.symbol);
+              }
+
+              const mergedStock = {
+                ...r,
+                peRatio: liveStock?.pe_ratio ?? r.peRatio,
+                priceToBook: liveStock?.pb_ratio ?? r.priceToBook,
+                priceToSales: liveStock?.ps_ratio ?? r.priceToSales,
+                roe: liveStock?.roe ?? r.roe,
+                freeCashFlowMargin: liveStock?.free_cash_flow_margin ?? r.freeCashFlowMargin,
+                debtToEquity: liveStock?.de_ratio ?? r.debtToEquity,
+                revenueGrowth: liveStock?.rev_growth ?? r.revenueGrowth,
+                netIncomeGrowth: liveStock?.net_income_growth ?? r.netIncomeGrowth,
+              };
+
+              return {
+                ticker: r.symbol,
+                name,
+                price: liveStock?.price ?? r.price,
+                metrics: formatMetrics(mergedStock, 'valuation'),
+              };
+            });
+
+            if (!cancelled) {
+              setCandidates(mapped);
+              setDataSource('valuation');
+              setLoading(false);
+              return;
+            }
           }
-        } catch {
-          // No valuation available, continue with live data only
+        } catch (e) {
+          console.warn('Valuation analysis not available:', e?.message || e);
         }
 
-        if (!hasValuationAnalysis && liveData && typeof liveData === 'object' && liveData.stocks) {
+        // Priority 2: Live data only
+        if (liveData?.stocks && Array.isArray(liveData.stocks)) {
           try {
-            // Process live data stocks directly
-            const liveStocks = Array.isArray(liveData.stocks) ? liveData.stocks : [];
-            const enriched = liveStocks.map((stock) => {
+            const enriched = liveData.stocks.map((stock) => {
               const name = stock.name || utils.getStockName(stock.symbol) || stock.symbol;
               const metricObj = {
                 peRatio: stock.pe_ratio,
@@ -116,85 +193,31 @@ export default function UndervaluedOpportunities({
                 revenueGrowth: stock.rev_growth,
                 netIncomeGrowth: stock.net_income_growth,
                 price: stock.price,
-                change: 0 // Default, as this isn't in live data
+                change: 0,
               };
-
-              // Format metrics for MetricCard display
-              const metrics = [
-                { label: "P/E Ratio", value: stock.pe_ratio },
-                { label: "P/B Ratio", value: stock.pb_ratio },
-                { label: "P/S Ratio", value: stock.ps_ratio },
-                { label: "ROE", value: stock.roe, type: "pct" },
-                { label: "FCF M", value: stock.free_cash_flow_margin, type: "pct" },
-                { label: "D/E", value: stock.de_ratio },
-                { label: "RevG", value: stock.rev_growth, type: "pct" },
-                { label: "NIG", value: stock.net_income_growth, type: "pct" },
-                { label: "Change", value: 0, type: "pct", colorize: true }, // Default since not in live data
-              ];
 
               return {
                 ticker: stock.symbol,
                 name,
-                metrics,
+                metrics: formatMetrics(stock, 'live'),
                 price: stock.price,
-                _score: computeUndervaluationScore(metricObj)
+                _score: computeUndervaluationScore(metricObj),
               };
             });
 
             const sorted = enriched.sort((a, b) => a._score - b._score);
-            if (!cancelled) setCandidates(sorted.slice(0, 2));
-            setLoading(false);
-            return;
+            if (!cancelled) {
+              setCandidates(sorted.slice(0, 2));
+              setDataSource('live');
+              setLoading(false);
+              return;
+            }
           } catch (e) {
-            console.warn("Failed to process live data:", e);
+            console.warn('Failed to process live data:', e);
           }
         }
 
-        // Priority 2: Enhanced valuation from cached Perplexity + live data metrics
-        try {
-          const valuation = await runSectorValuationFromCache(sectorKey);
-          const topTwo = Array.isArray(valuation?.results) ? valuation.results : [];
-
-          const mapped = topTwo.map((r) => {
-            const name = utils.getStockName(r.symbol);
-            const v = r.valuation || {};
-
-            // Try to find corresponding live data for this stock
-            let liveStock = null;
-            if (liveData && liveData.stocks) {
-              liveStock = liveData.stocks.find(s => s.symbol === r.symbol);
-            }
-
-            // Use live data for basic metrics if available, otherwise use analysis results
-            // Note: valuation percentages (upside, MoS) are already in percentage format (e.g., 24.5 for 24.5%)
-            // But live data percentages might be in decimal format (e.g., 0.245 for 24.5%)
-            const metrics = [
-              { label: "Fair Value", value: v.blendedFairPrice, type: "money" },
-              { label: "Upside", value: v.upsidePct, type: "pct_already", colorize: true },
-              { label: "MoS", value: v.marginOfSafety, type: "pct_already", colorize: true },
-              { label: "P/E", value: liveStock?.pe_ratio ?? r.peRatio },
-              { label: "P/B", value: liveStock?.pb_ratio ?? r.priceToBook },
-              { label: "P/S", value: liveStock?.ps_ratio ?? r.priceToSales },
-              { label: "ROE", value: liveStock?.roe ?? r.roe, type: "pct" },
-              { label: "FCF M", value: liveStock?.free_cash_flow_margin ?? r.freeCashFlowMargin, type: "pct" },
-              { label: "D/E", value: liveStock?.de_ratio ?? r.debtToEquity },
-              { label: "RevG", value: liveStock?.rev_growth ?? r.revenueGrowth, type: "pct" },
-              { label: "NIG", value: liveStock?.net_income_growth ?? r.netIncomeGrowth, type: "pct" },
-            ];
-
-            return {
-              ticker: r.symbol,
-              name,
-              price: liveStock?.price ?? r.price,
-              metrics,
-            };
-          });
-          if (!cancelled) setValuationCandidates(mapped);
-        } catch (e) {
-          console.warn("Valuation from cache not available:", e?.message || e);
-        }
-
-        // Priority 3: Fallback: adapter-based scoring
+        // Priority 3: Fallback to adapter
         const tickers = await Promise.resolve(utils.getStocksBySector(sectorKey));
         const enriched = await Promise.all(
           tickers.map(async (t) => {
@@ -203,21 +226,28 @@ export default function UndervaluedOpportunities({
             return { ticker: t, name, metrics };
           })
         );
+
         const scored = enriched
-          .map((s) => ({ ...s, _score: computeUndervaluationScore(s.metrics) }))
+          .map((s) => ({
+            ...s,
+            metrics: formatMetrics(s, 'fallback'),
+            _score: computeUndervaluationScore(s.metrics),
+          }))
           .sort((a, b) => a._score - b._score);
-        if (!cancelled) setCandidates(scored.slice(0, 2));
+
+        if (!cancelled) {
+          setCandidates(scored.slice(0, 2));
+          setDataSource('fallback');
+        }
       } catch (e) {
-        if (!cancelled) setError(e?.message || "Failed to load opportunities");
+        if (!cancelled) setError(e?.message || 'Failed to load opportunities');
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
     load();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [sectorKey, liveData, parentLoading, parentError, utils]);
 
   const content = useMemo(() => {
@@ -229,45 +259,39 @@ export default function UndervaluedOpportunities({
         </div>
       );
     }
+
     if (error) return <p className="uval-error">{error}</p>;
-    const toRender = valuationCandidates.length ? valuationCandidates : candidates;
-    if (!toRender.length)
-      return <p className="uval-empty">No candidates found for this sector.</p>;
+
+    if (!candidates.length) {
+      return (
+        <p className="uval-empty">
+          No candidates found for this sector.
+        </p>
+      );
+    }
 
     return (
       <div className="uval-cards">
-        {toRender.map((s) => {
-          const m = s.metrics;
-          const metrics = [
-            { label: "P/E Ratio", value: m.peRatio },
-            { label: "P/B Ratio", value: m.pbRatio },
-            { label: "P/S Ratio", value: m.psRatio },
-            { label: "ROE", value: m.roe, type: "pct" },
-            { label: "CashFlowM", value: m.cashFlowMargin, type: "pct" },
-            { label: "D/E", value: m.deRatio },
-            { label: "RevenueG", value: m.revenueGrowth, type: "pct" },
-            { label: "NIG", value: m.netIncomeGrowth, type: "pct" },
-            { label: "Change", value: m.change, type: "pct", colorize: true },
-          ];
-
-          return (
-            <MetricCard
-              key={s.ticker}
-              ticker={s.ticker}
-              name={s.name}
-              price={s.price ?? m.price}
-              metrics={valuationCandidates.length ? s.metrics : metrics}
-              ctaDisabled={true}
-              ctaLabel="Generate AI Report"
-            />
-          );
-        })}
+        {candidates.map((stock) => (
+          <MetricCard
+            key={stock.ticker}
+            ticker={stock.ticker}
+            name={stock.name}
+            price={stock.price}
+            metrics={stock.metrics}
+            ctaDisabled={true}
+            ctaLabel="Generate AI Report"
+          />
+        ))}
       </div>
     );
-  }, [loading, error, candidates, valuationCandidates]);
+  }, [loading, error, candidates]);
 
   return (
-    <section className="uval-section" aria-label="Undervalued Opportunities">
+    <section
+      className="uval-section"
+      aria-label="Undervalued Opportunities"
+    >
       {content}
     </section>
   );

@@ -67,51 +67,50 @@ export default function UndervaluedOpportunities({
   const [candidates, setCandidates] = useState([]);
   const [dataSource, setDataSource] = useState('');
 
-  const formatMetrics = (stock, source = 'fallback') => {
+  const extractMetrics = (stock, source = 'fallback') => {
     if (source === 'valuation') {
       const v = stock.valuation || {};
-      return [
-        { label: 'Fair Value', value: v.blendedFairPrice, type: 'money' },
-        { label: 'Upside', value: v.upsidePct, type: 'pct_already', colorize: true },
-        { label: 'MoS', value: v.marginOfSafety, type: 'pct_already', colorize: true },
-        { label: 'P/E', value: stock.peRatio },
-        { label: 'P/B', value: stock.priceToBook },
-        { label: 'P/S', value: stock.priceToSales },
-        { label: 'ROE', value: stock.roe, type: 'pct' },
-        { label: 'FCF M', value: stock.freeCashFlowMargin, type: 'pct' },
-        { label: 'D/E', value: stock.debtToEquity },
-        { label: 'RevG', value: stock.revenueGrowth, type: 'pct' },
-        { label: 'NIG', value: stock.netIncomeGrowth, type: 'pct' },
-      ];
+      return {
+        fairValue: v.blendedFairPrice,
+        upside: v.upsidePct,
+        mos: v.marginOfSafety,
+        peRatio: stock.peRatio,
+      };
     }
 
     if (source === 'live') {
-      return [
-        { label: 'P/E Ratio', value: stock.pe_ratio },
-        { label: 'P/B Ratio', value: stock.pb_ratio },
-        { label: 'P/S Ratio', value: stock.ps_ratio },
-        { label: 'ROE', value: stock.roe, type: 'pct' },
-        { label: 'FCF M', value: stock.free_cash_flow_margin, type: 'pct' },
-        { label: 'D/E', value: stock.de_ratio },
-        { label: 'RevG', value: stock.rev_growth, type: 'pct' },
-        { label: 'NIG', value: stock.net_income_growth, type: 'pct' },
-        { label: 'Change', value: 0, type: 'pct', colorize: true },
-      ];
+      // For live data, we need to calculate fair value and upside
+      // Using a simple P/E based valuation as fallback
+      const currentPrice = stock.price || 0;
+      const pe = stock.pe_ratio || 15;
+      const sectorAvgPE = 18; // default sector average
+      const fairValue = currentPrice * (sectorAvgPE / pe);
+      const upside = ((fairValue - currentPrice) / currentPrice) * 100;
+      const mos = Math.max(0, upside - 20); // 20% margin of safety threshold
+
+      return {
+        fairValue: fairValue,
+        upside: upside,
+        mos: mos,
+        peRatio: pe,
+      };
     }
 
     // fallback
     const m = stock.metrics || stock;
-    return [
-      { label: 'P/E Ratio', value: m.peRatio },
-      { label: 'P/B Ratio', value: m.pbRatio },
-      { label: 'P/S Ratio', value: m.psRatio },
-      { label: 'ROE', value: m.roe, type: 'pct' },
-      { label: 'CashFlowM', value: m.cashFlowMargin, type: 'pct' },
-      { label: 'D/E', value: m.deRatio },
-      { label: 'RevenueG', value: m.revenueGrowth, type: 'pct' },
-      { label: 'NIG', value: m.netIncomeGrowth, type: 'pct' },
-      { label: 'Change', value: m.change, type: 'pct', colorize: true },
-    ];
+    const currentPrice = stock.price || m.currentPrice || 0;
+    const pe = m.peRatio || 15;
+    const sectorAvgPE = 18;
+    const fairValue = currentPrice * (sectorAvgPE / pe);
+    const upside = ((fairValue - currentPrice) / currentPrice) * 100;
+    const mos = Math.max(0, upside - 20);
+
+    return {
+      fairValue: fairValue,
+      upside: upside,
+      mos: mos,
+      peRatio: pe,
+    };
   };
 
   useEffect(() => {
@@ -159,11 +158,12 @@ export default function UndervaluedOpportunities({
                 netIncomeGrowth: liveStock?.net_income_growth ?? r.netIncomeGrowth,
               };
 
+              const metrics = extractMetrics(mergedStock, 'valuation');
               return {
                 ticker: r.symbol,
                 name,
                 price: liveStock?.price ?? r.price,
-                metrics: formatMetrics(mergedStock, 'valuation'),
+                ...metrics,
               };
             });
 
@@ -196,11 +196,12 @@ export default function UndervaluedOpportunities({
                 change: 0,
               };
 
+              const metrics = extractMetrics(stock, 'live');
               return {
                 ticker: stock.symbol,
                 name,
-                metrics: formatMetrics(stock, 'live'),
                 price: stock.price,
+                ...metrics,
                 _score: computeUndervaluationScore(metricObj),
               };
             });
@@ -228,11 +229,14 @@ export default function UndervaluedOpportunities({
         );
 
         const scored = enriched
-          .map((s) => ({
-            ...s,
-            metrics: formatMetrics(s, 'fallback'),
-            _score: computeUndervaluationScore(s.metrics),
-          }))
+          .map((s) => {
+            const metrics = extractMetrics(s, 'fallback');
+            return {
+              ...s,
+              ...metrics,
+              _score: computeUndervaluationScore(s.metrics),
+            };
+          })
           .sort((a, b) => a._score - b._score);
 
         if (!cancelled) {
@@ -278,7 +282,10 @@ export default function UndervaluedOpportunities({
             ticker={stock.ticker}
             name={stock.name}
             price={stock.price}
-            metrics={stock.metrics}
+            fairValue={stock.fairValue}
+            upside={stock.upside}
+            mos={stock.mos}
+            peRatio={stock.peRatio}
             ctaDisabled={true}
             ctaLabel="Generate AI Report"
           />

@@ -16,6 +16,7 @@ import {
 import ScreeningImg from "../../assets/ScreeningImg.svg";
 import DealsImg from "../../assets/DealsImg.svg";
 import GoalImg from "../../assets/GoalImg.svg";
+import BrandLogo from "../BrandLogo/BrandLogo";
 import "./Landing.css";
 
 function Landing() {
@@ -125,12 +126,18 @@ function Landing() {
           <h2 className="cta-title">Ready to Find Your Next Investment?</h2>
           <p className="cta-subtitle">
             Join thousands of investors using{" "}
-            <span className="brand-text">Seedling</span> to identify undervalued
-            opportunities.
+            <span className="brand-inline brand--glow">
+              <BrandLogo inline />
+            </span>{" "}
+            to identify undervalued opportunities.
           </p>
+
           <button
             className="btn btn--cta"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => {
+              navigate("/dashboard");
+              setTimeout(() => window.scrollTo(0, 0), 0);
+            }}
           >
             Get Started Free
           </button>

@@ -56,6 +56,34 @@
   color: var(--app-text);
 }
 
+.mc-top-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0;
+  gap: 16px;
+}
+
+.mc-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 24px 0;
+  gap: 16px;
+}
+
+.mc-top-row .mc-metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mc-bottom-row .mc-metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .mc-grid {
   display: flex;
   flex-wrap: wrap;
@@ -118,9 +146,28 @@
   transform: translateY(0);
 }
 
-/* Phones: 1 per row */
+/* Responsive design for mobile */
 @media (max-width: 600px) {
   .mc-metric {
     flex: 0 0 100%;
+  }
+
+  .mc-top-row,
+  .mc-bottom-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mc-top-row .mc-metric,
+  .mc-bottom-row .mc-metric {
+    text-align: center;
+  }
+}
+
+/* Tablets and small screens */
+@media (max-width: 768px) {
+  .mc-top-row,
+  .mc-bottom-row {
+    gap: 12px;
   }
 }

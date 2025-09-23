@@ -1,0 +1,36 @@
+.brand-logo {
+    display: inline-flex;
+    gap: .35rem;
+}
+
+.brand-logo-icon {
+    display: block;
+}
+
+.brand-logo-text {
+    font-weight: 800;
+    letter-spacing: .2px;
+    font-size: 1.15rem;
+    /* adjust in place where used if needed */
+}
+
+/* two-tone word */
+.brand-logo-seed {
+    color: #65A30D;
+}
+
+/* green */
+.brand-logo-ling {
+    color: #181743;
+}
+
+.brand-logo--inline {
+    align-items: baseline;
+    vertical-align: baseline;
+}
+
+.brand-logo--inline .brand-logo-icon {
+    width: 1.2em;
+    height: 1.2em;
+    transform: translateY(4px);
+}

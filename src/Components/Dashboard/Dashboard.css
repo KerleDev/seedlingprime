@@ -32,9 +32,15 @@
 
 /* Top dropdown row */
 .dashboard .page-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  margin: clamp(12px, 2.5vw, 20px) 0;
-  /* vertical spacing only */
+  margin: clamp(12px, 2.5vw, 20px) auto;
+  max-width: 1600px;
+  padding: 0 16px;
+  width: 100%;
 }
 
 /* Main grid */
@@ -46,14 +52,17 @@
 
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(12px, 2vw, 20px);
+  gap: clamp(16px, 2.5vw, 24px);
   grid-auto-rows: max-content;
   /* rows grow to fit content */
   align-items: stretch;
+  justify-items: center;
 }
 
 .dashboard-grid>* {
   min-height: 0;
+  width: 100%;
+  max-width: 1400px;
   /* helps in complex card layouts */
 }
 
@@ -72,7 +81,58 @@
 .chart-footer {
   margin-top: 12px;
   display: flex;
-  justify-content: flex-start;
-  margin: 0 0 2em 4em;
+  justify-content: center;
+  align-items: center;
+  margin: 1em auto 2em auto;
+  width: 100%;
+  max-width: 400px;
+}
 
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    width: min(100% - clamp(24px, 6vw, 120px), 1400px);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard .page-hero {
+    padding: 0 12px;
+    margin: clamp(8px, 2.5vw, 20px) auto 0;
+  }
+
+  .dashboard .page-controls {
+    padding: 0 12px;
+    margin: clamp(8px, 2vw, 16px) auto;
+  }
+
+  .dashboard-grid {
+    width: min(100% - 24px, 100%);
+    gap: clamp(12px, 2vw, 16px);
+    margin-block: clamp(8px, 2vw, 16px);
+  }
+
+  .chart-footer {
+    justify-content: center;
+    margin: 0.5em auto 1em auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard .page-hero {
+    padding: 0 8px;
+  }
+
+  .dashboard .page-controls {
+    padding: 0 8px;
+  }
+
+  .dashboard-grid {
+    width: min(100% - 16px, 100%);
+    gap: 12px;
+  }
+}
+
+.api-status {
+  color: rgba(127, 255, 212, 0.466);
 }

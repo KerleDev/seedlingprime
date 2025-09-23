@@ -8,15 +8,17 @@ import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import SeedLoader from "../SeedLoader/SeedLoader";
 import './Dashboard.css';
 
-// Data / utils (confirm these paths match your repo)
-import newSectorData from '../../constants/sectorDataNew';
+// Data / utils
+
+// import newSectorData from '../../constants/sectorDataNew';
+import simplifiedSectorData from '../../constants/simplifiedSectorData';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';
 import { saveSectorData, loadSectorData } from '../../services/perplexityCache';
 
 // Prepare once (pure transform)
-const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames, etf }
+const shaped = shapeSectorsFromReport(simplifiedSectorData); // { sectors, displayNames, etf }
 
 function Dashboard() {
   const defaultKey =
@@ -156,13 +158,22 @@ function Dashboard() {
           label="Choose a sector"
         />
         {/* Live data status (Perplexity) */}
-        <div style={{ marginRight: 8, fontSize: 12, color: '#6b7280' }}>
-          {ppxlLoading && <span>Fetching live data…</span>}
+        <div style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
+          {ppxlLoading && (
+            <div>
+              <span className="api-status">Fetching live data…</span>
+            </div>
+          )}
           {!ppxlLoading && ppxlError && (
-            <span style={{ color: '#ef4444' }}>Live data error</span>
+            <span
+              className="api-status"
+              style={{ color: '#ef4444' }}
+            >
+              Live data error
+            </span>
           )}
           {!ppxlLoading && !ppxlError && ppxlData && (
-            <span>
+            <span className="api-status">
               Live data ready
               {typeof ppxlData === 'object' && ppxlData?.sector_etf?.ticker
                 ? ` (ETF: ${ppxlData.sector_etf.ticker})`

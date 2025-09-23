@@ -6,7 +6,7 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
   color: var(--app-text--dark);
 
-  width: 80em;
+  width: 100%;
   /* use full width by default */
   max-width: 1180px;
   /* cap the size for large screens */
@@ -16,6 +16,23 @@
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+/* Responsive adjustments for SectionCard */
+@media (max-width: 768px) {
+  .section-card {
+    width: 100%;
+    max-width: none;
+    padding: 12px;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-card {
+    padding: 8px;
+    border-radius: 8px;
+  }
 }
 
 .section-card-header {

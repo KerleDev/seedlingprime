@@ -1,9 +1,11 @@
+/* Updated for mobile responsiveness */
 .uval-section {
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 2vw, 20px);
   width: min(100%, 1200px);
   margin-inline: auto;
+  padding: 0 16px;
 }
 
 
@@ -37,9 +39,17 @@
 
 /* Mobile: single column, full width cards */
 @media (max-width: 768px) {
+  .uval-section {
+    width: 100%;
+    padding: 0;
+  }
+
   .uval-cards {
     flex-direction: column;
     gap: 16px;
+    width: 100%;
+    justify-content: stretch;
+    align-items: stretch;
   }
 
   .uval-cards>* {
@@ -47,13 +57,41 @@
     width: 100%;
     max-width: none;
     min-width: none;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* Better mobile breakpoint matching MetricCard */
+@media (max-width: 600px) {
+  .uval-section {
+    width: 100%;
+    padding: 0;
+  }
+
+  .uval-cards {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    justify-content: stretch;
+    align-items: stretch;
+  }
+
+  .uval-cards>* {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    min-width: none;
+    margin: 0;
   }
 }
 
 /* Small mobile: reduce padding and spacing */
 @media (max-width: 480px) {
+  .uval-section {
+    padding: 0 8px;
+  }
+
   .uval-cards>* {
     min-height: 380px;
   }

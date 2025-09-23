@@ -15,6 +15,7 @@
   display: block;
   margin-inline: auto;
   width: min(100% - clamp(32px, 8vw, 160px), var(--dropdown-max));
+  max-width: 600px;
 }
 
 /* Trigger fills the container; one line only */

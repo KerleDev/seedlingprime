@@ -1,8 +1,8 @@
 // Flattens sectorDataNew structure into an array of canonical stock objects
 // Applies field normalization and validation
 
-const { normalizeStock } = require("./normalizeStock");
-const { validateStock } = require("./validateStock");
+import { normalizeStock } from "./normalizeStock.js";
+import { validateStock } from "./validateStock.js";
 
 /**
  * Convert sector label: uses sector_name if present, strips trailing ' Sector'
@@ -81,6 +81,4 @@ function normalizeSectorData(sectorDataNew) {
   return { stocks: out, issues: issuesMap };
 }
 
-module.exports = {
-  normalizeSectorData,
-};
+export { normalizeSectorData };

@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 SeedlingPrime is a React-based investment dashboard application that provides sector analysis and stock market insights. The app displays financial data across 11 market sectors with 143 stocks total.
 
-### Mean Reversion Analysis Feature
+### Valuation Analysis Feature
 
-The application is designed to implement a sophisticated mean reversion analysis system that follows a 7-step data flow:
+The application implements a comprehensive valuation analysis system that follows a 7-step data flow:
 
 1. **User Sector Selection** - User chooses specific market sector
 2. **Perplexity API Data Collection** - Comprehensive financial data gathering
@@ -18,7 +18,7 @@ The application is designed to implement a sophisticated mean reversion analysis
 6. **Report Generation** - Comprehensive investment reports
 7. **UI Display** - User-friendly report presentation
 
-This system identifies undervalued stocks showing mean reversion potential, provides risk assessments, and generates professional investment recommendations.
+This system identifies undervalued stocks with strong potential, provides comprehensive valuation assessments, and generates professional investment recommendations.
 
 ## Architecture
 

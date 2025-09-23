@@ -60,6 +60,4 @@ function normalizeStock({ symbol, sector, raw }) {
   };
 }
 
-module.exports = {
-  normalizeStock,
-};
+export { normalizeStock };

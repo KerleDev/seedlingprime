@@ -5,12 +5,12 @@ import { extractJSON } from '../utils/json';
 /**
  * Call Perplexity with the sector prompt and return both the raw text and parsed JSON (if any).
  * @param {string} sectorKeyOrQuery
- * @returns {Promise<{ text: string, json: any | null, raw: any }>} 
+ * @returns {Promise<{ text: string, json: any | null, raw: any }>}
  */
-export async function askPerplexitySimple(sectorKeyOrQuery) {
+export async function askPerplexity(sectorKeyOrQuery) {
   const data = await sendToPerplexity(ppxlPrompt(sectorKeyOrQuery), {
     system: 'You are a financial analyst.',
-    temperature: 0.2,
+    temperature: 0.1,
     return_citations: true,
     search_recency_filter: 'month',
   });

@@ -64,7 +64,13 @@ const computeUndervaluationScore = (m) => {
   );
 };
 
-export default function SectorBreakdownTable({ sectorKey, utils = uoUtils }) {
+export default function SectorBreakdownTable({
+  sectorKey,
+  liveData = null,
+  loading: parentLoading = false,
+  error: parentError = '',
+  utils = uoUtils
+}) {
   const [rows, setRows] = useState([]);
   const [top2Set, setTop2Set] = useState(new Set());
   const [loading, setLoading] = useState(true);
@@ -75,13 +81,79 @@ export default function SectorBreakdownTable({ sectorKey, utils = uoUtils }) {
 
 
   useEffect(() => {
-    setSortConfig({ key: "price", direction: "asc" }); 
+    setSortConfig({ key: "price", direction: "asc" });
     let cancelled = false;
     async function load() {
       try {
         setLoading(true);
         setError("");
 
+        // If parent has an error, use it
+        if (parentError) {
+          setError(parentError);
+          setLoading(false);
+          return;
+        }
+
+        // If parent is still loading, wait
+        if (parentLoading) {
+          setLoading(true);
+          return;
+        }
+
+        // Priority 1: Use live data directly if available
+        if (liveData && typeof liveData === 'object' && liveData.stocks) {
+          try {
+            const liveStocks = Array.isArray(liveData.stocks) ? liveData.stocks : [];
+            const enriched = liveStocks.map((stock) => {
+              const metrics = {
+                peRatio: stock.pe_ratio,
+                pbRatio: stock.pb_ratio,
+                psRatio: stock.ps_ratio,
+                roe: stock.roe,
+                cashFlowMargin: stock.free_cash_flow_margin,
+                deRatio: stock.de_ratio,
+                revenueGrowth: stock.rev_growth,
+                netIncomeGrowth: stock.net_income_growth,
+              };
+
+              return {
+                symbol: stock.symbol,
+                company: stock.name || stock.symbol,
+                price: stock.price,
+                marketCap: stock.market_cap,
+                pe: stock.pe_ratio,
+                pb: stock.pb_ratio,
+                roe: stock.roe,
+                cfm: stock.free_cash_flow_margin,
+                de: stock.de_ratio,
+                revG: stock.rev_growth,
+                netIncome: stock.net_income,
+                nig: stock.net_income_growth,
+                change: 0, // Default, as this isn't in live data
+                _score: computeUndervaluationScore(metrics),
+                _isLive: true // Flag to indicate live data
+              };
+            });
+
+            // pick top-2 by score
+            const top2 = [...enriched]
+              .sort((a, b) => a._score - b._score)
+              .slice(0, 2)
+              .map((r) => r.symbol);
+
+            if (!cancelled) {
+              setRows(enriched);
+              setTop2Set(new Set(top2));
+              setLoading(false);
+              return;
+            }
+          } catch (e) {
+            console.warn("Failed to process live data:", e);
+          }
+        }
+
+        // Priority 2: Fallback to static data
         const tickers = await Promise.resolve(utils.getStocksBySector(sectorKey));
 
         const enriched = await Promise.all(
@@ -110,6 +182,7 @@ export default function SectorBreakdownTable({ sectorKey, utils = uoUtils }) {
               nig: m?.netIncomeGrowth ?? null,
               change: m?.change ?? null,
               _score: computeUndervaluationScore(m),
+              _isLive: false
             };
           })
         );
@@ -134,7 +207,7 @@ export default function SectorBreakdownTable({ sectorKey, utils = uoUtils }) {
     return () => {
       cancelled = true;
     };
-  }, [sectorKey, utils]);
+  }, [sectorKey, liveData, parentLoading, parentError, utils]);
 
   // robust sorter (keeps nulls at end; works for strings & numbers)
   const sortedRows = useMemo(() => {
@@ -239,8 +312,25 @@ export default function SectorBreakdownTable({ sectorKey, utils = uoUtils }) {
   const arrowFor = (key) =>
     sortConfig.key === key ? (sortConfig.direction === "asc" ? " ▲" : " ▼") : "";
 
+  // Check if we're using live data
+  const usingLiveData = rows.length > 0 && rows[0]._isLive;
+
   return (
     <div className="sbt-wrap">
+      {usingLiveData && (
+        <div style={{
+          marginBottom: '12px',
+          padding: '8px 12px',
+          backgroundColor: '#f0fdf4',
+          border: '1px solid #10b981',
+          borderRadius: '6px',
+          fontSize: '14px',
+          color: '#047857',
+          fontWeight: '500'
+        }}>
+          ●LIVE DATA: Showing real-time financial metrics from Perplexity API
+        </div>
+      )}
       <table className="sbt-table">
         <thead>
           <tr>

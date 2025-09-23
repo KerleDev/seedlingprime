@@ -14,7 +14,6 @@ const simplifiedSectorData = {
         'WMB',
         'HAL',
         'EOG',
-        'PXD',
       ],
     },
     materials: {

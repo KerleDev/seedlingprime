@@ -8,13 +8,23 @@ const pctSmart = (n) => {
 if (!Number.isFinite(n)) return "—";
 return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
 };
+
+const pctAlready = (n) => {
+if (!Number.isFinite(n)) return "—";
+return `${n.toFixed(1)}%`;
+};
 const toPctNumber = (n) => (Number.isFinite(n) ? (n <= 1 ? n * 100 : n) : 0);
 
 
 function MetricItem({ label, value, type = "ratio", colorize = false }) {
 const raw = Number.isFinite(value) ? value : NaN;
-const sign = colorize && Number.isFinite(raw) ? (toPctNumber(raw) > 0 ? "pos" : toPctNumber(raw) < 0 ? "neg" : "flat") : "";
-const text = type === "money" ? money(value) : type === "pct" ? pctSmart(value) : ratio(value);
+// For pct_already, the value is already in percentage format, so use it directly for color logic
+const colorValue = type === "pct_already" ? raw : toPctNumber(raw);
+const sign = colorize && Number.isFinite(colorValue) ? (colorValue > 0 ? "pos" : colorValue < 0 ? "neg" : "flat") : "";
+const text = type === "money" ? money(value) :
+             type === "pct" ? pctSmart(value) :
+             type === "pct_already" ? pctAlready(value) :
+             ratio(value);
 return (
 <div className={`mc-metric ${sign}`}>
 <span className="mc-metric-label">{label}</span>

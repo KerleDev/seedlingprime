@@ -5,7 +5,7 @@ class StockScreener {
   constructor() {
     this.cache = new Map();
     this.sectorStats = new Map();
-    this.CACHE_TTL = 15 * 60 * 1000; // 15 minutes
+    this.CACHE_TTL = 3 * 60 * 60 * 1000; // 3 hours
   }
 
   /**
@@ -521,11 +521,16 @@ class StockScreener {
   // }
 }
 
-// Export for use in different environments
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StockScreener;
-} else if (typeof window !== 'undefined') {
-  window.StockScreener = StockScreener;
+// ES6 export for modern environments
+export default StockScreener;
+
+// Legacy support for different environments
+if (typeof globalThis !== 'undefined') {
+  if (typeof globalThis.module !== 'undefined' && globalThis.module.exports) {
+    globalThis.module.exports = StockScreener;
+  } else if (typeof globalThis.window !== 'undefined') {
+    globalThis.window.StockScreener = StockScreener;
+  }
 }
 
 // Example usage:

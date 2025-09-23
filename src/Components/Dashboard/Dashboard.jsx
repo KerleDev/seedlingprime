@@ -46,15 +46,20 @@ function Dashboard() {
   // Derive the table for the chosen sector - use live data if available
   const stockData = useMemo(() => {
     // Priority 1: Use live data if available
-    if (ppxlData && typeof ppxlData === 'object' && ppxlData.stocks && Array.isArray(ppxlData.stocks)) {
-      return ppxlData.stocks.map(stock => ({
+    if (
+      ppxlData &&
+      typeof ppxlData === 'object' &&
+      ppxlData.stocks &&
+      Array.isArray(ppxlData.stocks)
+    ) {
+      return ppxlData.stocks.map((stock) => ({
         symbol: stock.symbol,
         name: stock.name || stock.symbol,
         currentPrice: stock.price,
         pe: stock.pe_ratio,
         pb: stock.pb_ratio,
         // Add other fields needed for compatibility
-        marketCap: stock.market_cap
+        marketCap: stock.market_cap,
       }));
     }
 
@@ -165,7 +170,7 @@ function Dashboard() {
       {/* Top controls */}
       <div
         className="page-controls"
-        style={{ display: 'flex', gap: 12, alignItems: 'center' }}
+        style={{ gap: 12, alignItems: 'center' }}
       >
         <SectorDropdownData
           sectors={shaped.sectors}

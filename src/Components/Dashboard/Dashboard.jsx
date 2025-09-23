@@ -170,7 +170,7 @@ function Dashboard() {
       {/* Top controls */}
       <div
         className="page-controls"
-        style={{ display: 'flex', gap: 12, alignItems: 'center' }}
+        style={{ gap: 12, alignItems: 'center' }}
       >
         <SectorDropdownData
           sectors={shaped.sectors}

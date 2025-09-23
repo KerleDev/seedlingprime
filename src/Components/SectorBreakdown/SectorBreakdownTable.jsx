@@ -9,7 +9,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './SectorBreakdownTable.css';
 import { uoUtils } from '../../utils/uoUtilsAdapter';
+
 import sectorDataNew from '../../constants/sectorDataNew';
+
 
 const money = (n) =>
   Number.isFinite(n)
@@ -398,28 +400,34 @@ export default function SectorBreakdownTable({
               PRICE{arrowFor('price')}
             </th>
             <th onClick={() => handleSort('marketCap')}>
-              MARKET CAP{arrowFor('marketCap')}
+
+              MKT CAP{arrowFor('marketCap')}
             </th>
             <th onClick={() => handleSort('pe')}>
-              P/E RATIO{arrowFor('pe')}
+              P/E {arrowFor('pe')}
             </th>
             <th onClick={() => handleSort('pb')}>
-              P/B RATIO{arrowFor('pb')}
+              P/B {arrowFor('pb')}
+
             </th>
             <th onClick={() => handleSort('roe')}>
               ROE{arrowFor('roe')}
             </th>
             <th onClick={() => handleSort('cfm')}>
-              CashFlowM{arrowFor('cfm')}
+
+              Free CFM{arrowFor('cfm')}
+
             </th>
             <th onClick={() => handleSort('de')}>
               D/E{arrowFor('de')}
             </th>
             <th onClick={() => handleSort('revG')}>
-              RevenueG{arrowFor('revG')}
+
+              RevG{arrowFor('revG')}
             </th>
             <th onClick={() => handleSort('netIncome')}>
-              NetIncome{arrowFor('netIncome')}
+              NetInc{arrowFor('netIncome')}
+
             </th>
             <th onClick={() => handleSort('nig')}>
               NIG{arrowFor('nig')}

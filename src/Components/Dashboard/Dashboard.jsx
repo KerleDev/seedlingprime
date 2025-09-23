@@ -234,7 +234,7 @@ function Dashboard() {
         sublines={[
           "Patching fundamentals, prices & alt-data",
           "Reconciling filings & news with Perplexity AI",
-          "Spotting mispricing as the market moves",
+          "Spotting miss-pricing as the market moves",
           "Re-ranking by risk/reward, catalysts & liquidity",
         ]}
       />

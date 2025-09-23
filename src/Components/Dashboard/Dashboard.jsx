@@ -11,9 +11,15 @@ import SectorChart from '../SectorChart/SectorChart';
 import UndervaluedOpportunities from '../Undervalued/UndervaluedOpportunities';
 import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
 import './Dashboard.css';
+import './api-loader.css';
 
 // Data / utils
+<<<<<<< Updated upstream
 import newSectorData from '../../utils/sectorDataNew';
+=======
+// import newSectorData from '../../constants/sectorDataNew';
+import simplifiedSectorData from '../../constants/simplifiedSectorData';
+>>>>>>> Stashed changes
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
 import { askPerplexity } from '../../services/perplexityService';
@@ -23,7 +29,7 @@ import {
 } from '../../services/perplexityCache';
 
 // Prepare once (pure transform)
-const shaped = shapeSectorsFromReport(newSectorData); // { sectors, displayNames, etf }
+const shaped = shapeSectorsFromReport(simplifiedSectorData); // { sectors, displayNames, etf }
 
 function Dashboard() {
   // Default to "information_technology" if exists, otherwise first sector key (or empty)
@@ -179,15 +185,24 @@ function Dashboard() {
           label="Choose a sector"
         />
         {/* Live data status (Perplexity) */}
-        <div
-          style={{ marginRight: 8, fontSize: 12, color: '#6b7280' }}
-        >
-          {ppxlLoading && <span>Fetching live data…</span>}
+        <div style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
+          {/* <span className="loader"></span> */}
+          {ppxlLoading && (
+            <div>
+              <span className="loader"></span>
+              <span className="api-status">Fetching live data…</span>
+            </div>
+          )}
           {!ppxlLoading && ppxlError && (
-            <span style={{ color: '#ef4444' }}>Live data error</span>
+            <span
+              className="api-status"
+              style={{ color: '#ef4444' }}
+            >
+              Live data error
+            </span>
           )}
           {!ppxlLoading && !ppxlError && ppxlData && (
-            <span>
+            <span className="api-status">
               Live data ready
               {typeof ppxlData === 'object' &&
               ppxlData?.sector_etf?.ticker

@@ -9,7 +9,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './SectorBreakdownTable.css';
 import { uoUtils } from '../../utils/uoUtilsAdapter';
-import sectorDataNew from '../../utils/sectorDataNew';
+
+import sectorDataNew from '../../constants/sectorDataNew';
+
 
 const money = (n) =>
   Number.isFinite(n)
@@ -398,6 +400,7 @@ export default function SectorBreakdownTable({
               PRICE{arrowFor('price')}
             </th>
             <th onClick={() => handleSort('marketCap')}>
+
               MKT CAP{arrowFor('marketCap')}
             </th>
             <th onClick={() => handleSort('pe')}>
@@ -405,21 +408,26 @@ export default function SectorBreakdownTable({
             </th>
             <th onClick={() => handleSort('pb')}>
               P/B {arrowFor('pb')}
+
             </th>
             <th onClick={() => handleSort('roe')}>
               ROE{arrowFor('roe')}
             </th>
             <th onClick={() => handleSort('cfm')}>
+
               Free CFM{arrowFor('cfm')}
+
             </th>
             <th onClick={() => handleSort('de')}>
               D/E{arrowFor('de')}
             </th>
             <th onClick={() => handleSort('revG')}>
+
               RevG{arrowFor('revG')}
             </th>
             <th onClick={() => handleSort('netIncome')}>
               NetInc{arrowFor('netIncome')}
+
             </th>
             <th onClick={() => handleSort('nig')}>
               NIG{arrowFor('nig')}

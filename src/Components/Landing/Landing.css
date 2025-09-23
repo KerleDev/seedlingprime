@@ -1,13 +1,18 @@
+.page-look {
+  background-color: var(--bar-background);
+}
+
 
 
 .landing {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  min-height: 100vh;            /* full height */
+  min-height: 50vh;          
   background: var(--bg-gradient);          
   color: #fff;
-  padding: 40px 20px;
+  padding: 4em 2em 4em 4em;
+ 
 }
 
 
@@ -16,14 +21,15 @@
   display: flex;
   align-items: top;
   justify-content: space-between;
-  max-width: 1200px;            /* contain center content */
+  max-width: 1200px;  
   width: 100%;
-  gap: 20px;
+   gap: 10px;
+  
 }
 
 .p-structure > div:first-child {
   flex: 1;
-  max-width: 480px;             /* narrow text */
+  max-width: 480px;           
 }
 
 .p-structure > div:last-child {
@@ -37,7 +43,7 @@
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
   line-height: 1.2;
-  margin-bottom: 20px;
+  margin-bottom: 0.5em;
   color: #fff;
 }
 
@@ -45,7 +51,7 @@
   font-size: 1rem;
   line-height: 1.6;
   color: #e5e7eb;               /* lighter text */
-  margin-bottom: 32px;
+  margin-bottom: 1em;
 }
 
 .landing-buttons {
@@ -85,15 +91,15 @@
 
 /* Animation / illustration scaling */
 .lottie-container {
-  max-width: 700px;   /* increase this from 500px */
-  width: 100%;
+ max-width: 1200px; 
+  
+  width: 100% !important;
 }
 
 .lottie-container canvas {
   width: 100% !important;
-  height: auto !important;
+  height:max-content;
 }
-
 
 /* Responsive: stack vertically on mobile */
 @media (max-width: 768px) {
@@ -109,3 +115,94 @@
   }
 }
 
+.section-subtitle {
+  text-align: center;
+  color: #6b7280;            /* slate-500 */
+  margin: 0.25rem auto 1.25rem;
+  max-width: 720px;
+  line-height: 1.5;
+  font-size: 0.975rem;
+}
+
+.small-card-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2em;
+  margin-top: 2em;
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+@media (max-width: 1024px) { .small-card-wrapper { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .small-card-wrapper { grid-template-columns: 1fr; } }
+
+.small-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin: 1em 2em 1em 2em;
+  padding: 1em 3em 1em 3em;
+}
+@media (max-width: 1024px) { .small-card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .small-card-grid { grid-template-columns: 1fr; } }
+
+/* Remove shadow only for landing cards */
+.landing-no-shadow .section-card {
+  box-shadow: none;              /* size unchanged */
+}
+
+/* Optional: make them look fully “flat/transparent” */
+.landing-no-shadow .section-card {
+  background: var(--bar-background); /* or transparent */
+  border: none;                      /* remove the outline if you want */
+}
+
+/* If something still overrides it, add !important once */
+.landing-no-shadow .section-card { box-shadow: none !important; }
+
+/* CTA hero (landing only) */
+.cta-hero {
+  background: var(--bg-gradient);
+  color: #fff;
+  border-radius: 16px;
+  padding: 3rem 1.5rem;
+  margin: 2.5rem auto 3rem;
+  max-width: 1180px;         /* same width rhythm as your cards */
+  box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+}
+
+.cta-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cta-title {
+  font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin: 0 0 0.5rem;
+}
+
+.cta-subtitle {
+  color: #e5e7eb;
+  margin: 0 0 1.5rem;
+  line-height: 1.6;
+}
+
+/* CTA button variant (reuses your .btn base) */
+.btn--cta {
+  background: #fff;
+  color: #181743;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 12px;          /* a bit chunkier than pill if you prefer: 9999px */
+  box-shadow: 0 10px 24px rgba(255,255,255,0.28), 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn--cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(255,255,255,0.32), 0 4px 10px rgba(0,0,0,0.18);
+}

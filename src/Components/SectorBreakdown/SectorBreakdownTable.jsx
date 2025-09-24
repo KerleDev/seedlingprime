@@ -23,9 +23,6 @@ const pctSmart = (n) => {
   return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
 };
 
-const fmtChangeClass = (n) =>
-  Number.isFinite(n) ? (n > 0 ? 'pos' : n < 0 ? 'neg' : 'flat') : '';
-
 const abbrCap = (v) => {
   if (!Number.isFinite(v)) return 'N/A';
   const abs = Math.abs(v);
@@ -79,6 +76,7 @@ const computeUndervaluationScore = (m) => {
 export default function SectorBreakdownTable({
   sectorKey,
   liveData = null,
+  screeningResults = null,
   loading: parentLoading = false,
   error: parentError = '',
   utils = uoUtils,
@@ -137,6 +135,11 @@ export default function SectorBreakdownTable({
                 netIncomeGrowth: stock.net_income_growth,
               };
 
+              // Find corresponding screening result for this stock
+              const screeningResult = screeningResults?.find(
+                (result) => result.symbol === stock.symbol
+              );
+
               return {
                 symbol: stock.symbol,
                 company: stock.name || stock.symbol,
@@ -150,7 +153,7 @@ export default function SectorBreakdownTable({
                 revG: stock.rev_growth,
                 netIncome: stock.net_income,
                 nig: stock.net_income_growth,
-                change: 0, // Default, as this isn't in live data
+                score: screeningResult?.combinedScore ?? screeningResult?.screeningScore ?? null,
                 _score: computeUndervaluationScore(metrics),
                 _isLive: true, // Flag to indicate live data
               };
@@ -205,7 +208,7 @@ export default function SectorBreakdownTable({
               revG: m?.revenueGrowth ?? null,
               netIncome: raw?.net_income ?? null,
               nig: m?.netIncomeGrowth ?? null,
-              change: m?.change ?? null,
+              score: m?.combinedScore ?? m?.screeningScore ?? null,
               _score: computeUndervaluationScore(m),
               _isLive: false,
             };
@@ -233,7 +236,7 @@ export default function SectorBreakdownTable({
     return () => {
       cancelled = true;
     };
-  }, [sectorKey, liveData, parentLoading, parentError, utils]);
+  }, [sectorKey, liveData, screeningResults, parentLoading, parentError, utils]);
 
   // robust sorter (keeps nulls at end; works for strings & numbers)
   const sortedRows = useMemo(() => {
@@ -349,8 +352,8 @@ export default function SectorBreakdownTable({
             <td className="num">{pctSmart(r.revG)}</td>
             <td className="num">{abbrCap(r.netIncome)}</td>
             <td className="num">{pctSmart(r.nig)}</td>
-            <td className={`num ${fmtChangeClass(r.change)}`}>
-              {pctSmart(r.change)}
+            <td className="num">
+              {fmtNum(r.score, 2)}
             </td>
           </tr>
         ))}
@@ -433,8 +436,19 @@ export default function SectorBreakdownTable({
             <th onClick={() => handleSort('nig')}>
               NIG{arrowFor('nig')}
             </th>
-            <th onClick={() => handleSort('change')}>
-              CHANGE{arrowFor('change')}
+            <th onClick={() => handleSort('score')}>
+              SCORE{arrowFor('score')}
+              <span
+                title="Investment Score: Quality (60%) + Upside (40%)"
+                style={{
+                  marginLeft: '4px',
+                  fontSize: '12px',
+                  color: '#666',
+                  cursor: 'help'
+                }}
+              >
+                ⓘ
+              </span>
             </th>
           </tr>
         </thead>

@@ -19,6 +19,11 @@ import './Dashboard.css';
 import simplifiedSectorData from '../../constants/simplifiedSectorData';
 import { shapeSectorsFromReport } from '../../utils/sectorTransform';
 import { sectorMetrics } from '../../utils/metrics';
+import {
+  computeSectorStats,
+  estimateFairPrice,
+} from '../../services/valuation';
+import { calculateInvestmentScores } from '../../utils/calculateInvestmentScore';
 import { askPerplexity } from '../../services/perplexityService';
 import {
   saveSectorData,
@@ -47,92 +52,113 @@ function Dashboard() {
   }, []);
 
   // Run screening analysis on Perplexity data
-  const runScreeningAnalysis = useCallback(async (ppxlData, sectorKey) => {
-    if (!ppxlData || !sectorKey) return;
+  const runScreeningAnalysis = useCallback(
+    async (ppxlData, sectorKey) => {
+      if (!ppxlData || !sectorKey) return;
 
-    try {
-      setScreeningLoading(true);
-      setScreeningResults(null);
+      try {
+        setScreeningLoading(true);
+        setScreeningResults(null);
 
-      // Convert Perplexity data to normalized format for screening
-      const { normalizeSectorData } = await import('../../utils/normalizeSectorData');
+        // Convert Perplexity data to normalized format for screening
+        const { normalizeSectorData } = await import(
+          '../../utils/normalizeSectorData'
+        );
 
-      // Convert Perplexity data to the expected format for analysis
-      const datasetFormat = {
-        sectors: {
-          [sectorKey]: {
-            sector_name: ppxlData.sector || sectorKey,
-            stocks: {}
-          }
-        }
-      };
-
-      // Transform Perplexity stocks to expected format
-      if (ppxlData.stocks && Array.isArray(ppxlData.stocks)) {
-        ppxlData.stocks.forEach(stock => {
-          datasetFormat.sectors[sectorKey].stocks[stock.symbol] = {
-            name: stock.name,
-            price: stock.price,
-            pe_ratio: stock.pe_ratio,
-            pb_ratio: stock.pb_ratio,
-            ps_ratio: stock.ps_ratio,
-            roe: stock.roe,
-            net_income: stock.net_income,
-            free_cash_flow_margin: stock.free_cash_flow_margin,
-            de_ratio: stock.de_ratio,
-            rev_growth: stock.rev_growth,
-            net_income_growth: stock.net_income_growth,
-            market_cap: stock.market_cap
-          };
-        });
-      }
-
-      // Normalize the data
-      const { stocks: allStocks } = normalizeSectorData(datasetFormat);
-      const sectorStocks = allStocks.filter(s => s.sector === ppxlData.sector);
-
-      // Run screening to calculate scores for ALL stocks (not just filtered ones)
-      const screener = new StockScreener();
-
-      // Use very lenient criteria to avoid filtering out stocks
-      const lenientCriteria = {
-        sector: ppxlData.sector,
-        minROE: -100, // Very low to include all
-        maxPEMultiplier: 10, // Very high to include all
-        maxPBMultiplier: 10, // Very high to include all
-        maxPSMultiplier: 10, // Very high to include all
-        minRevenueGrowth: -100, // Very low to include all
-        maxDebtToEquity: 50, // Very high to include all
-        minFreeCashFlowMargin: -100, // Very low to include all
-        requirePositiveNetIncome: false
-      };
-
-      const allScreeningResults = await screener.screenStocks(lenientCriteria, allStocks);
-
-      // Calculate sector statistics for valuation
-      const sectorStats = computeSectorStats(allStocks, ppxlData.sector);
-
-      // Add valuation analysis to each stock
-      const stocksWithValuation = allScreeningResults.map(stock => {
-        const valuation = estimateFairPrice(stock, sectorStats);
-        return {
-          ...stock,
-          valuation
+        // Convert Perplexity data to the expected format for analysis
+        const datasetFormat = {
+          sectors: {
+            [sectorKey]: {
+              sector_name: ppxlData.sector || sectorKey,
+              stocks: {},
+            },
+          },
         };
-      });
 
-      // Calculate combined investment scores
-      const stocksWithCombinedScores = calculateInvestmentScores(stocksWithValuation);
+        // Transform Perplexity stocks to expected format
+        if (ppxlData.stocks && Array.isArray(ppxlData.stocks)) {
+          ppxlData.stocks.forEach((stock) => {
+            datasetFormat.sectors[sectorKey].stocks[stock.symbol] = {
+              name: stock.name,
+              price: stock.price,
+              pe_ratio: stock.pe_ratio,
+              pb_ratio: stock.pb_ratio,
+              ps_ratio: stock.ps_ratio,
+              roe: stock.roe,
+              net_income: stock.net_income,
+              free_cash_flow_margin: stock.free_cash_flow_margin,
+              de_ratio: stock.de_ratio,
+              rev_growth: stock.rev_growth,
+              net_income_growth: stock.net_income_growth,
+              market_cap: stock.market_cap,
+            };
+          });
+        }
 
-      console.log('Screening results with combined scores:', stocksWithCombinedScores);
-      setScreeningResults(stocksWithCombinedScores);
-    } catch (error) {
-      console.error('Screening analysis failed:', error);
-      setScreeningResults([]);
-    } finally {
-      setScreeningLoading(false);
-    }
-  }, []);
+        // Normalize the data
+        const { stocks: allStocks } =
+          normalizeSectorData(datasetFormat);
+        const sectorStocks = allStocks.filter(
+          (s) => s.sector === ppxlData.sector
+        );
+
+        // Run screening to calculate scores for ALL stocks (not just filtered ones)
+        const screener = new StockScreener();
+
+        // Use very lenient criteria to avoid filtering out stocks
+        const lenientCriteria = {
+          sector: ppxlData.sector,
+          minROE: -100, // Very low to include all
+          maxPEMultiplier: 10, // Very high to include all
+          maxPBMultiplier: 10, // Very high to include all
+          maxPSMultiplier: 10, // Very high to include all
+          minRevenueGrowth: -100, // Very low to include all
+          maxDebtToEquity: 50, // Very high to include all
+          minFreeCashFlowMargin: -100, // Very low to include all
+          requirePositiveNetIncome: false,
+        };
+
+        const allScreeningResults = await screener.screenStocks(
+          lenientCriteria,
+          allStocks
+        );
+
+        // Calculate sector statistics for valuation
+        const sectorStats = computeSectorStats(
+          allStocks,
+          ppxlData.sector
+        );
+
+        // Add valuation analysis to each stock
+        const stocksWithValuation = allScreeningResults.map(
+          (stock) => {
+            const valuation = estimateFairPrice(stock, sectorStats);
+            return {
+              ...stock,
+              valuation,
+            };
+          }
+        );
+
+        // Calculate combined investment scores
+        const stocksWithCombinedScores = calculateInvestmentScores(
+          stocksWithValuation
+        );
+
+        console.log(
+          'Screening results with combined scores:',
+          stocksWithCombinedScores
+        );
+        setScreeningResults(stocksWithCombinedScores);
+      } catch (error) {
+        console.error('Screening analysis failed:', error);
+        setScreeningResults([]);
+      } finally {
+        setScreeningLoading(false);
+      }
+    },
+    []
+  );
 
   // Derive the table for the chosen sector - use live data if available
   const stockData = useMemo(() => {
@@ -234,10 +260,20 @@ function Dashboard() {
   // Run screening analysis when Perplexity data is available
   useEffect(() => {
     if (ppxlData && !ppxlLoading && !ppxlError && selectedSector) {
-      console.log('Running screening analysis for:', selectedSector, ppxlData);
+      console.log(
+        'Running screening analysis for:',
+        selectedSector,
+        ppxlData
+      );
       runScreeningAnalysis(ppxlData, selectedSector);
     }
-  }, [ppxlData, ppxlLoading, ppxlError, selectedSector, runScreeningAnalysis]);
+  }, [
+    ppxlData,
+    ppxlLoading,
+    ppxlError,
+    selectedSector,
+    runScreeningAnalysis,
+  ]);
 
   // No sector fallback
   if (!defaultKey) {
@@ -322,7 +358,6 @@ function Dashboard() {
         className="dashboard-grid"
         aria-label="Dashboard content"
       >
-        
         {/* Sector Overview card: chart + sort control */}
         <SectionCard
           title={`${shaped.displayNames[selectedSector]} Sector Overview`}

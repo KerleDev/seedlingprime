@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-import React, { useMemo, useState, useCallback, useEffect } from "react";
-import SectionCard from "../Sectioncard/Sectioncard";
-import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
-import SortDropdown from "../SectorDropdown/SortDropdown";
-import SectorChart from "../SectorChart/SectorChart";
-import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities";
-import SectorBreakdownTable from "../SectorBreakdown/SectorBreakdownTable";
-import SeedLoader from "../SeedLoader/SeedLoader";
-import "./Dashboard.css";
-
-// Data / utils
-import simplifiedSectorData from "../../constants/simplifiedSectorData";
-import { shapeSectorsFromReport } from "../../utils/sectorTransform";
-import { sectorMetrics } from "../../utils/metrics";
-import { askPerplexity } from "../../services/perplexityService";
-import { saveSectorData, loadSectorData } from "../../services/perplexityCache";
-=======
 import React, {
   useMemo,
   useState,
@@ -42,14 +24,6 @@ import {
   saveSectorData,
   loadSectorData,
 } from '../../services/perplexityCache';
-<<<<<<< HEAD
->>>>>>> 3f8460055c0c9be3a95a0828829badd0782919c4
-=======
-import runAnalysis from '../../services/analysisRunner';
-import StockScreener from '../../services/screening';
-import { estimateFairPrice, computeSectorStats } from '../../services/valuation';
-import { calculateInvestmentScores } from '../../utils/calculateInvestmentScore';
->>>>>>> c8194056406098b090804a61bf02a2c1e31a7ed0
 
 // Prepare once (pure transform)
 const shaped = shapeSectorsFromReport(simplifiedSectorData); // { sectors, displayNames, etf }
@@ -326,7 +300,6 @@ function Dashboard() {
         </div>
       </div>
 
-<<<<<<< HEAD
       {/* FIRST CARD (extra bottom padding via wrapper + controlled inner grid) */}
       <div className="pad-inside">
         <SectionCard
@@ -344,24 +317,12 @@ function Dashboard() {
         </SectionCard>
       </div>
 
-=======
->>>>>>> 3f8460055c0c9be3a95a0828829badd0782919c4
       {/* Main grid */}
       <section
         className="dashboard-grid"
         aria-label="Dashboard content"
       >
-        <SectionCard
-          title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
-          className="section-card--extra-pad"
-        >
-          <UndervaluedOpportunities
-            sectorKey={selectedSector}
-            liveData={ppxlData}
-            loading={ppxlLoading}
-            error={ppxlError}
-          />
-        </SectionCard>
+        
         {/* Sector Overview card: chart + sort control */}
         <SectionCard
           title={`${shaped.displayNames[selectedSector]} Sector Overview`}
@@ -392,7 +353,6 @@ function Dashboard() {
           </div>
         </SectionCard>
 
-<<<<<<< HEAD
         {/* THIRD CARD (extra bottom padding via wrapper) */}
         <div className="pad-inside">
           <SectionCard title="Complete Sector Breakdown">
@@ -404,20 +364,6 @@ function Dashboard() {
             />
           </SectionCard>
         </div>
-=======
-        <SectionCard
-          title="Complete Sector Breakdown"
-          className="section-card--extra-pad"
-        >
-          <SectorBreakdownTable
-            sectorKey={selectedSector}
-            liveData={ppxlData}
-            screeningResults={screeningResults}
-            loading={ppxlLoading || screeningLoading}
-            error={ppxlError}
-          />
-        </SectionCard>
->>>>>>> 3f8460055c0c9be3a95a0828829badd0782919c4
       </section>
 
       {/* Loader overlay (fixed, covers the page) */}

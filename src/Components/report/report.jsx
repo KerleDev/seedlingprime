@@ -144,8 +144,8 @@ export default function Report({ stockData, geminiData }) {
         {/* Brand Header */}
         <header className="brand-header">
           <div className="brand-content">
-            <span className="brand-logo-text">
-              <span className="brand-logo-seed">Seed</span>
+            <span className="brand-text">
+              <span className="brand-seed">Seed</span>
               <span className="brand-logo-ling">ling</span>
             </span>
             <p className="brand-description">

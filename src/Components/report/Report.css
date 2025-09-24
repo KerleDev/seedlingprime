@@ -4,14 +4,14 @@ hr {
   background-image: linear-gradient(to right, rgba(52, 163, 24, 0), rgba(94, 190, 49, 0.75), rgba(168, 216, 178, 0));
 }
 
-.brand-logo-text {
+.brand-text {
   font-weight: 800;
   letter-spacing: .2px;
   font-size: 3rem;
 }
 
-.brand-logo-seed {
-  color: hsl(85, 85%, 75%);
+.brand-seed {
+  color: #65A30D;
 }
 
 .brand-logo-ling {
@@ -163,7 +163,7 @@ hr {
 }
 
 .metric-value.positive {
-  color: #10b981;
+  color: #65A30D;
 }
 
 .metric-value.negative {
@@ -280,7 +280,7 @@ hr {
   content: '⨈';
   position: absolute;
   left: 0;
-  color: #10b981;
+  color: #65A30D;
   font-weight: normal;
 }
 
@@ -352,7 +352,7 @@ hr {
 }
 
 .growth-positive {
-  color: #059669 !important;
+  color: #65A30D !important;
 }
 
 .growth-negative {

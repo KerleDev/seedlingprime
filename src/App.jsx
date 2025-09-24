@@ -3,7 +3,7 @@ import Layout from './Layout';
 import Dashboard from './Components/Dashboard/Dashboard';
 import Landing from './Components/Landing/Landing';
 import './App.css';
-import Report from './Components/report/Report';
+import Report from './Components/Report/Report';
 
 function App() {
   return (

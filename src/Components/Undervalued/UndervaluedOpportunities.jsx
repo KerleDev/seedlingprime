@@ -102,14 +102,17 @@ export default function UndervaluedOpportunities({
         originalButton.disabled = true;
       }
 
-      // Create comprehensive stock data object
+      // Create unified comprehensive stock data object
       const stockData = {
         symbol: stock.ticker,
         name: stock.name,
         sector: sectorKey,
         currentPrice: stock.price,
+        price: stock.price,
         fairValue: stock.fairValue,
         targetPrice: stock.fairValue,
+        upside: stock.upside,
+        mos: stock.mos,
         peRatio: stock.peRatio,
         pbRatio: 0,
         psRatio: 0,
@@ -119,6 +122,11 @@ export default function UndervaluedOpportunities({
         freeCashFlowMargin: 0,
         revenueGrowth: 0,
         netIncomeGrowth: 0,
+        valuation: {
+          blendedFairPrice: stock.fairValue,
+          upsidePct: stock.upside,
+          marginOfSafety: stock.mos,
+        },
         ratios: {
           peRatio: stock.peRatio || 0,
           pbRatio: 0,
@@ -186,44 +194,12 @@ export default function UndervaluedOpportunities({
       });
 
       console.log('Gemini analysis received:', geminiAnalysis);
-
-      // Create enhanced stock data for the report
-      const enhancedStockData = {
-        ...stockData,
-        targetPrice:
-          stockData.fairValue ||
-          stockData.targetPrice ||
-          stockData.currentPrice * 1.2,
-        upside: stock.upside,
-        mos: stock.mos,
-        valuation: {
-          blendedFairPrice: stockData.fairValue,
-          upsidePct: stock.upside,
-          marginOfSafety: stock.mos,
-        },
-        ratios: {
-          peRatio: stockData.ratios.peRatio || 0,
-          pbRatio: stockData.ratios.pbRatio || 0,
-          psRatio: stockData.ratios.psRatio || 0,
-          deRatio: stockData.ratios.deRatio || 0,
-          roe: stockData.ratios.roe || 0,
-          netIncome: stockData.ratios.netIncome || 0,
-          freeCashFlowMargin:
-            stockData.ratios.freeCashFlowMargin || 0,
-          revenueGrowth: stockData.ratios.revenueGrowth || 0,
-          netIncomeGrowth: stockData.ratios.netIncomeGrowth || 0,
-        },
-      };
-
-      console.log(
-        'Enhanced stock data being saved:',
-        enhancedStockData
-      );
+      console.log('Unified stock data being saved:', stockData);
       console.log('Stock object with upside/mos:', stock);
 
-      // Store both base data and Gemini analysis in localStorage
+      // Store unified stock data and Gemini analysis in localStorage
       const reportData = {
-        ...enhancedStockData,
+        ...stockData,
         geminiAnalysis,
       };
       localStorage.setItem('reportData', JSON.stringify(reportData));

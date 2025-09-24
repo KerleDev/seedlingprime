@@ -4,14 +4,14 @@ hr {
   background-image: linear-gradient(to right, rgba(52, 163, 24, 0), rgba(94, 190, 49, 0.75), rgba(168, 216, 178, 0));
 }
 
-.brand-logo-text {
+.brand-text {
   font-weight: 800;
   letter-spacing: .2px;
   font-size: 3rem;
 }
 
-.brand-logo-seed {
-  color: hsl(85, 85%, 75%);
+.brand-seed {
+  color: #65A30D;
 }
 
 .brand-logo-ling {
@@ -281,6 +281,7 @@ hr {
   position: absolute;
   left: 0;
   color: var(--app-green);
+
   font-weight: normal;
 }
 

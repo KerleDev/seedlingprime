@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   brandSeed: {
-    color: '#22c55e',
+    color: '#65A30D',
   },
   brandLing: {
     color: '#1f2937',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   growthPositive: {
-    color: '#22c55e',
+    color: '#65A30D',
   },
   disclaimer: {
     marginTop: 30,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   valuationPositive: {
-    color: '#059669',
+    color: '#65A30D',
   },
   valuationNegative: {
     color: '#dc2626',
@@ -269,7 +269,7 @@ export default function ReportPDF({ stockData }) {
   const getRecommendationColor = (recommendation) => {
     switch (recommendation?.toUpperCase()) {
       case 'BUY':
-        return '#22c55e';
+        return '#65A30D';
       case 'SELL':
         return '#ef4444';
       default:

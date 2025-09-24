@@ -187,7 +187,7 @@ function Dashboard() {
       </div>
 
       <SectionCard
-        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
+        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}  className="section-card--extra-pad"
       >
         <UndervaluedOpportunities
           sectorKey={selectedSector}
@@ -229,7 +229,7 @@ function Dashboard() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Complete Sector Breakdown">
+        <SectionCard title="Complete Sector Breakdown"  className="section-card--extra-pad">
           <SectorBreakdownTable
             sectorKey={selectedSector}
             liveData={ppxlData}

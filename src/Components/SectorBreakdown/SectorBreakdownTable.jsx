@@ -373,17 +373,18 @@ export default function SectorBreakdownTable({
       {usingLiveData && (
         <div
           style={{
-            marginBottom: '12px',
+            marginBottom: '1em',
             padding: '8px 12px',
-            backgroundColor: '#f0fdf4',
-            border: '1px solid #10b981',
+            backgroundColor: '#65A30D',
+            // border: '1px solid #10b981',
             borderRadius: '6px',
             fontSize: '14px',
-            color: '#047857',
+            color: '#ffffffff',
             fontWeight: '500',
+            textAlign: 'center',
           }}
         >
-          ●LIVE DATA: Showing real-time financial metrics from
+          ⚙️LIVE DATA: Showing real-time financial metrics from
           Perplexity API
         </div>
       )}

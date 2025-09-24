@@ -1,16 +1,25 @@
 /* Root container for this page (scoped; avoids clashing with global .page) */
 .dashboard {
-  /* No layout rules here — Layout handles full-height + sticky footer */
+  /* Laptop-friendly default + shared gutter */
+  --dash-grid-max: 1180px;                 /* laptop cap */
+  --dash-gutter: clamp(32px, 8vw, 160px);  /* side spacing */
+}
+
+/* Scale up for larger displays */
+@media (min-width: 1600px) {
+  .dashboard { --dash-grid-max: 1600px; }  /* desktop cap */
+}
+@media (min-width: 2000px) {
+  .dashboard { --dash-grid-max: 1800px; }  /* ultrawide headroom */
 }
 
 /* Hero */
 .dashboard .page-hero {
-  max-width: 1600px;
+  width: min(100% - var(--dash-gutter), var(--dash-grid-max));
   margin: clamp(12px, 3.5vw, 28px) auto 0;
   padding: 0 16px;
   text-align: center;
   gap: 8px;
-  /* tighter vertical rhythm */
 }
 
 /* Fluid sizing for title/subtitle */
@@ -38,14 +47,13 @@
   justify-content: center;
   text-align: center;
   margin: clamp(12px, 2.5vw, 20px) auto;
-  max-width: 1600px;
+  width: min(100% - var(--dash-gutter), var(--dash-grid-max));
   padding: 0 16px;
-  width: 100%;
 }
 
 /* Main grid */
 .dashboard-grid {
-  width: min(100% - clamp(32px, 8vw, 160px), 1600px);
+  width: min(100% - var(--dash-gutter), var(--dash-grid-max));
   margin-inline: auto;
   margin-block: clamp(12px, 3vw, 24px);
   padding: 0;
@@ -53,17 +61,18 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(16px, 2.5vw, 24px);
-  grid-auto-rows: max-content;
-  /* rows grow to fit content */
+  grid-auto-rows: max-content; /* rows grow to fit content */
   align-items: stretch;
   justify-items: center;
 }
 
-.dashboard-grid>* {
+/* All children in the grid share the same cap */
+.dashboard-grid > * {
   min-height: 0;
   width: 100%;
-  max-width: 1400px;
-  /* helps in complex card layouts */
+  max-width: var(--dash-grid-max);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Simple helpers inside the SectionCard content */
@@ -90,12 +99,12 @@
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
-  .dashboard-grid {
-    width: min(100% - clamp(24px, 6vw, 120px), 1400px);
-  }
+  .dashboard { --dash-gutter: clamp(24px, 6vw, 120px); }
 }
 
 @media (max-width: 768px) {
+  .dashboard { --dash-gutter: 24px; }
+
   .dashboard .page-hero {
     padding: 0 12px;
     margin: clamp(8px, 2.5vw, 20px) auto 0;
@@ -119,13 +128,8 @@
 }
 
 @media (max-width: 480px) {
-  .dashboard .page-hero {
-    padding: 0 8px;
-  }
-
-  .dashboard .page-controls {
-    padding: 0 8px;
-  }
+  .dashboard .page-hero { padding: 0 8px; }
+  .dashboard .page-controls { padding: 0 8px; }
 
   .dashboard-grid {
     width: min(100% - 16px, 100%);
@@ -137,26 +141,26 @@
   color: rgba(127, 255, 212, 0.466);
 }
 
-/* ---- Dashboard-only SectionCard width override ---- */
-.dashboard-grid > .section-card,
+/* ========= DASHBOARD-ONLY OVERRIDE (place LAST) =========
+   Ensures SectionCard.css (max-width:1180px) doesn't cap cards
+   on big screens. Scoped to dashboard; landing page unaffected. */
 .dashboard .section-card {
-  width: 100%;
-  max-width: 1400px; /* default for laptop screens */
-  margin: 0 auto;
+  max-width: var(--dash-grid-max) !important;
 }
-
-/* Large screens (desktops / ultrawide) */
-@media (min-width: 1600px) {
-  .dashboard-grid > .section-card,
+@media (max-width: 768px) {
   .dashboard .section-card {
-    max-width: 1600px;
+    max-width: none !important;
   }
 }
 
-/* Tablets and below keep the responsive SectionCard.css behavior */
+/* Utility: add ~2em extra bottom padding INSIDE a dashboard card */
+.dashboard .section-card--extra-pad {
+  padding-bottom: calc(16px + 2em) !important;
+}
+
+/* Optional: a bit less on small screens */
 @media (max-width: 768px) {
-  .dashboard-grid > .section-card,
-  .dashboard .section-card {
-    max-width: none;
+  .dashboard .section-card--extra-pad {
+    padding-bottom: calc(12px + 1em) !important;
   }
 }

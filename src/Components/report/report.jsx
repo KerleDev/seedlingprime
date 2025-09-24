@@ -3,6 +3,7 @@ import SeedIcon from '../../assets/seed.svg';
 import './Report.css';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ReportPDF from './ReportPDF';
+import { getMergedReportData, formatCurrency, formatPercent, getRecommendationColor } from '../../utils/reportUtils';
 // import BrandLogo from '../BrandLogo/BrandLogo';
 
 export default function Report({ stockData, geminiData }) {
@@ -11,132 +12,18 @@ export default function Report({ stockData, geminiData }) {
   // Log the symbol from URL for debugging
   console.log('Report loaded for symbol:', symbol);
 
-  // Get base data from localStorage
-  const getStorageData = () => {
-    try {
-      const stored = localStorage.getItem('reportData');
-      return stored ? JSON.parse(stored) : null;
-    } catch (error) {
-      console.warn('Failed to parse localStorage reportData:', error);
-      return null;
-    }
-  };
-
-  // Get Gemini data from localStorage if not provided as prop
-  const getGeminiData = () => {
-    if (geminiData) return geminiData;
-
-    try {
-      const stored = localStorage.getItem('geminiData');
-      return stored ? JSON.parse(stored) : null;
-    } catch (error) {
-      console.warn('Failed to parse localStorage geminiData:', error);
-      return null;
-    }
-  };
-
-  // Default fallback data structure
-  const defaultData = {
-    symbol: 'AAPL',
-    companyName: 'Apple Inc.',
-    currentPrice: 150.25,
-    marketCap: '2.45T',
-    peRatio: 25.4,
-    sector: 'Technology',
-    introduction: 'Loading company overview...',
-    recommendation: 'ANALYZING',
-    confidence: 'PENDING',
-    targetPrice: 0,
-    strengths: [
-      'Analysis in progress...',
-      'Please wait for AI analysis...',
-      'Content loading...',
-    ],
-    weaknesses: [
-      'Analysis in progress...',
-      'Please wait for AI analysis...',
-      'Content loading...',
-    ],
-    marketPosition: 'AI analysis in progress...',
-    ratios: {
-      peRatio: 0,
-      pbRatio: 0,
-      psRatio: 0,
-      deRatio: 0,
-      roe: 0,
-      netIncome: 0,
-      freeCashFlowMargin: 0,
-      revenueGrowth: 0,
-      netIncomeGrowth: 0,
-    },
-  };
-
-  // Merge data sources: localStorage -> stockData -> geminiData (priority order)
-  const storageData = getStorageData();
-  const currentGeminiData = getGeminiData();
-  const baseData = { ...defaultData, ...storageData, ...stockData };
-
-  // Apply Gemini-generated content with highest priority
-  const data = {
-    ...baseData,
-    ...(currentGeminiData?.introduction && {
-      introduction: currentGeminiData.introduction,
-    }),
-    ...(currentGeminiData?.recommendation && {
-      recommendation: currentGeminiData.recommendation,
-    }),
-    ...(currentGeminiData?.confidence && {
-      confidence: currentGeminiData.confidence,
-    }),
-    ...(currentGeminiData?.strengths && {
-      strengths: currentGeminiData.strengths,
-    }),
-    ...(currentGeminiData?.weaknesses && {
-      weaknesses: currentGeminiData.weaknesses,
-    }),
-    ...(currentGeminiData?.marketPosition && {
-      marketPosition: currentGeminiData.marketPosition,
-    }),
-  };
+  // Get merged data using utility function
+  const data = getMergedReportData(symbol, stockData, geminiData);
 
   // Debug logs
-  // console.log('Report data loaded:');
-  // console.log('- Symbol:', symbol);
-  // console.log('- StorageData:', storageData);
-  // console.log('- StockData prop:', stockData);
-  // console.log('- GeminiData:', currentGeminiData);
-  // console.log('- Final data object:', data);
-  // console.log('- Final ratios:', data.ratios);
-  // console.log('- Upside:', data.upside);
-  // console.log('- MoS:', data.mos);
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(value);
-  };
-
-  const formatPercent = (value) => {
-    if (value === null || value === undefined || isNaN(value))
-      return '0%';
-    return `${parseFloat(value).toFixed(1)}%`;
-  };
-
-  const getRecommendationColor = (recommendation) => {
-    switch (recommendation?.toUpperCase()) {
-      case 'LONG':
-        // case 'STRONG BUY':
-        return '#65A30D';
-      case 'SHORT':
-        // case 'STRONG SELL':
-        return '#ef4444';
-      // case 'HOLD':
-      //   return '#f59e0b';
-      // default:
-      //   return '#6b7280';
-    }
-  };
+  console.log('Report data loaded:');
+  console.log('- Symbol:', symbol);
+  console.log('- StockData prop:', stockData);
+  console.log('- GeminiData:', geminiData);
+  console.log('- Final data object:', data);
+  console.log('- Final ratios:', data.ratios);
+  console.log('- Upside:', data.upside);
+  console.log('- MoS:', data.mos);
 
   return (
     <div className="report-container">
@@ -144,8 +31,8 @@ export default function Report({ stockData, geminiData }) {
         {/* Brand Header */}
         <header className="brand-header">
           <div className="brand-content">
-            <span className="brand-logo-text">
-              <span className="brand-logo-seed">Seed</span>
+            <span className="brand-text">
+              <span className="brand-seed">Seed</span>
               <span className="brand-logo-ling">ling</span>
             </span>
             <p className="brand-description">

@@ -186,19 +186,18 @@ function Dashboard() {
         </div>
       </div>
 
-      <SectionCard
-        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}  className="section-card--extra-pad"
-      >
-        <UndervaluedOpportunities
-          sectorKey={selectedSector}
-          liveData={ppxlData}
-          loading={ppxlLoading}
-          error={ppxlError}
-        />
-      </SectionCard>
-
       {/* Main grid */}
       <section className="dashboard-grid" aria-label="Dashboard content">
+        <SectionCard
+          title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}  className="section-card--extra-pad"
+        >
+          <UndervaluedOpportunities
+            sectorKey={selectedSector}
+            liveData={ppxlData}
+            loading={ppxlLoading}
+            error={ppxlError}
+          />
+        </SectionCard>
         {/* Sector Overview card: chart + sort control */}
         <SectionCard
           title={`${shaped.displayNames[selectedSector]} Sector Overview`}

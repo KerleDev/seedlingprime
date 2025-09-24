@@ -1,14 +1,44 @@
-export default function buildGeminiPrompt({ sectorJson, ppxlText }) {
-  return `You are a senior financial analyst. Using ONLY the structured JSON data below (and your reasoning), write a clear, concise markdown report identifying the most undervalued stocks in the specified sector. Do not invent tickers or metrics that are not present in the JSON; if a metric is missing or zero, acknowledge it as a limitation.
+export default function buildGeminiPrompt({
+  stockSymbol,
+  stockData,
+  sectorJson,
+  ppxlText,
+}) {
+  return `You are a senior financial analyst. Using ONLY the structured JSON data below, generate a comprehensive investment analysis for ${stockSymbol}. Do not invent metrics that are not present in the data.
 
-JSON DATA START\n${JSON.stringify(sectorJson ?? { raw: ppxlText }, null, 2)}\nJSON DATA END
+STOCK DATA:
+${JSON.stringify(stockData || {}, null, 2)}
 
-Report requirements:
-- Start with a short sector overview including the sector ETF (if available).
-- Provide a ranked list of the top 2-3 candidates that appear undervalued based on available metrics (P/E, P/B, P/S, ROE, net income, FCF margin, D/E, revenue growth, net income growth).
-- For each pick, include a brief rationale referencing the actual metrics from the JSON.
-- Note any data gaps where values are missing or zero.
-- End with a brief risk section and a one-paragraph conclusion.
+SECTOR DATA:
+${JSON.stringify(sectorJson ?? { raw: ppxlText }, null, 2)}
 
-Format the output in markdown with headings, bullet points, and short paragraphs.`;
+You must provide your analysis in this EXACT JSON format (no markdown, no additional text):
+
+{
+  "introduction": "A 2-3 sentence company overview describing what the company does and its business model",
+  "recommendation": "LONG or SHORT",
+  "confidence": "HIGH or MEDIUM or LOW",
+  "strengths": [
+    "First key strength based on the data",
+    "Second key strength based on the data",
+    "Third key strength based on the data"
+  ],
+  "weaknesses": [
+    "First key weakness or risk based on the data",
+    "Second key weakness or risk based on the data",
+    "Third key weakness or risk based on the data"
+  ],
+  "marketPosition": "A single paragraph describing the company's competitive position and market dynamics"
+}
+
+Analysis guidelines:
+- Base your recommendation on actual financial metrics provided (P/E, P/B, ROE, growth rates, etc.)
+- Strengths should highlight positive financial metrics, competitive advantages, or growth prospects
+- Weaknesses should identify risks, poor metrics, or concerning trends
+- Market position should consider sector context and competitive landscape
+- If data is missing, mention it as a limitation but still provide analysis based on available information
+- Keep each array item to 1-2 sentences maximum
+- Ensure recommendation aligns with your analysis
+
+Return ONLY the JSON object, no other text.`;
 }

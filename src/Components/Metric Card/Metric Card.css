@@ -138,7 +138,7 @@
   font-size: var(--S4);
   color: #fff;
   background: #181743;
-  cursor: not-allowed;
+  cursor: pointer;
   box-shadow: 0 6px 14px rgba(24, 23, 67, 0.18);
 }
 
@@ -166,6 +166,7 @@
 
 /* Tablets and small screens */
 @media (max-width: 768px) {
+
   .mc-top-row,
   .mc-bottom-row {
     gap: 12px;

@@ -61,7 +61,7 @@ export default function Report({ stockData }) {
     switch (recommendation?.toUpperCase()) {
       case 'BUY':
         // case 'STRONG BUY':
-        return '#22c55e';
+        return '#65A30D';
       case 'SELL':
         // case 'STRONG SELL':
         return '#ef4444';
@@ -163,9 +163,7 @@ export default function Report({ stockData }) {
           </div>
           {data.targetPrice && (
             <div className="target-price">
-              <span className="target-label">
-                12-Month Target Price:{' '}
-              </span>
+              <span className="target-label">Target Price: </span>
               <span className="target-value">
                 {formatCurrency(data.targetPrice)}
               </span>

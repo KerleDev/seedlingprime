@@ -136,3 +136,27 @@
 .api-status {
   color: rgba(127, 255, 212, 0.466);
 }
+
+/* ---- Dashboard-only SectionCard width override ---- */
+.dashboard-grid > .section-card,
+.dashboard .section-card {
+  width: 100%;
+  max-width: 1400px; /* default for laptop screens */
+  margin: 0 auto;
+}
+
+/* Large screens (desktops / ultrawide) */
+@media (min-width: 1600px) {
+  .dashboard-grid > .section-card,
+  .dashboard .section-card {
+    max-width: 1600px;
+  }
+}
+
+/* Tablets and below keep the responsive SectionCard.css behavior */
+@media (max-width: 768px) {
+  .dashboard-grid > .section-card,
+  .dashboard .section-card {
+    max-width: none;
+  }
+}

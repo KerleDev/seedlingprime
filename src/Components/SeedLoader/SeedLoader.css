@@ -2,202 +2,279 @@
    SeedLoader.css  (pure CSS)
    ================================ */
 
-   :root{
-    --sl-radius:24px;
-    --sl-card-bg:rgba(255,255,255,0.9);
-    /* Text (lighter / white shades) */
-    --sl-text:#F9FAFB;            /* near-white */
-    --sl-text-muted:rgba(255,255,255,0.85);
-  
-    --sl-ring:rgba(255,255,255,0.18);
-    --sl-overlay:rgba(0,0,0,0.40);
-  
-    /* Brand gradient (your colors) */
-    --brand-g1:#24243e;
-    --brand-g2:#302b63;
-    --brand-g3:#0f0c29;
-    --brand-grad-90: linear-gradient(90deg, var(--brand-g1), var(--brand-g2), var(--brand-g3));
-    --brand-grad-135: linear-gradient(135deg, var(--brand-g1), var(--brand-g2), var(--brand-g3));
-  
-    /* Legacy glow gradient (unused elsewhere but kept for subtle effect) */
-    --sl-grad-from:#34d399;
-    --sl-grad-mid:#a5b4fc;
-    --sl-grad-to:#38bdf8;
-  
-    --sl-card-shadow:0 20px 40px rgba(0,0,0,0.35);
-    --sl-z:1000;
-  
-    /* Progress sweep speed (increase to slow more) */
-    --sl-sweep-duration: 4.5s;
-  
-    /* Spacing between headline and subline */
-    --sl-head-gap: 22px;
+:root {
+  --sl-radius: 24px;
+  --sl-card-bg: rgba(255, 255, 255, 0.9);
+  /* Text (lighter / white shades) */
+  --sl-text: #F9FAFB;
+  /* near-white */
+  --sl-text-muted: rgba(255, 255, 255, 0.85);
+
+  --sl-ring: rgba(255, 255, 255, 0.18);
+  --sl-overlay: rgba(0, 0, 0, 0.40);
+
+  /* Brand gradient (your colors) */
+  --brand-g1: #24243e;
+  --brand-g2: #302b63;
+  --brand-g3: #0f0c29;
+  --brand-grad-90: linear-gradient(90deg, var(--brand-g1), var(--brand-g2), var(--brand-g3));
+  --brand-grad-135: linear-gradient(135deg, var(--brand-g1), var(--brand-g2), var(--brand-g3));
+
+  /* Legacy glow gradient (unused elsewhere but kept for subtle effect) */
+  --sl-grad-from: #34d399;
+  --sl-grad-mid: #a5b4fc;
+  --sl-grad-to: #38bdf8;
+
+  --sl-card-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  --sl-z: 1000;
+
+  /* Progress sweep speed (increase to slow more) */
+  --sl-sweep-duration: 4.5s;
+
+  /* Spacing between headline and subline */
+  --sl-head-gap: 22px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --sl-head-gap: 26px;
   }
-  @media (min-width: 768px){
-    :root{
-      --sl-head-gap: 26px;
-    }
+}
+
+/* Dark mode retains light text over dark gradient */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --sl-card-bg: rgba(17, 17, 17, 0.9);
+    --sl-text: #FFFFFF;
+    --sl-text-muted: rgba(255, 255, 255, 0.85);
+    --sl-ring: rgba(255, 255, 255, 0.22);
   }
-  
-  /* Dark mode retains light text over dark gradient */
-  @media (prefers-color-scheme: dark){
-    :root{
-      --sl-card-bg:rgba(17,17,17,0.9);
-      --sl-text:#FFFFFF;
-      --sl-text-muted:rgba(255,255,255,0.85);
-      --sl-ring:rgba(255,255,255,0.22);
-    }
-  }
-  
-  /* --- Overlay & container --- */
-  
-  .seedloader-overlay{
-    position:fixed; inset:0; z-index:var(--sl-z);
-    display:flex; align-items:center; justify-content:center;
-    padding:28px;
-  }
-  .seedloader-overlay.with-backdrop{
-    /* keep a soft dim behind the card; if you want full-screen brand gradient instead,
+}
+
+/* --- Overlay & container --- */
+
+.seedloader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--sl-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.seedloader-overlay.with-backdrop {
+  /* keep a soft dim behind the card; if you want full-screen brand gradient instead,
        replace with: background: var(--brand-grad-90); */
-    background:var(--sl-overlay);
-    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  background: var(--sl-overlay);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.seedloader-container {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* wider card */
+
+/* --- Card --- */
+
+.seedloader-card {
+  position: relative;
+  border-radius: var(--sl-radius);
+  /* Use YOUR brand gradient as the card background */
+  background: var(--brand-grad-90);
+  box-shadow: var(--sl-card-shadow);
+  border: 1px solid var(--sl-ring);
+  padding: 64px;
+  /* more inner padding */
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .seedloader-card {
+    padding: 36px;
   }
-  
-  .seedloader-container{ width:100%; max-width:1100px; } /* wider card */
-  
-  /* --- Card --- */
-  
-  .seedloader-card{
-    position:relative;
-    border-radius:var(--sl-radius);
-    /* Use YOUR brand gradient as the card background */
-    background: var(--brand-grad-90);
-    box-shadow:var(--sl-card-shadow);
-    border:1px solid var(--sl-ring);
-    padding:64px;               /* more inner padding */
-    overflow:hidden;
+}
+
+/* background glow — very subtle overlay to add depth */
+.seedloader-glow {
+  position: absolute;
+  inset: -120px;
+  opacity: .22;
+  filter: blur(72px);
+  pointer-events: none;
+  background: var(--brand-grad-135);
+}
+
+/* --- Content layout --- */
+
+.seedloader-content {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  /* more space between sections */
+  text-align: center;
+  /* center fallback for all text */
+}
+
+/* Make header vertical, centered, with headline ABOVE the animation */
+.seedloader-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 36px;
+  /* space between text block and the plant */
+}
+
+/* Reorder so texts appear first without touching JSX */
+.seedloader-texts {
+  order: -1;
+  /* move above the SVG */
+  min-width: 0;
+}
+
+/* headline: centered, single line w/ ellipsis + spacing to subline */
+.seedloader-headline {
+  margin: 0 0 var(--sl-head-gap);
+  color: var(--sl-text);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-size: 22px;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+@media (min-width:768px) {
+  .seedloader-headline {
+    font-size: 28px;
   }
-  @media (max-width: 640px){
-    .seedloader-card{ padding:36px; }
+}
+
+/* subline (rotating text container) */
+.seedloader-subline-wrapper {
+  height: 28px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 0;
+  /* spacing controlled by --sl-head-gap */
+}
+
+.seedloader-subline {
+  margin: 0;
+  color: var(--sl-text-muted);
+  line-height: 1.2;
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  text-align: center;
+}
+
+/* Add a touch more air above/below the SVG block */
+.seedloader-plant {
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+/* --- Progress (track + moving chunk) --- */
+
+.seedloader-progress {
+  width: 100%;
+  height: 12px;
+  /* slightly thicker bar */
+  border-radius: 999px;
+  overflow: hidden;
+  /* light track on dark gradient */
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Reduced-motion fallback (only applies when user requests reduced motion) */
+@media (prefers-reduced-motion: reduce) {
+  .seedloader-progress-bar.pulse {
+    height: 100%;
+    width: 33%;
+    background: rgba(255, 255, 255, 0.7);
+    animation: sl-pulse 1.4s ease-in-out infinite;
   }
-  
-  /* background glow — very subtle overlay to add depth */
-  .seedloader-glow{
-    position:absolute; inset:-120px;
-    opacity:.22; filter:blur(72px); pointer-events:none;
-    background:var(--brand-grad-135);
+}
+
+/* Sweep that goes fully L->R using YOUR gradient */
+.seedloader-progress-bar.gradient {
+  height: 100%;
+  width: 100%;
+  /* two moving layers over the track, using your colors */
+  --chunk: no-repeat linear-gradient(90deg, var(--brand-g1) 0%, var(--brand-g2) 50%, var(--brand-g3) 100%);
+  background: var(--chunk), var(--chunk);
+  background-size: 60% 100%;
+  /* visible chunk width; tweak for wider/narrower sweep */
+  animation: sl-sweep-layers var(--sl-sweep-duration) linear infinite;
+}
+
+/* --- Footer --- */
+
+.seedloader-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.seedloader-tip {
+  margin: 0;
+  margin-inline: auto;
+  color: var(--sl-text-muted);
+  font-size: 13px;
+}
+
+.seedloader-cancel {
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sl-text);
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.seedloader-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* --- Keyframes --- */
+
+@keyframes sl-pulse {
+  0% {
+    opacity: .7
   }
-  
-  /* --- Content layout --- */
-  
-  .seedloader-content{
-    position:relative;
-    display:grid; grid-template-columns:1fr;
-    gap:40px;                   /* more space between sections */
-    text-align:center;          /* center fallback for all text */
+
+  50% {
+    opacity: 1
   }
-  
-  /* Make header vertical, centered, with headline ABOVE the animation */
-  .seedloader-header{
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    gap:36px;                   /* space between text block and the plant */
+
+  100% {
+    opacity: .7
   }
-  
-  /* Reorder so texts appear first without touching JSX */
-  .seedloader-texts{
-    order:-1;                   /* move above the SVG */
-    min-width:0;
+}
+
+/* two-layer sweep that reaches the end cleanly */
+@keyframes sl-sweep-layers {
+  0% {
+    background-position: -150% 0, -150% 0;
   }
-  
-  /* headline: centered, single line w/ ellipsis + spacing to subline */
-  .seedloader-headline{
-    margin: 0 0 var(--sl-head-gap);
-    color: var(--sl-text);
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    font-size: 22px; line-height: 1.25;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    text-align: center;
+
+  66% {
+    background-position: 250% 0, -150% 0;
   }
-  @media (min-width:768px){
-    .seedloader-headline{ font-size:28px; }
+
+  100% {
+    background-position: 250% 0, 250% 0;
   }
-  
-  /* subline (rotating text container) */
-  .seedloader-subline-wrapper{
-    height:28px; position:relative; overflow:hidden;
-    margin-top: 0; /* spacing controlled by --sl-head-gap */
-  }
-  .seedloader-subline{
-    margin:0; color:var(--sl-text-muted); line-height:1.2;
-    font-size:clamp(1rem,2.5vw,1.15rem);
-    text-align:center;
-  }
-  
-  /* Add a touch more air above/below the SVG block */
-  .seedloader-plant{ flex-shrink:0; margin-top:8px; }
-  
-  /* --- Progress (track + moving chunk) --- */
-  
-  .seedloader-progress{
-    width:100%; height:12px;           /* slightly thicker bar */
-    border-radius:999px; overflow:hidden;
-    /* light track on dark gradient */
-    background: rgba(255,255,255,0.16);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-  }
-  
-  /* Reduced-motion fallback (only applies when user requests reduced motion) */
-  @media (prefers-reduced-motion: reduce){
-    .seedloader-progress-bar.pulse{
-      height:100%;
-      width:33%;
-      background:rgba(255,255,255,0.7);
-      animation:sl-pulse 1.4s ease-in-out infinite;
-    }
-  }
-  
-  /* Sweep that goes fully L->R using YOUR gradient */
-  .seedloader-progress-bar.gradient{
-    height:100%;
-    width:100%;
-    /* two moving layers over the track, using your colors */
-    --chunk: no-repeat linear-gradient(90deg, var(--brand-g1) 0%, var(--brand-g2) 50%, var(--brand-g3) 100%);
-    background: var(--chunk), var(--chunk);
-    background-size: 60% 100%;               /* visible chunk width; tweak for wider/narrower sweep */
-    animation: sl-sweep-layers var(--sl-sweep-duration) linear infinite;
-  }
-  
-  /* --- Footer --- */
-  
-  .seedloader-footer{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-  }
-  .seedloader-tip{
-    margin:0; color:var(--sl-text-muted); font-size:13px;
-  }
-  
-  .seedloader-cancel{
-    cursor:pointer; padding:10px 16px; border-radius:12px;
-    font-size:14px; font-weight:600; color:var(--sl-text);
-    background:transparent; border:1px solid rgba(255,255,255,0.25);
-    transition:background .2s ease,color .2s ease, border-color .2s ease;
-  }
-  .seedloader-cancel:hover{
-    background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.35);
-  }
-  
-  /* --- Keyframes --- */
-  
-  @keyframes sl-pulse{
-    0%{opacity:.7} 50%{opacity:1} 100%{opacity:.7}
-  }
-  
-  /* two-layer sweep that reaches the end cleanly */
-  @keyframes sl-sweep-layers{
-    0%   { background-position: -150% 0, -150% 0; }
-    66%  { background-position:  250% 0, -150% 0; }
-    100% { background-position:  250% 0,  250% 0; }
-  }
-  
+}

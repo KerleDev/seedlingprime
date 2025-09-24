@@ -273,7 +273,10 @@ export default function UndervaluedOpportunities({
         // Priority 1: localStorage - use loadSectorData(sectorKey)
         try {
           const localStorageData = loadSectorData(sectorKey);
-          if (localStorageData?.stocks && typeof localStorageData.stocks === 'object') {
+          if (
+            localStorageData?.stocks &&
+            typeof localStorageData.stocks === 'object'
+          ) {
             const processedCandidates = processLiveDataForUndervalued(
               { stocks: Object.values(localStorageData.stocks) },
               sectorKey
@@ -410,7 +413,9 @@ export default function UndervaluedOpportunities({
         aria-label="Undervalued Opportunities"
       >
         {content}
-        {dataSource && (
+
+        {/* for debugging 
+         {dataSource && (
           <div
             className="uval-debug"
             style={{
@@ -422,7 +427,7 @@ export default function UndervaluedOpportunities({
             Data source: {dataSource} | Found: {candidates.length}{' '}
             candidates
           </div>
-        )}
+        )} */}
       </section>
 
       {/* SeedLoader overlay during report generation */}

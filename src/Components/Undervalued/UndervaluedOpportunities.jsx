@@ -12,6 +12,7 @@ import { generateStockAnalysis } from '../../services/geminiService';
 import SeedLoader from '../SeedLoader/SeedLoader';
 import { normalizeStock } from '../../utils/normalizeStock';
 import { validateStock } from '../../utils/validateStock';
+import { estimateFairPrice, computeSectorStats } from '../../services/valuation';
 
 // Simple data processing function that leverages existing utils
 function processLiveDataForUndervalued(liveData, sectorKey) {
@@ -19,7 +20,7 @@ function processLiveDataForUndervalued(liveData, sectorKey) {
     return [];
   }
 
-  const candidates = liveData.stocks
+  const normalizedStocks = liveData.stocks
     .map((stock) => {
       // Use existing normalizeStock utility
       const normalized = normalizeStock({
@@ -50,6 +51,18 @@ function processLiveDataForUndervalued(liveData, sectorKey) {
         return null;
       }
 
+      return normalized;
+    })
+    .filter(Boolean);
+
+  // Compute sector statistics for dynamic valuation
+  const sectorStats = computeSectorStats(normalizedStocks, sectorKey);
+
+  const candidates = normalizedStocks
+    .map((normalized) => {
+      // Use valuation service for dynamic fair value, upside, and margin of safety
+      const valuation = estimateFairPrice(normalized, sectorStats);
+
       // Simple undervaluation score (lower P/E is better)
       const pe = normalized.peRatio || 999;
       const pb = normalized.priceToBook || 999;
@@ -60,13 +73,12 @@ function processLiveDataForUndervalued(liveData, sectorKey) {
         name: normalized.name || normalized.symbol,
         price: normalized.price,
         peRatio: normalized.peRatio,
-        fairValue: normalized.price * 1.2, // Simple 20% upside assumption
-        upside: 20,
-        mos: 10,
+        fairValue: valuation.blendedFairPrice || normalized.price * 1.2,
+        upside: valuation.upsidePct || 0,
+        mos: valuation.marginOfSafety || 0,
         _score: score,
       };
     })
-    .filter(Boolean) // Remove invalid stocks
     .sort((a, b) => a._score - b._score); // Sort by score (lower is better)
 
   return candidates.slice(0, 2);

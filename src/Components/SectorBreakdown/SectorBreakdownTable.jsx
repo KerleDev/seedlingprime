@@ -12,7 +12,6 @@ import { uoUtils } from '../../utils/uoUtilsAdapter';
 
 import sectorDataNew from '../../constants/sectorDataNew';
 
-
 const money = (n) =>
   Number.isFinite(n)
     ? `$${n.toLocaleString(undefined, { maximumFractionDigits: 2 })}`
@@ -153,7 +152,10 @@ export default function SectorBreakdownTable({
                 revG: stock.rev_growth,
                 netIncome: stock.net_income,
                 nig: stock.net_income_growth,
-                score: screeningResult?.combinedScore ?? screeningResult?.screeningScore ?? null,
+                score:
+                  screeningResult?.combinedScore ??
+                  screeningResult?.screeningScore ??
+                  computeUndervaluationScore(metrics),
                 _score: computeUndervaluationScore(metrics),
                 _isLive: true, // Flag to indicate live data
               };
@@ -236,7 +238,14 @@ export default function SectorBreakdownTable({
     return () => {
       cancelled = true;
     };
-  }, [sectorKey, liveData, screeningResults, parentLoading, parentError, utils]);
+  }, [
+    sectorKey,
+    liveData,
+    screeningResults,
+    parentLoading,
+    parentError,
+    utils,
+  ]);
 
   // robust sorter (keeps nulls at end; works for strings & numbers)
   const sortedRows = useMemo(() => {
@@ -352,9 +361,7 @@ export default function SectorBreakdownTable({
             <td className="num">{pctSmart(r.revG)}</td>
             <td className="num">{abbrCap(r.netIncome)}</td>
             <td className="num">{pctSmart(r.nig)}</td>
-            <td className="num">
-              {fmtNum(r.score, 2)}
-            </td>
+            <td className="num">{fmtNum(r.score, 2)}</td>
           </tr>
         ))}
       </tbody>
@@ -404,7 +411,6 @@ export default function SectorBreakdownTable({
               PRICE{arrowFor('price')}
             </th>
             <th onClick={() => handleSort('marketCap')}>
-
               MKT CAP{arrowFor('marketCap')}
             </th>
             <th onClick={() => handleSort('pe')}>
@@ -412,26 +418,21 @@ export default function SectorBreakdownTable({
             </th>
             <th onClick={() => handleSort('pb')}>
               P/B {arrowFor('pb')}
-
             </th>
             <th onClick={() => handleSort('roe')}>
               ROE{arrowFor('roe')}
             </th>
             <th onClick={() => handleSort('cfm')}>
-
               Free CFM{arrowFor('cfm')}
-
             </th>
             <th onClick={() => handleSort('de')}>
               D/E{arrowFor('de')}
             </th>
             <th onClick={() => handleSort('revG')}>
-
               RevG{arrowFor('revG')}
             </th>
             <th onClick={() => handleSort('netIncome')}>
               NetInc{arrowFor('netIncome')}
-
             </th>
             <th onClick={() => handleSort('nig')}>
               NIG{arrowFor('nig')}
@@ -444,7 +445,7 @@ export default function SectorBreakdownTable({
                   marginLeft: '4px',
                   fontSize: '12px',
                   color: '#666',
-                  cursor: 'help'
+                  cursor: 'help',
                 }}
               >
                 ⓘ

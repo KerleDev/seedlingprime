@@ -21,8 +21,8 @@ hr {
 
 .brand-logo-icon-bg {
   position: absolute;
-  right: -6rem;
-  top: 50%;
+  right: -5rem;
+  top: 48%;
   transform: translateY(-50%);
   height: 30rem;
   z-index: 1;
@@ -264,19 +264,19 @@ hr {
 }
 
 .strengths li::before {
-  content: '✓';
+  content: '⨈';
   position: absolute;
   left: 0;
   color: #10b981;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .weaknesses li::before {
-  content: '!';
+  content: '⨇';
   position: absolute;
   left: 0.25rem;
   color: #ef4444;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .market-position-text {

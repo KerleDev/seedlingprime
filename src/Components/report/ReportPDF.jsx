@@ -179,6 +179,39 @@ const styles = StyleSheet.create({
     backgroundColor: '#e5e7eb',
     marginVertical: 15,
   },
+  valuationMetrics: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 20,
+    marginVertical: 10,
+  },
+  valuationItem: {
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#f8fafc',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    minWidth: 120,
+  },
+  valuationLabel: {
+    fontSize: 9,
+    color: '#64748b',
+    marginBottom: 4,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  valuationValue: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  valuationPositive: {
+    color: '#059669',
+  },
+  valuationNegative: {
+    color: '#dc2626',
+  },
 });
 
 export default function ReportPDF({ stockData }) {
@@ -309,6 +342,33 @@ export default function ReportPDF({ stockData }) {
               {data.recommendation} - {data.confidence} CONFIDENCE
             </Text>
           </View>
+
+          <View style={styles.valuationMetrics}>
+            {data.upside && (
+              <View style={styles.valuationItem}>
+                <Text style={styles.valuationLabel}>Upside Potential</Text>
+                <Text style={[
+                  styles.valuationValue,
+                  data.upside > 0 ? styles.valuationPositive : styles.valuationNegative
+                ]}>
+                  {formatPercent(data.upside)}
+                </Text>
+              </View>
+            )}
+
+            {(data.mos || data.marginOfSafety) && (
+              <View style={styles.valuationItem}>
+                <Text style={styles.valuationLabel}>Margin of Safety</Text>
+                <Text style={[
+                  styles.valuationValue,
+                  (data.mos || data.marginOfSafety) > 0 ? styles.valuationPositive : styles.valuationNegative
+                ]}>
+                  {formatPercent(data.mos || data.marginOfSafety)}
+                </Text>
+              </View>
+            )}
+          </View>
+
           {data.targetPrice && (
             <View style={styles.targetPrice}>
               <Text style={styles.targetLabel}>12-Month Target Price: </Text>

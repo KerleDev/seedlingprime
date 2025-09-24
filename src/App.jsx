@@ -25,7 +25,7 @@ function App() {
           element={<Dashboard />}
         />
         <Route
-          path="report"
+          path="report/:symbol"
           element={<Report />}
         />
       </Route>

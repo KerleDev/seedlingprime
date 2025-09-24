@@ -1,11 +1,41 @@
+import { useParams } from 'react-router-dom';
 import SeedIcon from '../../assets/seed.svg';
 import './Report.css';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ReportPDF from './ReportPDF';
 // import BrandLogo from '../BrandLogo/BrandLogo';
 
-export default function Report({ stockData }) {
-  // Default data structure for when no props are passed
+export default function Report({ stockData, geminiData }) {
+  const { symbol } = useParams();
+
+  // Log the symbol from URL for debugging
+  console.log('Report loaded for symbol:', symbol);
+
+  // Get base data from localStorage
+  const getStorageData = () => {
+    try {
+      const stored = localStorage.getItem('reportData');
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      console.warn('Failed to parse localStorage reportData:', error);
+      return null;
+    }
+  };
+
+  // Get Gemini data from localStorage if not provided as prop
+  const getGeminiData = () => {
+    if (geminiData) return geminiData;
+
+    try {
+      const stored = localStorage.getItem('geminiData');
+      return stored ? JSON.parse(stored) : null;
+    } catch (error) {
+      console.warn('Failed to parse localStorage geminiData:', error);
+      return null;
+    }
+  };
+
+  // Default fallback data structure
   const defaultData = {
     symbol: 'AAPL',
     companyName: 'Apple Inc.',
@@ -13,38 +43,72 @@ export default function Report({ stockData }) {
     marketCap: '2.45T',
     peRatio: 25.4,
     sector: 'Technology',
-    introduction:
-      'Apple Inc. is a multinational technology company that designs, develops, and sells consumer electronics, computer software, and online services.',
-    recommendation: 'BUY',
-    confidence: 'HIGH',
-    targetPrice: 175.0,
+    introduction: 'Loading company overview...',
+    recommendation: 'ANALYZING',
+    confidence: 'PENDING',
+    targetPrice: 0,
     strengths: [
-      'Strong brand loyalty and ecosystem',
-      'Consistent revenue growth',
-      'Strong cash position',
-      'Innovation leadership in consumer tech',
+      'Analysis in progress...',
+      'Please wait for AI analysis...',
+      'Content loading...',
     ],
     weaknesses: [
-      'High dependence on iPhone sales',
-      'Premium pricing limits market reach',
-      'Regulatory scrutiny in multiple markets',
+      'Analysis in progress...',
+      'Please wait for AI analysis...',
+      'Content loading...',
     ],
-    marketPosition:
-      'Market leader in premium consumer electronics with strong competitive moats',
+    marketPosition: 'AI analysis in progress...',
     ratios: {
-      peRatio: 25.4,
-      pbRatio: 8.2,
-      psRatio: 6.8,
-      deRatio: 1.73,
-      roe: 26.4,
-      netIncome: 94.3,
-      freeCashFlowMargin: 25.8,
-      revenueGrowth: 8.1,
-      netIncomeGrowth: 5.4,
+      peRatio: 0,
+      pbRatio: 0,
+      psRatio: 0,
+      deRatio: 0,
+      roe: 0,
+      netIncome: 0,
+      freeCashFlowMargin: 0,
+      revenueGrowth: 0,
+      netIncomeGrowth: 0,
     },
   };
 
-  const data = stockData || defaultData;
+  // Merge data sources: localStorage -> stockData -> geminiData (priority order)
+  const storageData = getStorageData();
+  const currentGeminiData = getGeminiData();
+  const baseData = { ...defaultData, ...storageData, ...stockData };
+
+  // Apply Gemini-generated content with highest priority
+  const data = {
+    ...baseData,
+    ...(currentGeminiData?.introduction && {
+      introduction: currentGeminiData.introduction,
+    }),
+    ...(currentGeminiData?.recommendation && {
+      recommendation: currentGeminiData.recommendation,
+    }),
+    ...(currentGeminiData?.confidence && {
+      confidence: currentGeminiData.confidence,
+    }),
+    ...(currentGeminiData?.strengths && {
+      strengths: currentGeminiData.strengths,
+    }),
+    ...(currentGeminiData?.weaknesses && {
+      weaknesses: currentGeminiData.weaknesses,
+    }),
+    ...(currentGeminiData?.marketPosition && {
+      marketPosition: currentGeminiData.marketPosition,
+    }),
+  };
+
+  // Debug logs
+  console.log('Report data loaded:');
+  console.log('- Symbol:', symbol);
+  console.log('- StorageData:', storageData);
+  console.log('- StockData prop:', stockData);
+  console.log('- GeminiData:', currentGeminiData);
+  console.log('- Final data object:', data);
+  console.log('- Final ratios:', data.ratios);
+  console.log('- Upside:', data.upside);
+  console.log('- MoS:', data.mos);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -54,7 +118,9 @@ export default function Report({ stockData }) {
   };
 
   const formatPercent = (value) => {
-    return `${value}%`;
+    if (value === null || value === undefined || isNaN(value))
+      return '0%';
+    return `${parseFloat(value).toFixed(1)}%`;
   };
 
   const getRecommendationColor = (recommendation) => {
@@ -94,7 +160,7 @@ export default function Report({ stockData }) {
                 fileName={`${data.symbol}_investment_report.pdf`}
                 className="pdf-download-btn"
               >
-                {({ blob, url, loading, error }) =>
+                {({ loading }) =>
                   loading ? 'Generating PDF...' : 'Download PDF'
                 }
               </PDFDownloadLink>
@@ -161,6 +227,31 @@ export default function Report({ stockData }) {
               {data.recommendation} - {data.confidence} CONFIDENCE
             </span>
           </div>
+
+          <div className="valuation-metrics">
+            {(data.upside !== undefined && data.upside !== null) && (
+              <div className="metric-item">
+                <span className="metric-label">Upside Potential</span>
+                <span
+                  className={`metric-value ${data.upside > 0 ? 'positive' : 'negative'}`}
+                >
+                  {formatPercent(data.upside)}
+                </span>
+              </div>
+            )}
+
+            {(data.mos !== undefined && data.mos !== null) && (
+              <div className="metric-item">
+                <span className="metric-label">Margin of Safety</span>
+                <span
+                  className={`metric-value ${data.mos > 0 ? 'positive' : 'negative'}`}
+                >
+                  {formatPercent(data.mos)}
+                </span>
+              </div>
+            )}
+          </div>
+
           {data.targetPrice && (
             <div className="target-price">
               <span className="target-label">Target Price: </span>
@@ -209,55 +300,65 @@ export default function Report({ stockData }) {
                 <div className="ratio-item">
                   <span className="ratio-label">P/E Ratio</span>
                   <span className="ratio-value">
-                    {data.ratios.peRatio}
+                    {data.ratios?.peRatio || data.peRatio || '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">P/B Ratio</span>
                   <span className="ratio-value">
-                    {data.ratios.pbRatio}
+                    {data.ratios?.pbRatio || '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">P/S Ratio</span>
                   <span className="ratio-value">
-                    {data.ratios.psRatio}
+                    {data.ratios?.psRatio || '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">D/E Ratio</span>
                   <span className="ratio-value">
-                    {data.ratios.deRatio}
+                    {data.ratios?.deRatio || '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">ROE</span>
                   <span className="ratio-value">
-                    {formatPercent(data.ratios.roe)}
+                    {data.ratios?.roe
+                      ? formatPercent(data.ratios.roe)
+                      : '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">Net Income</span>
                   <span className="ratio-value">
-                    ${data.ratios.netIncome}B
+                    {data.ratios?.netIncome
+                      ? `$${(data.ratios.netIncome / 1000000000).toFixed(1)}B`
+                      : '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">FCF Margin</span>
                   <span className="ratio-value">
-                    {formatPercent(data.ratios.freeCashFlowMargin)}
+                    {data.ratios?.freeCashFlowMargin
+                      ? formatPercent(data.ratios.freeCashFlowMargin)
+                      : '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">Revenue Growth</span>
                   <span className="ratio-value growth-positive">
-                    {formatPercent(data.ratios.revenueGrowth)}
+                    {data.ratios?.revenueGrowth
+                      ? formatPercent(data.ratios.revenueGrowth)
+                      : '—'}
                   </span>
                 </div>
                 <div className="ratio-item">
                   <span className="ratio-label">Income Growth</span>
                   <span className="ratio-value growth-positive">
-                    {formatPercent(data.ratios.netIncomeGrowth)}
+                    {data.ratios?.netIncomeGrowth
+                      ? formatPercent(data.ratios.netIncomeGrowth)
+                      : '—'}
                   </span>
                 </div>
               </div>

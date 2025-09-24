@@ -74,7 +74,7 @@ export default function SeedLoader({
             <div className="seedloader-footer">
               <p className="seedloader-tip">
                 Fresh results will plant themselves into your dashboard
-                automatically. Need them faster? Upgrade to Pro!
+                automatically.<br/> Need them faster? Upgrade to Pro!
               </p>
               {onCancel && (
                 <button onClick={onCancel} className="seedloader-cancel">

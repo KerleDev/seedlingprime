@@ -58,7 +58,7 @@ export default function MetricCard({
   ctaProps = {},
 }) {
   const position = upside >= 0 ? 'Long' : 'Short';
-  const positionColor = upside >= 0 ? '#14833b' : '#b91c1c';
+  const positionColor = upside >= 0 ? '#65A30D' : '#dc2626';
 
   return (
     <article className="mc-card" aria-label={`${name || ticker} metric card`}>

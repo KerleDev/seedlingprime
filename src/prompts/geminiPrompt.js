@@ -16,7 +16,7 @@ You must provide your analysis in this EXACT JSON format (no markdown, no additi
 
 {
   "introduction": "A 2-3 sentence company overview describing what the company does and its business model",
-  "recommendation": "BUY or SELL",
+  "recommendation": "LONG or SHORT",
   "confidence": "HIGH or MEDIUM or LOW",
   "strengths": [
     "First key strength based on the data",

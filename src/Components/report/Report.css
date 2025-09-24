@@ -162,6 +162,14 @@ hr {
   color: #111827;
 }
 
+.metric-value.positive {
+  color: #10b981;
+}
+
+.metric-value.negative {
+  color: #ef4444;
+}
+
 .stock-introduction {
   padding-left: 2rem;
   border-left: 1px solid rgba(94, 190, 49, 0.75);
@@ -181,9 +189,14 @@ hr {
   line-height: 1.7;
 }
 
+.valuation-overview {
+  display: flex;
+}
+
 /* Recommendation Section */
 .recommendation-section {
   padding: 2rem 3rem;
+  margin-inline: 5rem;
   background: #f9fafb;
   display: flex;
   justify-content: space-between;
@@ -279,6 +292,7 @@ hr {
   font-weight: normal;
 }
 
+
 .market-position-text {
   font-size: 0.95rem;
   color: #4b5563;
@@ -287,7 +301,8 @@ hr {
   padding: 1rem;
   background: #f8fafc;
   border-radius: 8px;
-  border-left: 4px solid rgba(94, 190, 49, 0.75);
+  border-left: 2px solid rgba(94, 190, 49, 0.75);
+  border-bottom: 2px solid rgba(94, 190, 49, 0.75);
 }
 
 /* Financial Ratios */

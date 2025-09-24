@@ -125,10 +125,10 @@ export default function Report({ stockData, geminiData }) {
 
   const getRecommendationColor = (recommendation) => {
     switch (recommendation?.toUpperCase()) {
-      case 'BUY':
+      case 'LONG':
         // case 'STRONG BUY':
         return '#65A30D';
-      case 'SELL':
+      case 'SHORT':
         // case 'STRONG SELL':
         return '#ef4444';
       // case 'HOLD':
@@ -189,9 +189,7 @@ export default function Report({ stockData, geminiData }) {
               </div>
               <div className="metric-item">
                 <span className="metric-label">Market Cap</span>
-                <span className="metric-value">
-                  ${data.marketCap}
-                </span>
+                <span className="metric-value">{data.marketCap}</span>
               </div>
               <div className="metric-item">
                 <span className="metric-label">P/E Ratio</span>
@@ -207,6 +205,36 @@ export default function Report({ stockData, geminiData }) {
           <div className="stock-introduction">
             <h3 className="section-title">Company Overview</h3>
             <p className="introduction-text">{data.introduction}</p>
+
+            <div
+              className="key-metrics valuation-metrics"
+              style={{ marginTop: '0.6rem' }}
+            >
+              {data.upside && (
+                <div className="metric-item">
+                  <span className="metric-label">
+                    Upside Potential
+                  </span>
+                  <span
+                    className={`metric-value ${data.upside > 0 ? 'positive' : 'negative'}`}
+                  >
+                    {formatPercent(data.upside)}
+                  </span>
+                </div>
+              )}
+              {data.mos && (
+                <div className="metric-item">
+                  <span className="metric-label">
+                    Margin of Safety
+                  </span>
+                  <span
+                    className={`metric-value ${data.mos > 0 ? 'positive' : 'negative'}`}
+                  >
+                    {formatPercent(data.mos)}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
@@ -226,30 +254,6 @@ export default function Report({ stockData, geminiData }) {
             <span className="recommendation-text">
               {data.recommendation} - {data.confidence} CONFIDENCE
             </span>
-          </div>
-
-          <div className="valuation-metrics">
-            {(data.upside !== undefined && data.upside !== null) && (
-              <div className="metric-item">
-                <span className="metric-label">Upside Potential</span>
-                <span
-                  className={`metric-value ${data.upside > 0 ? 'positive' : 'negative'}`}
-                >
-                  {formatPercent(data.upside)}
-                </span>
-              </div>
-            )}
-
-            {(data.mos !== undefined && data.mos !== null) && (
-              <div className="metric-item">
-                <span className="metric-label">Margin of Safety</span>
-                <span
-                  className={`metric-value ${data.mos > 0 ? 'positive' : 'negative'}`}
-                >
-                  {formatPercent(data.mos)}
-                </span>
-              </div>
-            )}
           </div>
 
           {data.targetPrice && (
@@ -284,13 +288,6 @@ export default function Report({ stockData, geminiData }) {
                     <li key={index}>{weakness}</li>
                   ))}
                 </ul>
-              </div>
-
-              <div className="analysis-section">
-                <h4 className="analysis-title">Market Position</h4>
-                <p className="market-position-text">
-                  {data.marketPosition}
-                </p>
               </div>
             </div>
 
@@ -333,7 +330,7 @@ export default function Report({ stockData, geminiData }) {
                   <span className="ratio-label">Net Income</span>
                   <span className="ratio-value">
                     {data.ratios?.netIncome
-                      ? `$${(data.ratios.netIncome / 1000000000).toFixed(1)}B`
+                      ? `$${(data.ratios.netIncome / 1000000000).toFixed(0)} B`
                       : '—'}
                   </span>
                 </div>
@@ -366,6 +363,13 @@ export default function Report({ stockData, geminiData }) {
           </div>
         </section>
 
+        <div className="analysis-section">
+          <h4 className="analysis-title">Market Position</h4>
+          <p className="market-position-text">
+            {data.marketPosition}
+          </p>
+        </div>
+        <br />
         <hr className="section-divider" />
 
         {/* Disclaimer */}

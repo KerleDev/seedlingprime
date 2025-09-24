@@ -163,11 +163,11 @@ hr {
 }
 
 .metric-value.positive {
-  color: #10b981;
+  color: var(--app-green);
 }
 
 .metric-value.negative {
-  color: #ef4444;
+  color: var(--app-red);
 }
 
 .stock-introduction {
@@ -280,7 +280,7 @@ hr {
   content: '⨈';
   position: absolute;
   left: 0;
-  color: #10b981;
+  color: var(--app-green);
   font-weight: normal;
 }
 
@@ -288,7 +288,7 @@ hr {
   content: '⨇';
   position: absolute;
   left: 0.25rem;
-  color: #ef4444;
+  color: var(--app-red);
   font-weight: normal;
 }
 
@@ -352,11 +352,11 @@ hr {
 }
 
 .growth-positive {
-  color: #059669 !important;
+  color: var(--app-green);
 }
 
 .growth-negative {
-  color: #dc2626 !important;
+  color: var(--app-red)
 }
 
 /* Disclaimer */

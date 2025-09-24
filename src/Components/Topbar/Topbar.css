@@ -56,3 +56,11 @@
   align-items: center;
   gap: 12px;
 }
+
+/* PDF download button in topbar */
+.pdf-download-topbar {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

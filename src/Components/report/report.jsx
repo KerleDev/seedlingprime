@@ -100,15 +100,15 @@ export default function Report({ stockData, geminiData }) {
   };
 
   // Debug logs
-  console.log('Report data loaded:');
-  console.log('- Symbol:', symbol);
-  console.log('- StorageData:', storageData);
-  console.log('- StockData prop:', stockData);
-  console.log('- GeminiData:', currentGeminiData);
-  console.log('- Final data object:', data);
-  console.log('- Final ratios:', data.ratios);
-  console.log('- Upside:', data.upside);
-  console.log('- MoS:', data.mos);
+  // console.log('Report data loaded:');
+  // console.log('- Symbol:', symbol);
+  // console.log('- StorageData:', storageData);
+  // console.log('- StockData prop:', stockData);
+  // console.log('- GeminiData:', currentGeminiData);
+  // console.log('- Final data object:', data);
+  // console.log('- Final ratios:', data.ratios);
+  // console.log('- Upside:', data.upside);
+  // console.log('- MoS:', data.mos);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -160,9 +160,7 @@ export default function Report({ stockData, geminiData }) {
                 fileName={`${data.symbol}_investment_report.pdf`}
                 className="pdf-download-btn"
               >
-                {({ loading }) =>
-                  loading ? 'Generating PDF...' : 'Download PDF'
-                }
+                {({ loading }) => (loading ? '' : 'Download PDF')}
               </PDFDownloadLink>
             </div>
           </div>

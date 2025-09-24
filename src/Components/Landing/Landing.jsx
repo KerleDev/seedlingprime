@@ -16,7 +16,7 @@ import {
 import ScreeningImg from "../../assets/ScreeningImg.svg";
 import DealsImg from "../../assets/DealsImg.svg";
 import GoalImg from "../../assets/GoalImg.svg";
-import BrandLogo from "../BrandLogo/BrandLogo";
+import BrandLogo from '../Brandlogo/BrandLogo.jsx'
 import "./Landing.css";
 
 function Landing() {

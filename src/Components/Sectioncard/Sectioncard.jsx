@@ -1,4 +1,4 @@
-import './SectionCard.css';
+import './Sectioncard.css';
 
 export default function SectionCard({
   title,

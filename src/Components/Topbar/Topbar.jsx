@@ -2,7 +2,7 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ReportPDF from '../report/ReportPDF';
 import { getMergedReportData } from '../../utils/reportUtils';
-import './TopBar.css';
+import './Topbar.css'
 import logo from '../../assets/seed.svg';
 
 function TopBar() {

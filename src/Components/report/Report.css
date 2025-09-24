@@ -302,8 +302,8 @@ hr {
   padding: 1rem;
   background: #f8fafc;
   border-radius: 8px;
-  border-left: 2px solid rgba(94, 190, 49, 0.75);
-  border-bottom: 2px solid rgba(94, 190, 49, 0.75);
+  border-left: 2px solid #65a30d;
+  border-bottom: 2px solid #65a30d;
 }
 
 /* Financial Ratios */

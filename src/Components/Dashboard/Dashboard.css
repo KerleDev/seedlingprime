@@ -1,16 +1,20 @@
-/* Root container for this page (scoped; avoids clashing with global .page) */
+/* Vars for container width and gutters */
 .dashboard {
-  /* Laptop-friendly default + shared gutter */
-  --dash-grid-max: 1180px;                 /* laptop cap */
-  --dash-gutter: clamp(32px, 8vw, 160px);  /* side spacing */
+  --dash-grid-max: 1180px;
+  --dash-gutter: clamp(32px, 8vw, 160px);
 }
 
-/* Scale up for larger displays */
+/* Wider caps on large screens */
 @media (min-width: 1600px) {
-  .dashboard { --dash-grid-max: 1600px; }  /* desktop cap */
+  .dashboard {
+    --dash-grid-max: 1600px;
+  }
 }
+
 @media (min-width: 2000px) {
-  .dashboard { --dash-grid-max: 1800px; }  /* ultrawide headroom */
+  .dashboard {
+    --dash-grid-max: 1800px;
+  }
 }
 
 /* Hero */
@@ -22,7 +26,7 @@
   gap: 8px;
 }
 
-/* Fluid sizing for title/subtitle */
+/* Titles */
 .dashboard .page-title {
   margin: 0 0 8px 0;
   color: var(--app-text--light);
@@ -39,7 +43,7 @@
   line-height: 1.5;
 }
 
-/* Top dropdown row */
+/* Top controls */
 .dashboard .page-controls {
   display: flex;
   flex-direction: column;
@@ -57,17 +61,16 @@
   margin-inline: auto;
   margin-block: clamp(12px, 3vw, 24px);
   padding: 0;
-
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(16px, 2.5vw, 24px);
-  grid-auto-rows: max-content; /* rows grow to fit content */
+  grid-auto-rows: max-content;
   align-items: stretch;
   justify-items: center;
 }
 
-/* All children in the grid share the same cap */
-.dashboard-grid > * {
+/* Grid children cap */
+.dashboard-grid>* {
   min-height: 0;
   width: 100%;
   max-width: var(--dash-grid-max);
@@ -75,7 +78,7 @@
   margin-right: auto;
 }
 
-/* Simple helpers inside the SectionCard content */
+/* Helpers inside cards */
 .card-row {
   display: flex;
   flex-wrap: wrap;
@@ -86,7 +89,7 @@
   flex: 1 1 100%;
 }
 
-/* Footer under the chart (sort control row) */
+/* Chart footer */
 .chart-footer {
   margin-top: 12px;
   display: flex;
@@ -97,13 +100,17 @@
   max-width: 400px;
 }
 
-/* Responsive adjustments */
+/* Small-screen tweaks (optional) */
 @media (max-width: 1200px) {
-  .dashboard { --dash-gutter: clamp(24px, 6vw, 120px); }
+  .dashboard {
+    --dash-gutter: clamp(24px, 6vw, 120px);
+  }
 }
 
 @media (max-width: 768px) {
-  .dashboard { --dash-gutter: 24px; }
+  .dashboard {
+    --dash-gutter: 24px;
+  }
 
   .dashboard .page-hero {
     padding: 0 12px;
@@ -128,8 +135,13 @@
 }
 
 @media (max-width: 480px) {
-  .dashboard .page-hero { padding: 0 8px; }
-  .dashboard .page-controls { padding: 0 8px; }
+  .dashboard .page-hero {
+    padding: 0 8px;
+  }
+
+  .dashboard .page-controls {
+    padding: 0 8px;
+  }
 
   .dashboard-grid {
     width: min(100% - 16px, 100%);
@@ -137,30 +149,66 @@
   }
 }
 
-.api-status {
-  color: rgba(127, 255, 212, 0.466);
-}
-
-/* ========= DASHBOARD-ONLY OVERRIDE (place LAST) =========
-   Ensures SectionCard.css (max-width:1180px) doesn't cap cards
-   on big screens. Scoped to dashboard; landing page unaffected. */
+/* Card width only on dashboard */
 .dashboard .section-card {
   max-width: var(--dash-grid-max) !important;
 }
+
 @media (max-width: 768px) {
   .dashboard .section-card {
     max-width: none !important;
   }
 }
 
-/* Utility: add ~2em extra bottom padding INSIDE a dashboard card */
-.dashboard .section-card--extra-pad {
-  padding-bottom: calc(16px + 2em) !important;
+/* Wrapper that keeps layout + extra bottom padding (cards 1 & 3) */
+.pad-inside {
+  display: contents;
 }
 
-/* Optional: a bit less on small screens */
+.dashboard .pad-inside .section-card {
+  padding-bottom: calc(16px + 2em);
+}
+
 @media (max-width: 768px) {
-  .dashboard .section-card--extra-pad {
-    padding-bottom: calc(12px + 1em) !important;
+  .dashboard .pad-inside .section-card {
+    padding-bottom: calc(12px + 1em);
   }
+}
+
+/* First card inner layout (no JSX changes):
+   target the FIRST pad-inside wrapper and enforce two columns on its body */
+@media (min-width: 1024px) and (max-width: 1599px) {
+
+  /* If an inner wrapper exists (e.g., the first child inside the body), make it a 2-col grid */
+  .dashboard>.pad-inside:first-of-type .section-card .section-card-body>*:first-child {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+    align-items: start;
+  }
+
+  /* Prevent child items from forcing a wrap */
+  .dashboard>.pad-inside:first-of-type .section-card .section-card-body>*:first-child>* {
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    flex: 0 1 auto !important;
+  }
+
+  /* Fallback: if the component uses .card-row internally */
+  .dashboard>.pad-inside:first-of-type .card-row {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+  }
+
+  .dashboard>.pad-inside:first-of-type .card-row>* {
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+}
+
+/* Minor */
+.api-status {
+  color: rgba(127, 255, 212, 0.466);
 }

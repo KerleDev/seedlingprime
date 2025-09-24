@@ -1,174 +1,130 @@
 .mc-card {
   border: 0;
-  border-radius: 24px;
-  padding: 28px;
-  /* more breathing space inside */
+  border-radius: 1.5em;            /* ~24px */
+  padding: 1.75em;                 /* ~28px */
   background: #fff;
-  box-shadow: 0 16px 40px rgba(24, 23, 67, 0.08),
-    0 2px 6px rgba(24, 23, 67, 0.06);
+  box-shadow: 0 1em 2.5em rgba(24, 23, 67, 0.08),
+              0 0.125em 0.375em rgba(24, 23, 67, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* מחלק תוכן וכפתור */
+  padding-bottom: 2em;             /* אוויר בתחתית הכרטיס */
 }
-
 
 .mc-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 16px;
-  border-radius: 16px;
+  padding: 0.875em 1em;            /* ~14px 16px */
+  border-radius: 1em;              /* ~16px */
   background: rgba(24, 23, 67, 0.06);
-  margin-bottom: 14px;
+  margin-bottom: 1.5em;            /* ~24px */
 }
 
-.mc-left {
-  min-width: 0;
-}
+.mc-left { min-width: 0; }
 
 .mc-ticker {
   font-weight: 800;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.025em;
   color: #181743;
-  font-size: clamp(18px, 1.6vw, 22px);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
   line-height: 1.1;
 }
 
 .mc-subname {
   color: var(--input-text);
   font-size: var(--S4);
-  margin-top: 2px;
+  margin-top: 0.125em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.mc-right {
-  text-align: right;
-}
+.mc-right { text-align: right; }
 
 .mc-price-label {
   color: var(--input-text);
   font-size: var(--S4);
-  margin-bottom: 4px;
+  margin-bottom: 0.25em;
 }
 
 .mc-price-val {
   font-weight: 800;
-  font-size: clamp(18px, 1.8vw, 26px);
+  font-size: clamp(1.125rem, 1.8vw, 1.625rem);
   color: var(--app-text);
 }
 
-.mc-top-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 24px 0;
-  gap: 16px;
-}
-
-.mc-bottom-row {
-  display: flex;
-  justify-content: space-between;
-  margin: 24px 0;
-  gap: 16px;
-}
-
-.mc-top-row .mc-metric {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mc-bottom-row .mc-metric {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mc-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  /* space between items */
-  margin: 1em 0 1em 1em;
-  justify-content: flex-start;
+/* === Metrics grid === */
+.mc-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.5em;               /* ~24px */
+  row-gap: 1em;                    /* ~16px */
+  margin: 2em 0;                   /* ~32px */
+  align-items: start;
+  flex-grow: 1;                    /* דוחף את הכפתור לתחתית */
 }
 
 .mc-metric {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex: 0 0 calc(33.333% - 16px);
-  /* 3 per row */
-  box-sizing: border-box;
+  gap: 0.375em;                    /* ~6px */
+  min-width: 0;
 }
 
 .mc-metric-label {
   color: var(--input-text);
   font-size: var(--S4);
-  /* smaller label font */
   font-weight: 400;
 }
 
 .mc-metric-value {
   color: #181743;
   font-weight: 700;
-  font-size: clamp(18px, 1.4vw, 22px);
-  /* bigger than label */
+  font-size: clamp(1.125rem, 1.4vw, 1.375rem);
 }
 
-/* color logic for change */
-.mc-metric.pos .mc-metric-value {
-  color: #14833b;
-}
+/* צבעים */
+.mc-metric.pos .mc-metric-value { color: #14833b; }
+.mc-metric.neg .mc-metric-value { color: #b91c1c; }
+.mc-metric.flat .mc-metric-value { color: var(--app-text); }
 
-.mc-metric.neg .mc-metric-value {
-  color: #b91c1c;
-}
-
-.mc-metric.flat .mc-metric-value {
-  color: var(--app-text);
+/* === CTA button === */
+.mc-cta-wrapper {
+  margin-top: 2em;                 /* רווח מהמדדים */
 }
 
 .mc-cta {
   width: 100%;
-  height: 44px;
+  height: 2.75em;                  /* ~44px */
   border: none;
-  border-radius: 12px;
+  border-radius: 0.75em;           /* ~12px */
   font-weight: var(--fw-semibold);
   font-size: var(--S4);
   color: #fff;
   background: #181743;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(24, 23, 67, 0.18);
+  box-shadow: 0 0.375em 0.875em rgba(24, 23, 67, 0.18);
+  transition: all 0.25s ease;      /* אנימציה עדינה */
+}
+
+.mc-cta:hover {
+  background: #2a2970;             /* טון בהיר יותר בהובר */
+  transform: translateY(-0.125em); /* הרמה קטנה */
+  box-shadow: 0 0.5em 1em rgba(24, 23, 67, 0.22);
 }
 
 .mc-cta:active {
-  transform: translateY(0);
+  transform: translateY(0);        /* חזרה למקום בלחיצה */
+  box-shadow: 0 0.375em 0.875em rgba(24, 23, 67, 0.18);
 }
 
-/* Responsive design for mobile */
+/* רספונסיבי */
 @media (max-width: 600px) {
-  .mc-metric {
-    flex: 0 0 100%;
-  }
-
-  .mc-top-row,
-  .mc-bottom-row {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .mc-top-row .mc-metric,
-  .mc-bottom-row .mc-metric {
-    text-align: center;
-  }
+  .mc-metrics { grid-template-columns: 1fr; }
+  .mc-metric { text-align: center; }
 }
 
-/* Tablets and small screens */
 @media (max-width: 768px) {
-
-  .mc-top-row,
-  .mc-bottom-row {
-    gap: 12px;
-  }
+  .mc-metrics { column-gap: 1em; row-gap: 0.75em; }
 }

@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useEffect } from "react";
-import SectionCard from "../Sectioncard/Sectioncard"; // keep your existing casing if that's your folder/file
+import SectionCard from "../Sectioncard/Sectioncard";
 import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
 import SortDropdown from "../SectorDropdown/SortDropdown";
 import SectorChart from "../SectorChart/SectorChart";
@@ -9,8 +9,6 @@ import SeedLoader from "../SeedLoader/SeedLoader";
 import "./Dashboard.css";
 
 // Data / utils
-
-// import newSectorData from '../../constants/sectorDataNew';
 import simplifiedSectorData from "../../constants/simplifiedSectorData";
 import { shapeSectorsFromReport } from "../../utils/sectorTransform";
 import { sectorMetrics } from "../../utils/metrics";
@@ -186,16 +184,22 @@ function Dashboard() {
         </div>
       </div>
 
-      <SectionCard
-        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}  className="section-card--extra-pad"
-      >
-        <UndervaluedOpportunities
-          sectorKey={selectedSector}
-          liveData={ppxlData}
-          loading={ppxlLoading}
-          error={ppxlError}
-        />
-      </SectionCard>
+      {/* FIRST CARD (extra bottom padding via wrapper + controlled inner grid) */}
+      <div className="pad-inside">
+        <SectionCard
+          title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
+        >
+          {/* Control the inner layout so the two offer cards stay side-by-side on laptop */}
+          <div className="uvo-grid">
+            <UndervaluedOpportunities
+              sectorKey={selectedSector}
+              liveData={ppxlData}
+              loading={ppxlLoading}
+              error={ppxlError}
+            />
+          </div>
+        </SectionCard>
+      </div>
 
       {/* Main grid */}
       <section className="dashboard-grid" aria-label="Dashboard content">
@@ -229,14 +233,17 @@ function Dashboard() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Complete Sector Breakdown"  className="section-card--extra-pad">
-          <SectorBreakdownTable
-            sectorKey={selectedSector}
-            liveData={ppxlData}
-            loading={ppxlLoading}
-            error={ppxlError}
-          />
-        </SectionCard>
+        {/* THIRD CARD (extra bottom padding via wrapper) */}
+        <div className="pad-inside">
+          <SectionCard title="Complete Sector Breakdown">
+            <SectorBreakdownTable
+              sectorKey={selectedSector}
+              liveData={ppxlData}
+              loading={ppxlLoading}
+              error={ppxlError}
+            />
+          </SectionCard>
+        </div>
       </section>
 
       {/* Loader overlay (fixed, covers the page) */}

@@ -61,7 +61,6 @@ export default function MetricCard({
   peRatio,
   ctaLabel = 'Generate AI Report',
   onCta,
-  ctaDisabled = true,
 }) {
   // Calculate position based on upside
   const position = upside >= 0 ? 'Long' : 'Short';
@@ -130,7 +129,6 @@ export default function MetricCard({
         className="mc-cta"
         type="button"
         onClick={onCta}
-        disabled={ctaDisabled}
       >
         {ctaLabel}
       </button>

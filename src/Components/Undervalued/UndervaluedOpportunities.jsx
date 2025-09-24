@@ -85,7 +85,8 @@ export default function UndervaluedOpportunities({
       const pe = stock.pe_ratio || 15;
       const sectorAvgPE = 18; // default sector average
       const fairValue = currentPrice * (sectorAvgPE / pe);
-      const upside = ((fairValue - currentPrice) / currentPrice) * 100;
+      const upside =
+        ((fairValue - currentPrice) / currentPrice) * 100;
       const mos = Math.max(0, upside - 20); // 20% margin of safety threshold
 
       return {
@@ -137,13 +138,20 @@ export default function UndervaluedOpportunities({
 
         // Priority 1: Valuation analysis (cached Perplexity results)
         try {
-          const valuation = await runSectorValuationFromCache(sectorKey);
-          if (valuation?.results && Array.isArray(valuation.results) && valuation.results.length > 0) {
+          const valuation =
+            await runSectorValuationFromCache(sectorKey);
+          if (
+            valuation?.results &&
+            Array.isArray(valuation.results) &&
+            valuation.results.length > 0
+          ) {
             const mapped = valuation.results.map((r) => {
               const name = utils.getStockName(r.symbol);
               let liveStock = null;
               if (liveData?.stocks) {
-                liveStock = liveData.stocks.find(s => s.symbol === r.symbol);
+                liveStock = liveData.stocks.find(
+                  (s) => s.symbol === r.symbol
+                );
               }
 
               const mergedStock = {
@@ -152,13 +160,20 @@ export default function UndervaluedOpportunities({
                 priceToBook: liveStock?.pb_ratio ?? r.priceToBook,
                 priceToSales: liveStock?.ps_ratio ?? r.priceToSales,
                 roe: liveStock?.roe ?? r.roe,
-                freeCashFlowMargin: liveStock?.free_cash_flow_margin ?? r.freeCashFlowMargin,
+                freeCashFlowMargin:
+                  liveStock?.free_cash_flow_margin ??
+                  r.freeCashFlowMargin,
                 debtToEquity: liveStock?.de_ratio ?? r.debtToEquity,
-                revenueGrowth: liveStock?.rev_growth ?? r.revenueGrowth,
-                netIncomeGrowth: liveStock?.net_income_growth ?? r.netIncomeGrowth,
+                revenueGrowth:
+                  liveStock?.rev_growth ?? r.revenueGrowth,
+                netIncomeGrowth:
+                  liveStock?.net_income_growth ?? r.netIncomeGrowth,
               };
 
-              const metrics = extractMetrics(mergedStock, 'valuation');
+              const metrics = extractMetrics(
+                mergedStock,
+                'valuation'
+              );
               return {
                 ticker: r.symbol,
                 name,
@@ -175,14 +190,20 @@ export default function UndervaluedOpportunities({
             }
           }
         } catch (e) {
-          console.warn('Valuation analysis not available:', e?.message || e);
+          console.warn(
+            'Valuation analysis not available:',
+            e?.message || e
+          );
         }
 
         // Priority 2: Live data only
         if (liveData?.stocks && Array.isArray(liveData.stocks)) {
           try {
             const enriched = liveData.stocks.map((stock) => {
-              const name = stock.name || utils.getStockName(stock.symbol) || stock.symbol;
+              const name =
+                stock.name ||
+                utils.getStockName(stock.symbol) ||
+                stock.symbol;
               const metricObj = {
                 peRatio: stock.pe_ratio,
                 pbRatio: stock.pb_ratio,
@@ -206,7 +227,9 @@ export default function UndervaluedOpportunities({
               };
             });
 
-            const sorted = enriched.sort((a, b) => a._score - b._score);
+            const sorted = enriched.sort(
+              (a, b) => a._score - b._score
+            );
             if (!cancelled) {
               setCandidates(sorted.slice(0, 2));
               setDataSource('live');
@@ -219,10 +242,14 @@ export default function UndervaluedOpportunities({
         }
 
         // Priority 3: Fallback to adapter
-        const tickers = await Promise.resolve(utils.getStocksBySector(sectorKey));
+        const tickers = await Promise.resolve(
+          utils.getStocksBySector(sectorKey)
+        );
         const enriched = await Promise.all(
           tickers.map(async (t) => {
-            const metrics = await Promise.resolve(utils.getStockMetrics(t));
+            const metrics = await Promise.resolve(
+              utils.getStockMetrics(t)
+            );
             const name = utils.getStockName(t);
             return { ticker: t, name, metrics };
           })
@@ -244,14 +271,17 @@ export default function UndervaluedOpportunities({
           setDataSource('fallback');
         }
       } catch (e) {
-        if (!cancelled) setError(e?.message || 'Failed to load opportunities');
+        if (!cancelled)
+          setError(e?.message || 'Failed to load opportunities');
       } finally {
         if (!cancelled) setLoading(false);
       }
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [sectorKey, liveData, parentLoading, parentError, utils]);
 
   const content = useMemo(() => {
@@ -286,8 +316,13 @@ export default function UndervaluedOpportunities({
             upside={stock.upside}
             mos={stock.mos}
             peRatio={stock.peRatio}
-            ctaDisabled={true}
             ctaLabel="Generate AI Report"
+            onCta={() => {
+              console.log(
+                `Generate AI Report for ${stock.ticker}, ${stock.fairValue}`
+              );
+              // Add your report generation logic here
+            }}
           />
         ))}
       </div>

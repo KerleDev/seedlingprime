@@ -1,21 +1,21 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import SectionCard from '../Sectioncard/Sectioncard'; // keep your existing casing if that's your folder/file
-import SectorDropdownData from '../SectorDropdown/SectorDropdownData';
-import SortDropdown from '../SectorDropdown/SortDropdown';
-import SectorChart from '../SectorChart/SectorChart';
-import UndervaluedOpportunities from '../Undervalued/UndervaluedOpportunities';
-import SectorBreakdownTable from '../SectorBreakdown/SectorBreakdownTable';
+import React, { useMemo, useState, useCallback, useEffect } from "react";
+import SectionCard from "../Sectioncard/Sectioncard"; // keep your existing casing if that's your folder/file
+import SectorDropdownData from "../SectorDropdown/SectorDropdownData";
+import SortDropdown from "../SectorDropdown/SortDropdown";
+import SectorChart from "../SectorChart/SectorChart";
+import UndervaluedOpportunities from "../Undervalued/UndervaluedOpportunities";
+import SectorBreakdownTable from "../SectorBreakdown/SectorBreakdownTable";
 import SeedLoader from "../SeedLoader/SeedLoader";
-import './Dashboard.css';
+import "./Dashboard.css";
 
 // Data / utils
 
 // import newSectorData from '../../constants/sectorDataNew';
-import simplifiedSectorData from '../../constants/simplifiedSectorData';
-import { shapeSectorsFromReport } from '../../utils/sectorTransform';
-import { sectorMetrics } from '../../utils/metrics';
-import { askPerplexity } from '../../services/perplexityService';
-import { saveSectorData, loadSectorData } from '../../services/perplexityCache';
+import simplifiedSectorData from "../../constants/simplifiedSectorData";
+import { shapeSectorsFromReport } from "../../utils/sectorTransform";
+import { sectorMetrics } from "../../utils/metrics";
+import { askPerplexity } from "../../services/perplexityService";
+import { saveSectorData, loadSectorData } from "../../services/perplexityCache";
 
 // Prepare once (pure transform)
 const shaped = shapeSectorsFromReport(simplifiedSectorData); // { sectors, displayNames, etf }
@@ -23,13 +23,13 @@ const shaped = shapeSectorsFromReport(simplifiedSectorData); // { sectors, displ
 function Dashboard() {
   const defaultKey =
     (shaped?.sectors?.information_technology
-      ? 'information_technology'
-      : Object.keys(shaped?.sectors || {})[0]) || '';
+      ? "information_technology"
+      : Object.keys(shaped?.sectors || {})[0]) || "";
 
   const [selectedSector, setSelectedSector] = useState(defaultKey);
-  const [sortMode, setSortMode] = useState('asc'); // "asc" | "desc" | "distance" | "symbol"
+  const [sortMode, setSortMode] = useState("asc"); // "asc" | "desc" | "distance" | "symbol"
   const [ppxlLoading, setPpxlLoading] = useState(false);
-  const [ppxlError, setPpxlError] = useState('');
+  const [ppxlError, setPpxlError] = useState("");
   const [ppxlData, setPpxlData] = useState(null); // parsed JSON or raw text
 
   const handleSectorChange = useCallback((key) => {
@@ -40,7 +40,7 @@ function Dashboard() {
   const stockData = useMemo(() => {
     if (
       ppxlData &&
-      typeof ppxlData === 'object' &&
+      typeof ppxlData === "object" &&
       ppxlData.stocks &&
       Array.isArray(ppxlData.stocks)
     ) {
@@ -66,25 +66,25 @@ function Dashboard() {
   const sortedStockData = useMemo(() => {
     const arr = [...stockData];
     switch (sortMode) {
-      case 'asc':
+      case "asc":
         return arr.sort(
           (a, b) =>
             (a.currentPrice ?? 0) - (b.currentPrice ?? 0) ||
             a.symbol.localeCompare(b.symbol)
         );
-      case 'desc':
+      case "desc":
         return arr.sort(
           (a, b) =>
             (b.currentPrice ?? 0) - (a.currentPrice ?? 0) ||
             a.symbol.localeCompare(b.symbol)
         );
-      case 'distance':
+      case "distance":
         return arr.sort((a, b) => {
           const da = Math.abs((a.currentPrice ?? 0) - sectorMean);
           const db = Math.abs((b.currentPrice ?? 0) - sectorMean);
           return da - db || a.symbol.localeCompare(b.symbol);
         });
-      case 'symbol':
+      case "symbol":
         return arr.sort((a, b) => a.symbol.localeCompare(b.symbol));
       default:
         return arr;
@@ -97,7 +97,7 @@ function Dashboard() {
     async function run() {
       try {
         setPpxlLoading(true);
-        setPpxlError('');
+        setPpxlError("");
         setPpxlData(null);
 
         // Try cache first
@@ -114,17 +114,23 @@ function Dashboard() {
         const payload = json || text || null;
         setPpxlData(payload);
         saveSectorData(selectedSector, payload);
-        console.log('Perplexity data for sector:', selectedSector, json || text);
+        console.log(
+          "Perplexity data for sector:",
+          selectedSector,
+          json || text
+        );
       } catch (e) {
         if (cancelled) return;
-        console.error('Perplexity fetch failed:', e);
-        setPpxlError(e?.message || 'Failed to fetch Perplexity data');
+        console.error("Perplexity fetch failed:", e);
+        setPpxlError(e?.message || "Failed to fetch Perplexity data");
       } finally {
         if (!cancelled) setPpxlLoading(false);
       }
     }
     if (selectedSector) run();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [selectedSector]);
 
   // No sector fallback
@@ -150,7 +156,7 @@ function Dashboard() {
       </header>
 
       {/* Top controls */}
-      <div className="page-controls" style={{ gap: 12, alignItems: 'center' }}>
+      <div className="page-controls" style={{ gap: 12, alignItems: "center" }}>
         <SectorDropdownData
           sectors={shaped.sectors}
           selectedSector={selectedSector}
@@ -158,32 +164,31 @@ function Dashboard() {
           label="Choose a sector"
         />
         {/* Live data status (Perplexity) */}
-        <div style={{ marginTop: 8, fontSize: 12, color: '#6b7280' }}>
+        <div style={{ marginTop: 8, fontSize: 12, color: "#6b7280" }}>
           {ppxlLoading && (
             <div>
               <span className="api-status">Fetching live data…</span>
             </div>
           )}
           {!ppxlLoading && ppxlError && (
-            <span
-              className="api-status"
-              style={{ color: '#ef4444' }}
-            >
+            <span className="api-status" style={{ color: "#ef4444" }}>
               Live data error
             </span>
           )}
           {!ppxlLoading && !ppxlError && ppxlData && (
             <span className="api-status">
               Live data ready
-              {typeof ppxlData === 'object' && ppxlData?.sector_etf?.ticker
+              {typeof ppxlData === "object" && ppxlData?.sector_etf?.ticker
                 ? ` (ETF: ${ppxlData.sector_etf.ticker})`
-                : ''}
+                : ""}
             </span>
           )}
         </div>
       </div>
 
-      <SectionCard title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}>
+      <SectionCard
+        title={`${shaped.displayNames[selectedSector]} Sector Undervalued Opportunities`}
+      >
         <UndervaluedOpportunities
           sectorKey={selectedSector}
           liveData={ppxlData}
@@ -195,7 +200,10 @@ function Dashboard() {
       {/* Main grid */}
       <section className="dashboard-grid" aria-label="Dashboard content">
         {/* Sector Overview card: chart + sort control */}
-        <SectionCard title={`${shaped.displayNames[selectedSector]} Sector Overview`} hideHeader>
+        <SectionCard
+          title={`${shaped.displayNames[selectedSector]} Sector Overview`}
+          hideHeader
+        >
           <div className="card-row">
             <div className="card-col full">
               <SectorChart
@@ -213,7 +221,11 @@ function Dashboard() {
           </div>
 
           <div className="chart-footer">
-            <SortDropdown value={sortMode} onChange={setSortMode} label="Sort by" />
+            <SortDropdown
+              value={sortMode}
+              onChange={setSortMode}
+              label="Sort by"
+            />
           </div>
         </SectionCard>
 
@@ -232,10 +244,14 @@ function Dashboard() {
         visible={ppxlLoading}
         headline={`Growing insights for ${shaped.displayNames[selectedSector]} Sector...`}
         sublines={[
-          "Patching fundamentals, prices & alt-data",
-          "Reconciling filings & news with Perplexity AI",
+          "Asking Perplexity AI to reconcile filings & news",
           "Spotting miss-pricing as the market moves",
           "Re-ranking by risk/reward, catalysts & liquidity",
+          "Scanning companies for undervaluation signals",
+          "Cross-checking balance sheets and cash flows",
+          "Ranking opportunities by risk",
+          "Highlighting catalysts that can unlock value",
+          "Filtering for liquidity and tradability",
         ]}
       />
     </div>

@@ -6,10 +6,14 @@ export default function SeedLoader({
   visible = true,
   headline = "Growing undervalued ideas…",
   sublines = [
-    "Patching fundamentals, prices & alt-data",
     "Asking Perplexity AI to reconcile filings & news",
-    "Spotting mispricing as the market moves",
+    "Spotting miss-pricing as the market moves",
     "Re-ranking by risk/reward, catalysts & liquidity",
+    "Scanning companies for undervaluation signals",
+    "Cross-checking balance sheets and cash flows",
+    "Ranking opportunities by risk",
+    "Highlighting catalysts that can unlock value",
+    "Filtering for liquidity and tradability",
   ],
   backdrop = true,
   onCancel,
@@ -69,8 +73,8 @@ export default function SeedLoader({
 
             <div className="seedloader-footer">
               <p className="seedloader-tip">
-                We’re cultivating signals — fresh results will plant themselves
-                into your dashboard automatically.
+                Fresh results will plant themselves into your dashboard
+                automatically. Need them faster? Upgrade to Pro!
               </p>
               {onCancel && (
                 <button onClick={onCancel} className="seedloader-cancel">
@@ -125,9 +129,9 @@ function PlantAnimation({ reduced }) {
   const D = 10.0; // overall timeline reference (seconds)
 
   // SVG geometry
-  const cx = 56;       // center x
-  const groundY = 72;  // ground shadow y
-  const seedY = 60;    // resting seed center y
+  const cx = 56; // center x
+  const groundY = 72; // ground shadow y
+  const seedY = 60; // resting seed center y
 
   // Motion controllers (step-by-step sequencing)
   const shadow = useAnimation();
@@ -187,46 +191,104 @@ function PlantAnimation({ reduced }) {
 
       // quick bounce
       await Promise.all([
-        seed.start({ y: -6, scaleX: 1.06, scaleY: 0.9, transition: { duration: 0.10, ease: "easeOut" } }),
-        seedHi.start({ y: -6, transition: { duration: 0.10, ease: "easeOut" } }),
-        shadow.start({ scaleX: 1.12, opacity: 0.24, transition: { duration: 0.10, ease: "easeOut" } }),
+        seed.start({
+          y: -6,
+          scaleX: 1.06,
+          scaleY: 0.9,
+          transition: { duration: 0.1, ease: "easeOut" },
+        }),
+        seedHi.start({ y: -6, transition: { duration: 0.1, ease: "easeOut" } }),
+        shadow.start({
+          scaleX: 1.12,
+          opacity: 0.24,
+          transition: { duration: 0.1, ease: "easeOut" },
+        }),
       ]);
       if (cancelled) return;
 
       // settle
       await Promise.all([
-        seed.start({ y: 0, scaleX: 1, scaleY: 1, transition: { duration: 0.12, ease: "easeOut" } }),
+        seed.start({
+          y: 0,
+          scaleX: 1,
+          scaleY: 1,
+          transition: { duration: 0.12, ease: "easeOut" },
+        }),
         seedHi.start({ y: 0, transition: { duration: 0.12, ease: "easeOut" } }),
-        shadow.start({ scaleX: 0.98, opacity: 0.18, transition: { duration: 0.12, ease: "easeOut" } }),
+        shadow.start({
+          scaleX: 0.98,
+          opacity: 0.18,
+          transition: { duration: 0.12, ease: "easeOut" },
+        }),
       ]);
       if (cancelled) return;
 
       // 3) SPROUT SEQUENCE (only after seed settled)
-      await stem1.start({ pathLength: 1, opacity: 1, transition: { duration: 0.6, ease: "easeInOut" } });
+      await stem1.start({
+        pathLength: 1,
+        opacity: 1,
+        transition: { duration: 0.6, ease: "easeInOut" },
+      });
       if (cancelled) return;
 
       await Promise.all([
-        baseL.start({ opacity: 1, scale: 1, transition: { duration: 0.35, ease: "easeOut" } }),
-        baseR.start({ opacity: 1, scale: 1, transition: { duration: 0.35, ease: "easeOut" } }),
+        baseL.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.35, ease: "easeOut" },
+        }),
+        baseR.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.35, ease: "easeOut" },
+        }),
       ]);
       if (cancelled) return;
 
-      await stem2.start({ pathLength: 1, opacity: 1, transition: { duration: 0.55, ease: "easeInOut" } });
+      await stem2.start({
+        pathLength: 1,
+        opacity: 1,
+        transition: { duration: 0.55, ease: "easeInOut" },
+      });
       if (cancelled) return;
 
       await Promise.all([
-        midL.start({ opacity: 1, scale: 1, transition: { duration: 0.35, ease: "easeOut" } }),
-        midR.start({ opacity: 1, scale: 1, transition: { duration: 0.35, ease: "easeOut" } }),
+        midL.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.35, ease: "easeOut" },
+        }),
+        midR.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.35, ease: "easeOut" },
+        }),
       ]);
       if (cancelled) return;
 
-      await stem3.start({ pathLength: 1, opacity: 1, transition: { duration: 0.5, ease: "easeInOut" } });
+      await stem3.start({
+        pathLength: 1,
+        opacity: 1,
+        transition: { duration: 0.5, ease: "easeInOut" },
+      });
       if (cancelled) return;
 
       await Promise.all([
-        topL.start({ opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } }),
-        topR.start({ opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } }),
-        apex.start({ opacity: 1, scale: 1, transition: { duration: 0.3, ease: "easeOut" } }),
+        topL.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.3, ease: "easeOut" },
+        }),
+        topR.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.3, ease: "easeOut" },
+        }),
+        apex.start({
+          opacity: 1,
+          scale: 1,
+          transition: { duration: 0.3, ease: "easeOut" },
+        }),
       ]);
       if (cancelled) return;
 
@@ -249,25 +311,118 @@ function PlantAnimation({ reduced }) {
     return () => {
       cancelled = true;
     };
-  }, [reduced, shadow, seed, seedHi, stem1, stem2, stem3, baseL, baseR, midL, midR, topL, topR, apex, plant]);
+  }, [
+    reduced,
+    shadow,
+    seed,
+    seedHi,
+    stem1,
+    stem2,
+    stem3,
+    baseL,
+    baseR,
+    midL,
+    midR,
+    topL,
+    topR,
+    apex,
+    plant,
+  ]);
 
   // Reduced motion: static plant
   if (reduced) {
     return (
       <div className="seedloader-plant" aria-hidden>
         <svg width="112" height="96" viewBox="0 0 112 96" fill="none">
-          <ellipse cx={cx} cy={groundY} rx="32" ry="11" fill="#000" opacity="0.12" />
-          <ellipse cx={cx} cy={seedY} rx="6.5" ry="8.5" fill="#92400E" transform={`rotate(-15 ${cx} ${seedY})`} />
-          <path d={`M${cx} ${seedY-4} C${cx} ${seedY-12}, ${cx} ${seedY-18}, ${cx} ${seedY-24}`} stroke="#065F46" strokeWidth="3" strokeLinecap="round" />
-          <path d={`M${cx} ${seedY-14} C${cx-12} ${seedY-18}, ${cx-16} ${seedY-24}, ${cx-18} ${seedY-30} C${cx-8} ${seedY-28}, ${cx-3} ${seedY-24}, ${cx} ${seedY-14} Z`} fill="#059669" />
-          <path d={`M${cx} ${seedY-14} C${cx+12} ${seedY-18}, ${cx+16} ${seedY-24}, ${cx+18} ${seedY-30} C${cx+8} ${seedY-28}, ${cx+3} ${seedY-24}, ${cx} ${seedY-14} Z`} fill="#10B981" />
-          <path d={`M${cx} ${seedY-24} C${cx} ${seedY-28}, ${cx} ${seedY-32}, ${cx} ${seedY-36}`} stroke="#065F46" strokeWidth="3" strokeLinecap="round" />
-          <path d={`M${cx} ${seedY-26} C${cx-10} ${seedY-30}, ${cx-13} ${seedY-36}, ${cx-14} ${seedY-40} C${cx-6} ${seedY-38}, ${cx-2} ${seedY-34}, ${cx} ${seedY-26} Z`} fill="#34D399" />
-          <path d={`M${cx} ${seedY-26} C${cx+10} ${seedY-30}, ${cx+13} ${seedY-36}, ${cx+14} ${seedY-40} C${cx+6} ${seedY-38}, ${cx+2} ${seedY-34}, ${cx} ${seedY-26} Z`} fill="#6EE7B7" />
-          <path d={`M${cx} ${seedY-36} C${cx} ${seedY-40}, ${cx} ${seedY-44}, ${cx} ${seedY-48}`} stroke="#065F46" strokeWidth="3" strokeLinecap="round" />
-          <path d={`M${cx} ${seedY-38} C${cx-9} ${seedY-42}, ${cx-11} ${seedY-47}, ${cx-12} ${seedY-50} C${cx-5} ${seedY-49}, ${cx-2} ${seedY-45}, ${cx} ${seedY-38} Z`} fill="#A7F3D0" />
-          <path d={`M${cx} ${seedY-38} C${cx+9} ${seedY-42}, ${cx+11} ${seedY-47}, ${cx+12} ${seedY-50} C${cx+5} ${seedY-49}, ${cx+2} ${seedY-45}, ${cx} ${seedY-38} Z`} fill="#86EFAC" />
-          <ellipse cx={cx} cy={seedY-52} rx="3" ry="5" fill="#BBF7D0" />
+          <ellipse
+            cx={cx}
+            cy={groundY}
+            rx="32"
+            ry="11"
+            fill="#000"
+            opacity="0.12"
+          />
+          <ellipse
+            cx={cx}
+            cy={seedY}
+            rx="6.5"
+            ry="8.5"
+            fill="#92400E"
+            transform={`rotate(-15 ${cx} ${seedY})`}
+          />
+          <path
+            d={`M${cx} ${seedY - 4} C${cx} ${seedY - 12}, ${cx} ${
+              seedY - 18
+            }, ${cx} ${seedY - 24}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <path
+            d={`M${cx} ${seedY - 14} C${cx - 12} ${seedY - 18}, ${cx - 16} ${
+              seedY - 24
+            }, ${cx - 18} ${seedY - 30} C${cx - 8} ${seedY - 28}, ${cx - 3} ${
+              seedY - 24
+            }, ${cx} ${seedY - 14} Z`}
+            fill="#059669"
+          />
+          <path
+            d={`M${cx} ${seedY - 14} C${cx + 12} ${seedY - 18}, ${cx + 16} ${
+              seedY - 24
+            }, ${cx + 18} ${seedY - 30} C${cx + 8} ${seedY - 28}, ${cx + 3} ${
+              seedY - 24
+            }, ${cx} ${seedY - 14} Z`}
+            fill="#10B981"
+          />
+          <path
+            d={`M${cx} ${seedY - 24} C${cx} ${seedY - 28}, ${cx} ${
+              seedY - 32
+            }, ${cx} ${seedY - 36}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <path
+            d={`M${cx} ${seedY - 26} C${cx - 10} ${seedY - 30}, ${cx - 13} ${
+              seedY - 36
+            }, ${cx - 14} ${seedY - 40} C${cx - 6} ${seedY - 38}, ${cx - 2} ${
+              seedY - 34
+            }, ${cx} ${seedY - 26} Z`}
+            fill="#34D399"
+          />
+          <path
+            d={`M${cx} ${seedY - 26} C${cx + 10} ${seedY - 30}, ${cx + 13} ${
+              seedY - 36
+            }, ${cx + 14} ${seedY - 40} C${cx + 6} ${seedY - 38}, ${cx + 2} ${
+              seedY - 34
+            }, ${cx} ${seedY - 26} Z`}
+            fill="#6EE7B7"
+          />
+          <path
+            d={`M${cx} ${seedY - 36} C${cx} ${seedY - 40}, ${cx} ${
+              seedY - 44
+            }, ${cx} ${seedY - 48}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <path
+            d={`M${cx} ${seedY - 38} C${cx - 9} ${seedY - 42}, ${cx - 11} ${
+              seedY - 47
+            }, ${cx - 12} ${seedY - 50} C${cx - 5} ${seedY - 49}, ${cx - 2} ${
+              seedY - 45
+            }, ${cx} ${seedY - 38} Z`}
+            fill="#A7F3D0"
+          />
+          <path
+            d={`M${cx} ${seedY - 38} C${cx + 9} ${seedY - 42}, ${cx + 11} ${
+              seedY - 47
+            }, ${cx + 12} ${seedY - 50} C${cx + 5} ${seedY - 49}, ${cx + 2} ${
+              seedY - 45
+            }, ${cx} ${seedY - 38} Z`}
+            fill="#86EFAC"
+          />
+          <ellipse cx={cx} cy={seedY - 52} rx="3" ry="5" fill="#BBF7D0" />
         </svg>
       </div>
     );
@@ -276,7 +431,13 @@ function PlantAnimation({ reduced }) {
   // Animated SVG (controlled by the sequence above)
   return (
     <div className="seedloader-plant" aria-hidden>
-      <svg width="112" height="96" viewBox="0 0 112 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="112"
+        height="96"
+        viewBox="0 0 112 96"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         {/* Ground shadow */}
         <motion.ellipse
           animate={shadow}
@@ -309,84 +470,123 @@ function PlantAnimation({ reduced }) {
         />
 
         {/* Plant group (sways later) */}
-        <motion.g animate={plant} style={{ transformOrigin: `${cx}px ${seedY - 4}px` }}>
+        <motion.g
+          animate={plant}
+          style={{ transformOrigin: `${cx}px ${seedY - 4}px` }}
+        >
           {/* Stems */}
           <motion.path
             animate={stem1}
-            d={`M${cx} ${seedY-4} C${cx} ${seedY-12}, ${cx} ${seedY-18}, ${cx} ${seedY-24}`}
-            stroke="#065F46" strokeWidth="3" strokeLinecap="round"
+            d={`M${cx} ${seedY - 4} C${cx} ${seedY - 12}, ${cx} ${
+              seedY - 18
+            }, ${cx} ${seedY - 24}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
           />
           <motion.path
             animate={stem2}
-            d={`M${cx} ${seedY-24} C${cx} ${seedY-28}, ${cx} ${seedY-32}, ${cx} ${seedY-36}`}
-            stroke="#065F46" strokeWidth="3" strokeLinecap="round"
+            d={`M${cx} ${seedY - 24} C${cx} ${seedY - 28}, ${cx} ${
+              seedY - 32
+            }, ${cx} ${seedY - 36}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
           />
           <motion.path
             animate={stem3}
-            d={`M${cx} ${seedY-36} C${cx} ${seedY-40}, ${cx} ${seedY-44}, ${cx} ${seedY-48}`}
-            stroke="#065F46" strokeWidth="3" strokeLinecap="round"
+            d={`M${cx} ${seedY - 36} C${cx} ${seedY - 40}, ${cx} ${
+              seedY - 44
+            }, ${cx} ${seedY - 48}`}
+            stroke="#065F46"
+            strokeWidth="3"
+            strokeLinecap="round"
           />
 
           {/* Leaves: base, mid, top, apex */}
           <motion.path
             animate={baseL}
-            d={`M${cx} ${seedY-14}
-               C${cx-12} ${seedY-18}, ${cx-16} ${seedY-24}, ${cx-18} ${seedY-30}
-               C${cx-8} ${seedY-28}, ${cx-3} ${seedY-24}, ${cx} ${seedY-14} Z`}
+            d={`M${cx} ${seedY - 14}
+               C${cx - 12} ${seedY - 18}, ${cx - 16} ${seedY - 24}, ${
+              cx - 18
+            } ${seedY - 30}
+               C${cx - 8} ${seedY - 28}, ${cx - 3} ${seedY - 24}, ${cx} ${
+              seedY - 14
+            } Z`}
             fill="#059669"
-            style={{ transformOrigin: `${cx}px ${seedY-14}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 14}px` }}
           />
           <motion.path
             animate={baseR}
-            d={`M${cx} ${seedY-14}
-               C${cx+12} ${seedY-18}, ${cx+16} ${seedY-24}, ${cx+18} ${seedY-30}
-               C${cx+8} ${seedY-28}, ${cx+3} ${seedY-24}, ${cx} ${seedY-14} Z`}
+            d={`M${cx} ${seedY - 14}
+               C${cx + 12} ${seedY - 18}, ${cx + 16} ${seedY - 24}, ${
+              cx + 18
+            } ${seedY - 30}
+               C${cx + 8} ${seedY - 28}, ${cx + 3} ${seedY - 24}, ${cx} ${
+              seedY - 14
+            } Z`}
             fill="#10B981"
-            style={{ transformOrigin: `${cx}px ${seedY-14}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 14}px` }}
           />
 
           <motion.path
             animate={midL}
-            d={`M${cx} ${seedY-26}
-               C${cx-10} ${seedY-30}, ${cx-13} ${seedY-36}, ${cx-14} ${seedY-40}
-               C${cx-6} ${seedY-38}, ${cx-2} ${seedY-34}, ${cx} ${seedY-26} Z`}
+            d={`M${cx} ${seedY - 26}
+               C${cx - 10} ${seedY - 30}, ${cx - 13} ${seedY - 36}, ${
+              cx - 14
+            } ${seedY - 40}
+               C${cx - 6} ${seedY - 38}, ${cx - 2} ${seedY - 34}, ${cx} ${
+              seedY - 26
+            } Z`}
             fill="#34D399"
-            style={{ transformOrigin: `${cx}px ${seedY-26}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 26}px` }}
           />
           <motion.path
             animate={midR}
-            d={`M${cx} ${seedY-26}
-               C${cx+10} ${seedY-30}, ${cx+13} ${seedY-36}, ${cx+14} ${seedY-40}
-               C${cx+6} ${seedY-38}, ${cx+2} ${seedY-34}, ${cx} ${seedY-26} Z`}
+            d={`M${cx} ${seedY - 26}
+               C${cx + 10} ${seedY - 30}, ${cx + 13} ${seedY - 36}, ${
+              cx + 14
+            } ${seedY - 40}
+               C${cx + 6} ${seedY - 38}, ${cx + 2} ${seedY - 34}, ${cx} ${
+              seedY - 26
+            } Z`}
             fill="#6EE7B7"
-            style={{ transformOrigin: `${cx}px ${seedY-26}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 26}px` }}
           />
 
           <motion.path
             animate={topL}
-            d={`M${cx} ${seedY-38}
-               C${cx-9} ${seedY-42}, ${cx-11} ${seedY-47}, ${cx-12} ${seedY-50}
-               C${cx-5} ${seedY-49}, ${cx-2} ${seedY-45}, ${cx} ${seedY-38} Z`}
+            d={`M${cx} ${seedY - 38}
+               C${cx - 9} ${seedY - 42}, ${cx - 11} ${seedY - 47}, ${cx - 12} ${
+              seedY - 50
+            }
+               C${cx - 5} ${seedY - 49}, ${cx - 2} ${seedY - 45}, ${cx} ${
+              seedY - 38
+            } Z`}
             fill="#A7F3D0"
-            style={{ transformOrigin: `${cx}px ${seedY-38}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 38}px` }}
           />
           <motion.path
             animate={topR}
-            d={`M${cx} ${seedY-38}
-               C${cx+9} ${seedY-42}, ${cx+11} ${seedY-47}, ${cx+12} ${seedY-50}
-               C${cx+5} ${seedY-49}, ${cx+2} ${seedY-45}, ${cx} ${seedY-38} Z`}
+            d={`M${cx} ${seedY - 38}
+               C${cx + 9} ${seedY - 42}, ${cx + 11} ${seedY - 47}, ${cx + 12} ${
+              seedY - 50
+            }
+               C${cx + 5} ${seedY - 49}, ${cx + 2} ${seedY - 45}, ${cx} ${
+              seedY - 38
+            } Z`}
             fill="#86EFAC"
-            style={{ transformOrigin: `${cx}px ${seedY-38}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 38}px` }}
           />
 
           <motion.ellipse
             animate={apex}
             cx={cx}
-            cy={seedY-52}
+            cy={seedY - 52}
             rx="3"
             ry="5"
             fill="#BBF7D0"
-            style={{ transformOrigin: `${cx}px ${seedY-52}px` }}
+            style={{ transformOrigin: `${cx}px ${seedY - 52}px` }}
           />
         </motion.g>
       </svg>

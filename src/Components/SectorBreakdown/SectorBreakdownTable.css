@@ -88,6 +88,20 @@
 .sbt-table .neg { color: #b91c1c; }
 .sbt-table .flat { color: var(--app-text); }
 
+/* Score colors */
+.sbt-table .score-high {
+  color: #65A30D;
+  font-weight: 600;
+}
+.sbt-table .score-medium {
+  color: #d97706;
+  font-weight: 500;
+}
+.sbt-table .score-low {
+  color: #b91c1c;
+  font-weight: 500;
+}
+
 /* Row hover
 .sbt-table tbody tr:hover td {
   background: #fafbff;

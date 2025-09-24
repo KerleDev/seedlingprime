@@ -9,9 +9,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './SectorBreakdownTable.css';
 import { uoUtils } from '../../utils/uoUtilsAdapter';
+import {
+  computeSectorStats,
+  estimateFairPrice,
+} from '../../services/valuation';
 
 import sectorDataNew from '../../constants/sectorDataNew';
-
 
 const money = (n) =>
   Number.isFinite(n)
@@ -22,9 +25,6 @@ const pctSmart = (n) => {
   if (!Number.isFinite(n)) return '—';
   return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
 };
-
-const fmtChangeClass = (n) =>
-  Number.isFinite(n) ? (n > 0 ? 'pos' : n < 0 ? 'neg' : 'flat') : '';
 
 const abbrCap = (v) => {
   if (!Number.isFinite(v)) return 'N/A';
@@ -37,6 +37,16 @@ const abbrCap = (v) => {
 
 const fmtNum = (n, d = 2) =>
   Number.isFinite(n) ? Number(n).toFixed(d) : '—';
+
+const fmtScore = (n) =>
+  Number.isFinite(n) && n > 0 ? Number(n).toFixed(1) : 'N/A';
+
+const scoreClass = (n) => {
+  if (!Number.isFinite(n) || n <= 0) return '';
+  if (n >= 7) return 'score-high';
+  if (n >= 4) return 'score-medium';
+  return 'score-low';
+};
 
 // --- Undervaluation score (lower = better)
 const computeUndervaluationScore = (m) => {
@@ -76,6 +86,72 @@ const computeUndervaluationScore = (m) => {
   );
 };
 
+// --- Combined score calculation (screening score + upside potential)
+const computeCombinedScore = (stock, allStocks, sectorKey) => {
+  const weights = {
+    screening: 0.55, // 60% screening score
+    upside: 0.45, // 40% upside potential
+  };
+
+  // Get screening score (normalized to 0-10 scale)
+  const screeningScore = stock.screeningScore || 0;
+
+  // Calculate upside potential using valuation service
+  let upsideScore = 0;
+  try {
+    // Create sector stats for valuation
+    const normalizedStocks = allStocks
+      .map((s) => ({
+        sector: sectorKey,
+        price: s.price,
+        peRatio: s.pe,
+        priceToBook: s.pb,
+        priceToSales: s.cfm, // Using available field as proxy
+      }))
+      .filter((s) => s.price > 0);
+
+    const sectorStats = computeSectorStats(
+      normalizedStocks,
+      sectorKey
+    );
+
+    // Calculate fair price and upside
+    const stockForValuation = {
+      price: stock.price,
+      peRatio: stock.pe,
+      priceToBook: stock.pb,
+      priceToSales: stock.cfm,
+    };
+
+    const valuation = estimateFairPrice(
+      stockForValuation,
+      sectorStats
+    );
+    if (valuation.upsidePct && Number.isFinite(valuation.upsidePct)) {
+      // Normalize upside percentage to 0-10 scale
+      // Cap at 50% upside = 10 points, negative upside = 0 points
+      upsideScore = Math.max(
+        0,
+        Math.min(10, (valuation.upsidePct / 50) * 10)
+      );
+    }
+  } catch {
+    // If valuation fails, fall back to undervaluation score
+    const undervalScore = computeUndervaluationScore(stock);
+    if (Number.isFinite(undervalScore)) {
+      // Invert and normalize undervaluation score (lower is better -> higher score)
+      upsideScore = Math.max(0, Math.min(10, 10 - undervalScore / 2));
+    }
+  }
+
+  // Combine scores
+  const combinedScore =
+    screeningScore * weights.screening + upsideScore * weights.upside;
+  return Number.isFinite(combinedScore)
+    ? Math.round(combinedScore * 10) / 10
+    : 0;
+};
+
 export default function SectorBreakdownTable({
   sectorKey,
   liveData = null,
@@ -90,12 +166,12 @@ export default function SectorBreakdownTable({
 
   // sortConfig: which field + direction
   const [sortConfig, setSortConfig] = useState({
-    key: 'price',
-    direction: 'asc',
+    key: 'combinedScore',
+    direction: 'desc',
   });
 
   useEffect(() => {
-    setSortConfig({ key: 'price', direction: 'asc' });
+    setSortConfig({ key: 'combinedScore', direction: 'desc' });
     let cancelled = false;
     async function load() {
       try {
@@ -137,7 +213,7 @@ export default function SectorBreakdownTable({
                 netIncomeGrowth: stock.net_income_growth,
               };
 
-              return {
+              const stockData = {
                 symbol: stock.symbol,
                 company: stock.name || stock.symbol,
                 price: stock.price,
@@ -150,20 +226,32 @@ export default function SectorBreakdownTable({
                 revG: stock.rev_growth,
                 netIncome: stock.net_income,
                 nig: stock.net_income_growth,
-                change: 0, // Default, as this isn't in live data
                 _score: computeUndervaluationScore(metrics),
                 _isLive: true, // Flag to indicate live data
+                screeningScore: null, // Will be calculated separately if needed
               };
+
+              return stockData;
             });
 
+            // Calculate combined scores for all stocks
+            const enrichedWithScores = enriched.map((stock) => ({
+              ...stock,
+              combinedScore: computeCombinedScore(
+                stock,
+                enriched,
+                sectorKey
+              ),
+            }));
+
             // pick top-2 by score
-            const top2 = [...enriched]
+            const top2 = [...enrichedWithScores]
               .sort((a, b) => a._score - b._score)
               .slice(0, 2)
               .map((r) => r.symbol);
 
             if (!cancelled) {
-              setRows(enriched);
+              setRows(enrichedWithScores);
               setTop2Set(new Set(top2));
               setLoading(false);
               return;
@@ -205,21 +293,31 @@ export default function SectorBreakdownTable({
               revG: m?.revenueGrowth ?? null,
               netIncome: raw?.net_income ?? null,
               nig: m?.netIncomeGrowth ?? null,
-              change: m?.change ?? null,
               _score: computeUndervaluationScore(m),
               _isLive: false,
+              screeningScore: null, // Will be calculated separately if needed
             };
           })
         );
 
+        // Calculate combined scores for all stocks
+        const enrichedWithScores = enriched.map((stock) => ({
+          ...stock,
+          combinedScore: computeCombinedScore(
+            stock,
+            enriched,
+            sectorKey
+          ),
+        }));
+
         // pick top-2 by score
-        const top2 = [...enriched]
+        const top2 = [...enrichedWithScores]
           .sort((a, b) => a._score - b._score)
           .slice(0, 2)
           .map((r) => r.symbol);
 
         if (!cancelled) {
-          setRows(enriched);
+          setRows(enrichedWithScores);
           setTop2Set(new Set(top2));
         }
       } catch (e) {
@@ -349,8 +447,8 @@ export default function SectorBreakdownTable({
             <td className="num">{pctSmart(r.revG)}</td>
             <td className="num">{abbrCap(r.netIncome)}</td>
             <td className="num">{pctSmart(r.nig)}</td>
-            <td className={`num ${fmtChangeClass(r.change)}`}>
-              {pctSmart(r.change)}
+            <td className={`num ${scoreClass(r.combinedScore)}`}>
+              {fmtScore(r.combinedScore)}
             </td>
           </tr>
         ))}
@@ -401,7 +499,6 @@ export default function SectorBreakdownTable({
               PRICE{arrowFor('price')}
             </th>
             <th onClick={() => handleSort('marketCap')}>
-
               MKT CAP{arrowFor('marketCap')}
             </th>
             <th onClick={() => handleSort('pe')}>
@@ -409,32 +506,27 @@ export default function SectorBreakdownTable({
             </th>
             <th onClick={() => handleSort('pb')}>
               P/B {arrowFor('pb')}
-
             </th>
             <th onClick={() => handleSort('roe')}>
               ROE{arrowFor('roe')}
             </th>
             <th onClick={() => handleSort('cfm')}>
-
               Free CFM{arrowFor('cfm')}
-
             </th>
             <th onClick={() => handleSort('de')}>
               D/E{arrowFor('de')}
             </th>
             <th onClick={() => handleSort('revG')}>
-
               RevG{arrowFor('revG')}
             </th>
             <th onClick={() => handleSort('netIncome')}>
               NetInc{arrowFor('netIncome')}
-
             </th>
             <th onClick={() => handleSort('nig')}>
               NIG{arrowFor('nig')}
             </th>
-            <th onClick={() => handleSort('change')}>
-              CHANGE{arrowFor('change')}
+            <th onClick={() => handleSort('combinedScore')}>
+              SCORE{arrowFor('combinedScore')}
             </th>
           </tr>
         </thead>

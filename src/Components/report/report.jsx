@@ -1,5 +1,7 @@
 import SeedIcon from '../../assets/seed.svg';
 import './Report.css';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ReportPDF from './ReportPDF';
 // import BrandLogo from '../BrandLogo/BrandLogo';
 
 export default function Report({ stockData }) {
@@ -86,11 +88,22 @@ export default function Report({ stockData }) {
               with Perplexity Finance API and our advanced screening
               methods.
             </p>
+            <div className="header-actions">
+              <PDFDownloadLink
+                document={<ReportPDF stockData={data} />}
+                fileName={`${data.symbol}_investment_report.pdf`}
+                className="pdf-download-btn"
+              >
+                {({ blob, url, loading, error }) =>
+                  loading ? 'Generating PDF...' : 'Download PDF'
+                }
+              </PDFDownloadLink>
+            </div>
           </div>
           <img
             src={SeedIcon}
             alt=""
-            className="brand-logo-icon"
+            className="brand-logo-icon-bg"
           />
         </header>
 

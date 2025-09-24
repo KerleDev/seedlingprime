@@ -18,9 +18,15 @@ hr {
   color: #181743;
 }
 
-.brand-logo-icon {
-  height: 16rem;
-  rotate: 36deg;
+
+.brand-logo-icon-bg {
+  position: absolute;
+  right: -6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 30rem;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .report-container {
@@ -48,11 +54,39 @@ hr {
   padding: 3rem;
   background: linear-gradient(135deg, #38585a 0%, #3b5f07 100%);
   color: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .brand-content {
   flex: 1;
   max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+.header-actions {
+  margin-top: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.pdf-download-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.9rem;
+}
+
+.pdf-download-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .brand-title {
